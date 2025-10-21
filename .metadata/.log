@@ -1,0 +1,1546 @@
+!SESSION 2025-10-16 13:05:30.214 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:05:31.416
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 13:05:31.526
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:05:40.421
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:05:44.359
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 13:05:44.364
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:05:44.366
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:05:44.388
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:05:45.627
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.363.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:05:55.646
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:06:01.566
+!MESSAGE [Error] org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInConfirm(AuthStatusManager.java:76)
+	at com.microsoft.copilot.eclipse.ui.dialogs.SignInConfirmDialog$SignInConfirmationTask.lambda$0(SignInConfirmDialog.java:98)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:07:02.325
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:07:02.326
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:37:50.202
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:37:50.214
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:45:30.302
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:45:30.302
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!SESSION 2025-10-16 13:45:43.147 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:45:45.373
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 13:45:45.611
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:45:50.003
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 13:45:52.783
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:45:53.564
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:45:53.565
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:45:53.578
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 13:45:53.645
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:45:54.769
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.363.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:46:37.695
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:46:52.556
+!MESSAGE [Error] org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInConfirm(AuthStatusManager.java:76)
+	at com.microsoft.copilot.eclipse.ui.dialogs.SignInConfirmDialog$SignInConfirmationTask.lambda$0(SignInConfirmDialog.java:98)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:47:32.307
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:47:32.309
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!SESSION 2025-10-16 13:50:30.454 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:50:33.062
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 13:50:33.243
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 13:50:34.663
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 13:50:37.893
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:50:38.635
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:50:38.637
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 13:50:38.653
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 13:50:38.680
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:50:40.075
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.363.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 13:51:07.126
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:51:41.023
+!MESSAGE [Error] org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInConfirm(AuthStatusManager.java:76)
+	at com.microsoft.copilot.eclipse.ui.dialogs.SignInConfirmDialog$SignInConfirmationTask.lambda$0(SignInConfirmDialog.java:98)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: FetchError: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:59:51.410
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 13:59:51.412
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: unable to verify the first certificate
+!SESSION 2025-10-16 13:59:59.082 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 14:00:01.607
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 14:00:01.771
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 14:00:02.554
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 14:00:06.619
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 14:00:07.631
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 14:00:07.633
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 14:00:07.652
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 14:00:07.707
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:00:08.795
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.363.0 initialized
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 14:19:46.352
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:24:32.644
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 14:24:43.733
+!MESSAGE [Error] Unable to sign in to GitHub Copilot at this time org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: getaddrinfo ENOTFOUND github.com
+!STACK 0
+java.util.concurrent.ExecutionException: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: getaddrinfo ENOTFOUND github.com
+	at java.base/java.util.concurrent.CompletableFuture.reportGet(CompletableFuture.java:396)
+	at java.base/java.util.concurrent.CompletableFuture.get(CompletableFuture.java:2073)
+	at com.microsoft.copilot.eclipse.core.AuthStatusManager.signInInitiate(AuthStatusManager.java:56)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.initiateSignIn(SignInHandler.java:93)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.runInitiateSignIn(SignInHandler.java:82)
+	at com.microsoft.copilot.eclipse.ui.handlers.SignInHandler$SignInJob.run(SignInHandler.java:66)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: getaddrinfo ENOTFOUND github.com
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.handleResponse(RemoteEndpoint.java:220)
+	at org.eclipse.lsp4j.jsonrpc.RemoteEndpoint.consume(RemoteEndpoint.java:204)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$3(LanguageServerWrapper.java:419)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.handleMessage(StreamMessageProducer.java:185)
+	at org.eclipse.lsp4j.jsonrpc.json.StreamMessageProducer.listen(StreamMessageProducer.java:97)
+	at org.eclipse.lsp4j.jsonrpc.json.ConcurrentMessageProcessor.run(ConcurrentMessageProcessor.java:114)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:572)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-16 14:24:43.741
+!MESSAGE Sign in failed: org.eclipse.lsp4j.jsonrpc.ResponseErrorException: Could not log in with device flow on https://github.com/: getaddrinfo ENOTFOUND github.com
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2025-10-16 14:27:11.652
+!MESSAGE Connection to https://www.caucho.com/eclipse/site.xml failed on PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target. Retry attempt 0 started
+!STACK 0
+javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.ssl.Alert.createSSLException(Alert.java:130)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:383)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:326)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:321)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1327)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.onConsumeCertificate(CertificateMessage.java:1204)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.consume(CertificateMessage.java:1147)
+	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:393)
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:476)
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:447)
+	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:206)
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:172)
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1506)
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1421)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:455)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:426)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.executeHandshake(SSLConnectionSocketFactory.java:350)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.createLayeredSocket(SSLConnectionSocketFactory.java:318)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.createLayeredSocket(SSLConnectionSocketFactory.java:303)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder.lambda$setSSLSocketFactory$0(PoolingHttpClientConnectionManagerBuilder.java:125)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:219)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:490)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:164)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:174)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:144)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:195)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:150)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:106)
+	at org.eclipse.ecf.provider.filetransfer.httpclient5.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1009)
+	at org.eclipse.ecf.provider.filetransfer.httpclient5.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:997)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:76)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:388)
+	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:271)
+	at java.base/sun.security.validator.Validator.validate(Validator.java:256)
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:230)
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:132)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1311)
+	... 35 more
+Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:148)
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:129)
+	at java.base/java.security.cert.CertPathBuilder.build(CertPathBuilder.java:297)
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:383)
+	... 40 more
+
+!ENTRY org.eclipse.equinox.p2.transport.ecf 2 0 2025-10-16 14:27:12.839
+!MESSAGE Connection to https://www.caucho.com/eclipse/p2.index failed on PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target. Retry attempt 0 started
+!STACK 0
+javax.net.ssl.SSLHandshakeException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.ssl.Alert.createSSLException(Alert.java:130)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:383)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:326)
+	at java.base/sun.security.ssl.TransportContext.fatal(TransportContext.java:321)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1327)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.onConsumeCertificate(CertificateMessage.java:1204)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.consume(CertificateMessage.java:1147)
+	at java.base/sun.security.ssl.SSLHandshake.consume(SSLHandshake.java:393)
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:476)
+	at java.base/sun.security.ssl.HandshakeContext.dispatch(HandshakeContext.java:447)
+	at java.base/sun.security.ssl.TransportContext.dispatch(TransportContext.java:206)
+	at java.base/sun.security.ssl.SSLTransport.decode(SSLTransport.java:172)
+	at java.base/sun.security.ssl.SSLSocketImpl.decode(SSLSocketImpl.java:1506)
+	at java.base/sun.security.ssl.SSLSocketImpl.readHandshakeRecord(SSLSocketImpl.java:1421)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:455)
+	at java.base/sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:426)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.executeHandshake(SSLConnectionSocketFactory.java:350)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.createLayeredSocket(SSLConnectionSocketFactory.java:318)
+	at org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory.createLayeredSocket(SSLConnectionSocketFactory.java:303)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder.lambda$setSSLSocketFactory$0(PoolingHttpClientConnectionManagerBuilder.java:125)
+	at org.apache.hc.client5.http.impl.io.DefaultHttpClientConnectionOperator.connect(DefaultHttpClientConnectionOperator.java:219)
+	at org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager.connect(PoolingHttpClientConnectionManager.java:490)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:164)
+	at org.apache.hc.client5.http.impl.classic.InternalExecRuntime.connectEndpoint(InternalExecRuntime.java:174)
+	at org.apache.hc.client5.http.impl.classic.ConnectExec.execute(ConnectExec.java:144)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ProtocolExec.execute(ProtocolExec.java:195)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.ContentCompressionExec.execute(ContentCompressionExec.java:150)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.HttpRequestRetryExec.execute(HttpRequestRetryExec.java:113)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.RedirectExec.execute(RedirectExec.java:110)
+	at org.apache.hc.client5.http.impl.classic.ExecChainElement.execute(ExecChainElement.java:51)
+	at org.apache.hc.client5.http.impl.classic.InternalHttpClient.doExecute(InternalHttpClient.java:185)
+	at org.apache.hc.client5.http.impl.classic.CloseableHttpClient.execute(CloseableHttpClient.java:106)
+	at org.eclipse.ecf.provider.filetransfer.httpclient5.HttpClientRetrieveFileTransfer.performConnect(HttpClientRetrieveFileTransfer.java:1009)
+	at org.eclipse.ecf.provider.filetransfer.httpclient5.HttpClientRetrieveFileTransfer$1.performFileTransfer(HttpClientRetrieveFileTransfer.java:997)
+	at org.eclipse.ecf.filetransfer.FileTransferJob.run(FileTransferJob.java:76)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+Caused by: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:388)
+	at java.base/sun.security.validator.PKIXValidator.engineValidate(PKIXValidator.java:271)
+	at java.base/sun.security.validator.Validator.validate(Validator.java:256)
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkTrusted(X509TrustManagerImpl.java:230)
+	at java.base/sun.security.ssl.X509TrustManagerImpl.checkServerTrusted(X509TrustManagerImpl.java:132)
+	at java.base/sun.security.ssl.CertificateMessage$T13CertificateConsumer.checkServerCerts(CertificateMessage.java:1311)
+	... 35 more
+Caused by: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.build(SunCertPathBuilder.java:148)
+	at java.base/sun.security.provider.certpath.SunCertPathBuilder.engineBuild(SunCertPathBuilder.java:129)
+	at java.base/java.security.cert.CertPathBuilder.build(CertPathBuilder.java:297)
+	at java.base/sun.security.validator.PKIXValidator.doBuild(PKIXValidator.java:383)
+	... 40 more
+
+!ENTRY org.eclipse.jst.server.tomcat.core 4 4 2025-10-16 14:27:17.235
+!MESSAGE D:\apache-tomcat-9.0.100\conf\catalina.policy (The system cannot find the path specified)
+!STACK 0
+java.io.FileNotFoundException: D:\apache-tomcat-9.0.100\conf\catalina.policy (The system cannot find the path specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at org.eclipse.jst.server.tomcat.core.internal.Tomcat90Configuration.load(Tomcat90Configuration.java:246)
+	at org.eclipse.jst.server.tomcat.core.internal.Tomcat90Configuration.importFromPath(Tomcat90Configuration.java:294)
+	at org.eclipse.jst.server.tomcat.core.internal.TomcatServer.importRuntimeConfiguration(TomcatServer.java:201)
+	at org.eclipse.wst.server.core.internal.ServerWorkingCopy.importRuntimeConfiguration(ServerWorkingCopy.java:826)
+	at org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment.createChildFragments(NewServerWizardFragment.java:128)
+	at org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment.getChildFragments(NewServerWizardFragment.java:99)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addSubWizardFragments(TaskWizard.java:327)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addSubWizardFragments(TaskWizard.java:331)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.getAllWizardFragments(TaskWizard.java:315)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addPages(TaskWizard.java:345)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.updatePages(TaskWizard.java:392)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizardPage$1.run(TaskWizardPage.java:131)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:183)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:133)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4894)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizardPage.update(TaskWizardPage.java:128)
+	at org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeComposite.validate(TomcatRuntimeComposite.java:408)
+	at org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeComposite$2.modifyText(TomcatRuntimeComposite.java:172)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:217)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1219)
+	at org.eclipse.swt.widgets.Text.wmCommandChild(Text.java:3077)
+	at org.eclipse.swt.widgets.Control.WM_COMMAND(Control.java:4937)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4788)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Text.callWindowProc(Text.java:296)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4887)
+	at org.eclipse.swt.widgets.Text.windowProc(Text.java:2655)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SetWindowText(Native Method)
+	at org.eclipse.swt.internal.win32.OS.SetWindowText(OS.java:2276)
+	at org.eclipse.swt.widgets.Text.setText(Text.java:2315)
+	at org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeComposite$4.widgetSelected(TomcatRuntimeComposite.java:238)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:286)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4160)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3748)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.eclipse.wst.server.ui.internal.cnf.ServersView2$1.widgetSelected(ServersView2.java:120)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:286)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendSelectionEvent(Widget.java:1255)
+	at org.eclipse.swt.widgets.Link.wmNotifyChild(Link.java:721)
+	at org.eclipse.swt.widgets.Control.wmNotify(Control.java:5865)
+	at org.eclipse.swt.widgets.Composite.wmNotify(Composite.java:1972)
+	at org.eclipse.swt.widgets.Control.WM_NOTIFY(Control.java:5432)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4841)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Link.callWindowProc(Link.java:158)
+	at org.eclipse.swt.widgets.Widget.wmLButtonUp(Widget.java:2179)
+	at org.eclipse.swt.widgets.Control.WM_LBUTTONUP(Control.java:5245)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4822)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:678)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:583)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:185)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:219)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:149)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:115)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:467)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:298)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:627)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1431)
+
+!ENTRY org.eclipse.jst.server.tomcat.core 4 4 2025-10-16 14:30:01.997
+!MESSAGE D:\apache-tomcat-9.0.100\bin\conf\catalina.policy (The system cannot find the path specified)
+!STACK 0
+java.io.FileNotFoundException: D:\apache-tomcat-9.0.100\bin\conf\catalina.policy (The system cannot find the path specified)
+	at java.base/java.io.FileInputStream.open0(Native Method)
+	at java.base/java.io.FileInputStream.open(FileInputStream.java:213)
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:152)
+	at org.eclipse.jst.server.tomcat.core.internal.Tomcat90Configuration.load(Tomcat90Configuration.java:246)
+	at org.eclipse.jst.server.tomcat.core.internal.Tomcat90Configuration.importFromPath(Tomcat90Configuration.java:294)
+	at org.eclipse.jst.server.tomcat.core.internal.TomcatServer.importRuntimeConfiguration(TomcatServer.java:201)
+	at org.eclipse.wst.server.core.internal.ServerWorkingCopy.importRuntimeConfiguration(ServerWorkingCopy.java:826)
+	at org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment.createChildFragments(NewServerWizardFragment.java:128)
+	at org.eclipse.wst.server.ui.internal.wizard.fragment.NewServerWizardFragment.getChildFragments(NewServerWizardFragment.java:99)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addSubWizardFragments(TaskWizard.java:327)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addSubWizardFragments(TaskWizard.java:331)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.getAllWizardFragments(TaskWizard.java:315)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.addPages(TaskWizard.java:345)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.updatePages(TaskWizard.java:392)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizardPage$1.run(TaskWizardPage.java:131)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:183)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:133)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4894)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizardPage.update(TaskWizardPage.java:128)
+	at org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeComposite.validate(TomcatRuntimeComposite.java:408)
+	at org.eclipse.jst.server.tomcat.ui.internal.TomcatRuntimeComposite$2.modifyText(TomcatRuntimeComposite.java:172)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:217)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1219)
+	at org.eclipse.swt.widgets.Text.wmCommandChild(Text.java:3077)
+	at org.eclipse.swt.widgets.Control.WM_COMMAND(Control.java:4937)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4788)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Text.callWindowProc(Text.java:296)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4887)
+	at org.eclipse.swt.widgets.Text.windowProc(Text.java:2655)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SendMessage(Native Method)
+	at org.eclipse.swt.widgets.Text.paste(Text.java:1640)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.ui.internal.handlers.WidgetMethodHandler.execute(WidgetMethodHandler.java:119)
+	at org.eclipse.ui.internal.handlers.HandlerProxy.execute(HandlerProxy.java:277)
+	at org.eclipse.ui.internal.handlers.E4HandlerProxy.execute(E4HandlerProxy.java:98)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.e4.core.internal.di.MethodRequestor.execute(MethodRequestor.java:58)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invokeUsingClass(InjectorImpl.java:305)
+	at org.eclipse.e4.core.internal.di.InjectorImpl.invoke(InjectorImpl.java:237)
+	at org.eclipse.e4.core.contexts.ContextInjectionFactory.invoke(ContextInjectionFactory.java:174)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceHandler.execute(HandlerServiceHandler.java:165)
+	at org.eclipse.core.commands.Command.executeWithChecks(Command.java:488)
+	at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:485)
+	at org.eclipse.e4.core.commands.internal.HandlerServiceImpl.executeHandler(HandlerServiceImpl.java:204)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.executeCommand(KeyBindingDispatcher.java:320)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.press(KeyBindingDispatcher.java:581)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.processKeyEvent(KeyBindingDispatcher.java:662)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher.filterKeySequenceBindings(KeyBindingDispatcher.java:451)
+	at org.eclipse.e4.ui.bindings.keys.KeyBindingDispatcher$KeyDownFilter.handleEvent(KeyBindingDispatcher.java:104)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1340)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1213)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1223)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1265)
+	at org.eclipse.swt.widgets.Text.sendKeyEvent(Text.java:1788)
+	at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:1261)
+	at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1748)
+	at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:4908)
+	at org.eclipse.swt.widgets.Text.WM_CHAR(Text.java:2673)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4785)
+	at org.eclipse.swt.widgets.Text.windowProc(Text.java:2655)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3746)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:823)
+	at org.eclipse.jface.window.Window.open(Window.java:799)
+	at org.eclipse.wst.server.ui.internal.cnf.ServersView2$1.widgetSelected(ServersView2.java:120)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:286)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendSelectionEvent(Widget.java:1255)
+	at org.eclipse.swt.widgets.Link.wmNotifyChild(Link.java:721)
+	at org.eclipse.swt.widgets.Control.wmNotify(Control.java:5865)
+	at org.eclipse.swt.widgets.Composite.wmNotify(Composite.java:1972)
+	at org.eclipse.swt.widgets.Control.WM_NOTIFY(Control.java:5432)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4841)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Link.callWindowProc(Link.java:158)
+	at org.eclipse.swt.widgets.Widget.wmLButtonUp(Widget.java:2179)
+	at org.eclipse.swt.widgets.Control.WM_LBUTTONUP(Control.java:5245)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4822)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(Native Method)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3746)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:678)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:583)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:185)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:219)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:149)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:115)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:467)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:298)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:627)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1431)
+
+!ENTRY org.eclipse.wst.server.core 4 0 2025-10-16 14:30:19.599
+!MESSAGE Server Tomcat v9.0 Server at localhost failed to start.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:56:19.845
+!MESSAGE [Info]	[fetchChat] Request 0e91aeac-5b08-4fc2-a8f7-d23bc0fe0184 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 19082.150200000033ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:56:23.676
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:56:24.205
+!MESSAGE [Info]	[fetchChat] Request 6e288653-e5cb-4c19-9e8b-6d39dc886116 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 521.7113999999128ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:56:24.401
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:57:56.312
+!MESSAGE [Info]	[fetchChat] Request 495ee495-baeb-4a08-8ef0-fa7f64847919 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 13157.970699999947ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:58:00.700
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:58:01.260
+!MESSAGE [Info]	[fetchChat] Request b8c14125-5b99-425f-b91a-01903d9e597c at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 543.8409000001848ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 14:58:01.891
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+!SESSION 2025-10-16 15:14:50.370 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:14:52.852
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 15:14:53.071
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:14:53.926
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 15:14:58.883
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:14:59.937
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:14:59.939
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:14:59.961
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 15:14:59.995
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:15:01.165
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.363.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:15:01.297
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.827
+!MESSAGE No digest algorithm is available to verify download of osgi.bundle,com.microsoft.copilot.eclipse.terminal.api,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.827
+!MESSAGE No digest algorithm is available to verify download of osgi.bundle,com.microsoft.copilot.eclipse.ui,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.827
+!MESSAGE No digest algorithm is available to verify download of osgi.bundle,com.microsoft.copilot.eclipse.core.agent.win32,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.827
+!MESSAGE No digest algorithm is available to verify download of osgi.bundle,com.microsoft.copilot.eclipse.branding,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.828
+!MESSAGE No digest algorithm is available to verify download of osgi.bundle,com.microsoft.copilot.eclipse.core,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+
+!ENTRY org.eclipse.equinox.p2.artifact.repository 2 0 2025-10-16 15:17:49.828
+!MESSAGE No digest algorithm is available to verify download of org.eclipse.update.feature,com.microsoft.copilot.eclipse.feature,0.12.0.202510160637 from repository https://azuredownloads-g3ahgwb5b8bkbxhd.b01.azurefd.net/github-copilot/.
+!SESSION 2025-10-16 15:24:38.630 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/ -data file:/C:/Users/Admin/EMS/ -data file:/C:/Users/Admin/EMS/ -data file:/C:/Users/Admin/EMS/ -data file:/C:/Users/Admin/EMS/ -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:24:41.083
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 15:24:41.308
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:24:42.799
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:24:49.230
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:24:49.232
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 15:24:49.238
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:24:50.594
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:24:52.062
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:24:52.078
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:24:52.172
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+!SESSION 2025-10-16 15:31:57.760 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:32:00.125
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 15:32:00.345
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:32:01.133
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:32:06.697
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:32:06.699
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:32:06.716
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 15:32:06.783
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:32:08.266
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:32:08.282
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+!SESSION 2025-10-16 15:40:55.658 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:40:57.995
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 15:40:58.217
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 15:40:58.991
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 15:41:02.620
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 15:41:02.886
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 15:41:03.015
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:41:03.864
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:41:03.867
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 15:41:03.884
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 15:41:03.901
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:41:05.576
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:41:05.592
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.cdt.core.native 4 0 2025-10-16 15:41:24.801
+!MESSAGE Setting terminal size is not supported
+!STACK 0
+java.io.IOException: ConPTY is closed.
+	at org.eclipse.cdt.utils.pty.ConPTY.setTerminalSize(ConPTY.java:319)
+	at org.eclipse.cdt.utils.pty.PTY.setTerminalSize(PTY.java:258)
+	at org.eclipse.terminal.connector.process.ProcessConnector.setTerminalSize(ProcessConnector.java:299)
+	at org.eclipse.terminal.internal.connector.TerminalConnector.setTerminalSize(TerminalConnector.java:238)
+	at org.eclipse.terminal.internal.emulator.VT100Emulator.setDimensions(VT100Emulator.java:204)
+	at org.eclipse.terminal.internal.emulator.VT100TerminalControl.lambda$2(VT100TerminalControl.java:768)
+	at org.eclipse.terminal.internal.textcanvas.TextCanvas.onResize(TextCanvas.java:316)
+	at org.eclipse.terminal.internal.textcanvas.TextCanvas.onResize(TextCanvas.java:327)
+	at org.eclipse.terminal.internal.textcanvas.VirtualCanvas.lambda$1(VirtualCanvas.java:47)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1238)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1219)
+	at org.eclipse.swt.widgets.Control.sendResize(Control.java:3027)
+	at org.eclipse.swt.widgets.Composite.sendResize(Composite.java:1023)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1072)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3189)
+	at org.eclipse.swt.layout.GridLayout.layout(GridLayout.java:697)
+	at org.eclipse.swt.layout.GridLayout.layout(GridLayout.java:201)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.sendResize(Composite.java:1027)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1072)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3189)
+	at org.eclipse.swt.layout.FillLayout.layout(FillLayout.java:216)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.sendResize(Composite.java:1027)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1072)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.custom.CTabFolderLayout.layout(CTabFolderLayout.java:119)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.WM_SIZE(Composite.java:1747)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4862)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:91)
+	at org.eclipse.swt.widgets.Control.WM_WINDOWPOSCHANGED(Control.java:5743)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4875)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.EndDeferWindowPos(Native Method)
+	at org.eclipse.swt.widgets.Composite.resizeChildren(Composite.java:998)
+	at org.eclipse.swt.widgets.Composite.resizeChildren(Composite.java:975)
+	at org.eclipse.swt.widgets.Composite.setResizeChildren(Composite.java:1171)
+	at org.eclipse.swt.widgets.Composite.WM_SIZE(Composite.java:1751)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4862)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:91)
+	at org.eclipse.swt.widgets.Control.WM_WINDOWPOSCHANGED(Control.java:5743)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4875)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SetWindowPos(Native Method)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3237)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1066)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3189)
+	at org.eclipse.swt.layout.FillLayout.layout(FillLayout.java:216)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.WM_SIZE(Composite.java:1747)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4862)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:91)
+	at org.eclipse.swt.widgets.Control.WM_WINDOWPOSCHANGED(Control.java:5743)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4875)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SetWindowPos(Native Method)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3237)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1066)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3189)
+	at org.eclipse.swt.layout.FillLayout.layout(FillLayout.java:231)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.WM_SIZE(Composite.java:1747)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4862)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:91)
+	at org.eclipse.swt.widgets.Control.WM_WINDOWPOSCHANGED(Control.java:5743)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4875)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SetWindowPos(Native Method)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3237)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1066)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3189)
+	at org.eclipse.swt.layout.FillLayout.layout(FillLayout.java:216)
+	at org.eclipse.swt.widgets.Composite.updateLayout(Composite.java:1340)
+	at org.eclipse.swt.widgets.Composite.WM_SIZE(Composite.java:1747)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4862)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.DefWindowProc(Native Method)
+	at org.eclipse.swt.widgets.Scrollable.callWindowProc(Scrollable.java:91)
+	at org.eclipse.swt.widgets.Control.WM_WINDOWPOSCHANGED(Control.java:5743)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:4875)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:5130)
+	at org.eclipse.swt.internal.win32.OS.SetWindowPos(Native Method)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3237)
+	at org.eclipse.swt.widgets.Composite.setBoundsInPixels(Composite.java:1066)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3198)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3194)
+	at org.eclipse.swt.widgets.Control.setBoundsInPixels(Control.java:3271)
+	at org.eclipse.swt.widgets.Control.setBounds(Control.java:3267)
+	at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3249)
+	at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3261)
+	at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:1900)
+	at org.eclipse.swt.custom.CTabFolder.lambda$0(CTabFolder.java:332)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:91)
+	at org.eclipse.swt.widgets.Display.sendEvent(Display.java:4362)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1214)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:4160)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3748)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine$5.run(PartRenderingEngine.java:1151)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.e4.ui.internal.workbench.swt.PartRenderingEngine.run(PartRenderingEngine.java:1042)
+	at org.eclipse.e4.ui.internal.workbench.E4Workbench.createAndRunUI(E4Workbench.java:153)
+	at org.eclipse.ui.internal.Workbench.lambda$3(Workbench.java:678)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:339)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:583)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:173)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:185)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:219)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:149)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:115)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:467)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:298)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:627)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:575)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1431)
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:47:14.025
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:47:32.620
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:48:09.510
+!MESSAGE [Info]	[agentPrompt] Rendering fresh global context for conversation/turn 01797216-28b2-4042-88b6-43103e7be602/8dd2af0f-401e-4dda-b718-22bc33e797ca
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:48:42.122
+!MESSAGE [Info]	[fetchChat] Request 44713bf2-dd97-4790-be35-e0807eff93b5 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 32574.472999999998ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:48:55.324
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:48:56.020
+!MESSAGE [Info]	[fetchChat] Request c865f6fa-86e9-4693-89c3-33e2bc39730a at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 703.6251000000047ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:48:56.210
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:53:41.366
+!MESSAGE [Info]	[agentPrompt] Reusing cached global context from first turn for conversation/turn 01797216-28b2-4042-88b6-43103e7be602/e58ccb6e-5abd-4a86-b034-826887eca7ee
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:53:59.943
+!MESSAGE [Info]	[fetchChat] Request d45e2075-b079-44be-8aad-3a4bd2f2c3f7 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 18623.662199999904ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:54:15.985
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:54:17.015
+!MESSAGE [Info]	[fetchChat] Request c9107e0c-9204-4aa7-9898-aec48585f769 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 1044.0687000000617ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:54:17.089
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:58:13.660
+!MESSAGE [Info]	[agentPrompt] Reusing cached global context from first turn for conversation/turn 01797216-28b2-4042-88b6-43103e7be602/219107b9-ffd1-4f54-8397-43721d72dd97
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:58:34.193
+!MESSAGE [Info]	[fetchChat] Request 87eee681-5685-4ece-9aa2-46d3c8ef4928 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 20564.974099999876ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:58:56.251
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:58:59.952
+!MESSAGE [Info]	[fetchChat] Request 64740b9f-3e6d-40f4-912a-baf01fbab1c6 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 3734.623499999987ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 15:59:00.435
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+!SESSION 2025-10-16 16:03:22.669 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product -data file:/C:/Users/Admin/EMS/
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 16:03:25.232
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 16:03:25.420
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 16:03:26.105
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:03:29.687
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:03:29.690
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:03:29.706
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 16:03:29.759
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:03:31.212
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:03:31.230
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:03:31.345
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY org.eclipse.ui 4 0 2025-10-16 16:03:32.464
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:03:32.536
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:03:55.556
+!MESSAGE [Info]	[agentPrompt] Rendering fresh global context for conversation/turn 52054aa9-f99b-45f0-92e7-a1508c77d473/6a9ddac3-564b-4ffd-9e63-f48fd11aaa98
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:04:00.857
+!MESSAGE [Info]	[fetchChat] Request 41db1279-6077-4905-986a-aeaac0711a58 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 5273.561300000001ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:04:03.247
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:04:04.013
+!MESSAGE [Info]	[fetchChat] Request a91f96e1-287c-4913-876e-6ded3f780049 at <https://api.individual.githubcopilot.com/chat/completions> finished with 200 status after 745.1039999999994ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:04:04.228
+!MESSAGE [Info]	[streamMessages] message 0 returned. finish reason: [stop]
+!SESSION 2025-10-16 16:23:39.235 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 16:23:41.835
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-16 16:23:42.099
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-16 16:23:51.958
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:23:57.285
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-16 16:23:57.296
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:23:57.297
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-16 16:23:57.319
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:23:58.886
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:23:58.902
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:23:59.020
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-16 16:24:00.451
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+!SESSION 2025-10-20 14:19:31.164 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-20 14:19:34.097
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-20 14:19:34.286
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-20 14:19:35.252
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-20 14:19:39.261
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-20 14:19:40.291
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 14:19:40.376
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 14:19:40.378
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 14:19:41.641
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 14:19:43.026
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 14:19:43.041
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 14:19:43.202
+!MESSAGE [Info]	[certificates] Removed 9 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 14:19:44.652
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 15:14:38.022
+!MESSAGE [Info] Language ID not found for extension: jsp
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:41.742
+!MESSAGE [Info]	[fetchCompletions] Request 8be99b81-6986-4818-9c74-b74d1b6ac633 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 1655.129600000102ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:41.829
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:42.388
+!MESSAGE [Info]	[fetchCompletions] Request 8db3273e-0fdb-4a81-a8ff-ddbf56edde93 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 541.68880000012ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:42.486
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:43.087
+!MESSAGE [Info]	[fetchCompletions] Request d2962699-cfff-433d-b067-166a65ceb273 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 574.4484999999404ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:43.136
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:45.024
+!MESSAGE [Info]	[fetchCompletions] Request ef6f6997-40be-4286-9ec9-594a30708b00 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 558.039300000295ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:45.144
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:45.706
+!MESSAGE [Info]	[fetchCompletions] Request 7b7619fc-91c3-45f2-aef7-47140f0491ab at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 534.9901999998838ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:45.710
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [null]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:49.136
+!MESSAGE [Info]	[fetchCompletions] Request 198e3b94-a695-463b-aef2-470d1a3d2bf6 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 537.6931999996305ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:49.211
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:49.852
+!MESSAGE [Info]	[fetchCompletions] Request b357c5e6-9ce9-41e1-9e5b-32f3e5115f89 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 615.3736000000499ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:49.868
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:51.223
+!MESSAGE [Info]	[fetchCompletions] Request 91504fdc-33e8-4ef8-88e3-2775d69250c8 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 704.5161000001244ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:51.294
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:51.928
+!MESSAGE [Info]	[fetchCompletions] Request e32c4a63-ba19-4248-80af-ff44cc9f588c at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 610.2245000000112ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:52.003
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:53.258
+!MESSAGE [Info]	[fetchCompletions] Request 37dd988c-2f94-4dcd-be22-4b80bb8a7321 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 597.4467000002041ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:53.622
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:54.224
+!MESSAGE [Info]	[fetchCompletions] Request ad558a82-dfec-4ae4-ba6a-9b9a0347b245 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 590.8607999999076ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:54.303
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:54.923
+!MESSAGE [Info]	[fetchCompletions] Request bdc9f6fd-6360-4294-92aa-4cee7fb15663 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 607.9583000000566ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:55.101
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [null]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:59.837
+!MESSAGE [Info]	[fetchCompletions] Request 9dca876d-9a67-467f-b94e-724950e27818 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 543.2189000002109ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:14:59.907
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:00.337
+!MESSAGE [Info]	[fetchCompletions] Request 8d2dd00d-e7f4-4bf4-a515-fc3b929ca578 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 424.10800000000745ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:00.402
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:11.287
+!MESSAGE [Info]	[fetchCompletions] Request d11fc92d-f024-4602-bfdc-301ebfca9bd3 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 771.0626000002958ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:11.298
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:11.996
+!MESSAGE [Info]	[fetchCompletions] Request 85aa45ab-158d-4cbf-8fc7-e211d98426f5 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 617.5679000001401ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:12.101
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:12.672
+!MESSAGE [Info]	[fetchCompletions] Request 9ac8cf21-813a-451f-be34-3d811d86b479 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 563.2870000000112ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:12.749
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:13.356
+!MESSAGE [Info]	[fetchCompletions] Request 19c2b8a4-bcac-40f5-9132-4b9e246cb630 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 389.41660000011325ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 15:15:13.424
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 15:17:42.029
+!MESSAGE [Info] Document is null for editor: view-brokers.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 15:17:42.030
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/admin/view-brokers.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 15:17:44.303
+!MESSAGE [Info] Document is null for editor: candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 15:17:44.303
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/broker/candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:08:15.350
+!MESSAGE [Info] Document is null for editor: DatabaseConnection.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:08:15.351
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/src/com/election/util/DatabaseConnection.java
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:08:15.372
+!MESSAGE [Info] Document is null for editor: add-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:08:15.372
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/add-candidate.jsp
+!SESSION 2025-10-20 20:11:12.096 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-20 20:11:14.536
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-20 20:11:14.761
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-20 20:11:15.595
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:11:22.222
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:11:22.224
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-20 20:11:22.263
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 20:11:22.263
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 20:11:23.988
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 20:11:24.009
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 20:11:24.161
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-20 20:11:25.537
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 22:13:28.432
+!MESSAGE [Info] Document is null for editor: add-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-20 22:13:28.432
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/add-candidate.jsp
+!SESSION 2025-10-21 15:39:02.061 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-21 15:39:04.808
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-21 15:39:04.996
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-21 15:39:05.861
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-21 15:39:10.027
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-21 15:39:11.053
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-21 15:39:11.054
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-21 15:39:11.069
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-21 15:39:11.072
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 15:39:12.546
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 15:39:12.564
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 15:39:12.693
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 15:39:13.948
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true

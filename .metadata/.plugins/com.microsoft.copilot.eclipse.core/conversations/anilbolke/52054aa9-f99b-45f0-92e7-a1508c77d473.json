@@ -1,0 +1,49 @@
+{
+  "conversationId": "52054aa9-f99b-45f0-92e7-a1508c77d473",
+  "title": "Resuming Work on Project",
+  "requesterUsername": "anilbolke",
+  "responderUsername": "GitHub Copilot",
+  "turns": [
+    {
+      "message": {
+        "text": "resume"
+      },
+      "references": [],
+      "ignoredSkills": [],
+      "userLanguage": "en",
+      "source": "panel",
+      "model": "GPT-5 mini",
+      "chatMode": "Agent",
+      "needToolCallConfirmation": true,
+      "turnId": "86733ff8-f610-4711-8bd3-d329b1a522e1",
+      "role": "user",
+      "timestamp": "2025-10-16T10:33:55.205810800Z"
+    },
+    {
+      "reply": {
+        "annotations": [],
+        "references": [],
+        "hideText": false,
+        "notifications": [],
+        "followups": [],
+        "errorMessages": [],
+        "editAgentRounds": [
+          {
+            "roundId": 1,
+            "reply": "You said \"resume\" — I can continue whatever you were doing, but I need one quick clarification so I resume the right thing.\n\nPlan: I’ll confirm what you want resumed, then pick the appropriate actions (e.g., reopen last file, continue an edit, run the server, re-run tests/build). Pick one of the options below or describe what you meant.\n\nChecklist — choose one:\n- Resume editing: re-open the last modified project file(s) and continue changes.\n- Resume build/run: start the app (Tomcat) or run the project\u0027s build (compile.bat / COMPILE_AND_DEPLOY.bat).\n- Resume tests: run unit/integration tests and show failures.\n- Resume debugging: attach to the running Tomcat or rerun the last failing scenario.\n- Resume Git work: show `git status`, last commits, or continue a merge/rebase.\n- Other (please describe).\n\nIf you don\u0027t pick, I’ll by default: show recent git status and the last 5 modified files in the repo so you can tell me which work to resume.\n\nWhich option should I resume?",
+            "toolCalls": []
+          }
+        ],
+        "panelMessages": [],
+        "steps": [],
+        "data": {}
+      },
+      "suggestedTitle": "Resuming Work on Project",
+      "turnId": "6a9ddac3-564b-4ffd-9e63-f48fd11aaa98",
+      "role": "copilot",
+      "timestamp": "2025-10-16T10:33:55.556825700Z"
+    }
+  ],
+  "creationDate": "2025-10-16T10:33:55.174781300Z",
+  "lastMessageDate": "2025-10-16T10:34:04.250098600Z"
+}
