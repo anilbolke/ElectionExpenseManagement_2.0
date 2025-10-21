@@ -1,0 +1,200 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.model.User, com.election.model.Candidate, com.election.model.Expense, com.election.dao.ExpenseDAO, java.util.List" %>
+<%
+    User user = (User) session.getAttribute("user");
+    Candidate candidate = (Candidate) session.getAttribute("candidate");
+    
+    if (user == null) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+    
+    if (candidate == null) {
+        response.sendRedirect("dashboard.jsp?error=Please select a candidate first");
+        return;
+    }
+    
+    ExpenseDAO expenseDAO = new ExpenseDAO();
+    List<Expense> expenses = expenseDAO.getExpensesByCandidate(candidate.getCandidateId());
+    
+    String success = request.getParameter("success");
+    String error = request.getParameter("error");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Expenses - Election Expense Management</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+    <style>
+        .expense-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        .summary-card h4 {
+            font-size: 12px;
+            color: #718096;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+    </style>
+</head>
+<body class="dashboard">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🗳️ Election Expense</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="manage-candidates.jsp">My Candidates</a></li>
+                <li><a href="add-expense.jsp">Add Expense</a></li>
+                <li><a href="expenses.jsp" class="active">View Expenses</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
+                <span><%= user.getFullName() %></span>
+                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 80px; padding-bottom: 50px;">
+        <h1 style="margin-bottom: 20px;">Expense Report</h1>
+        <p style="margin-bottom: 25px; color: #64748b;">
+            Candidate: <strong><%= candidate.getCandidateName() %></strong> | 
+            <a href="<%=request.getContextPath()%>/select-candidate?action=clear" style="color: #667eea;">Switch Candidate</a>
+        </p>
+        
+        <% if (success != null) { %>
+            <div class="alert alert-success">✅ <%= success %></div>
+        <% } %>
+        
+        <% if (error != null) { %>
+            <div class="alert alert-error">❌ <%= error %></div>
+        <% } %>
+        
+        <!-- Expense Summary -->
+        <% 
+            int totalExpenses = expenses != null ? expenses.size() : 0;
+            double totalAmount = 0;
+            if (expenses != null) {
+                for (Expense e : expenses) {
+                    totalAmount += e.getExpenseAmount().doubleValue();
+                }
+            }
+        %>
+        <div class="expense-summary">
+            <div class="summary-card">
+                <h4>Total Expenses</h4>
+                <div class="value"><%= totalExpenses %></div>
+            </div>
+            <div class="summary-card" style="border-left-color: #48bb78;">
+                <h4>Total Amount</h4>
+                <div class="value">₹<%= String.format("%.2f", totalAmount) %></div>
+            </div>
+            <div class="summary-card" style="border-left-color: #ed8936;">
+                <h4>Average Expense</h4>
+                <div class="value">₹<%= totalExpenses > 0 ? String.format("%.2f", totalAmount / totalExpenses) : "0.00" %></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Expense List</h3>
+                <a href="add-expense.jsp" class="btn btn-success btn-sm">➕ Add New Expense</a>
+            </div>
+            <div class="card-body">
+                <% if (expenses != null && !expenses.isEmpty()) { %>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Vendor</th>
+                                    <th>Payment Mode</th>
+                                    <th>Amount</th>
+                                    <th>Receipt</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (Expense expense : expenses) { %>
+                                    <tr>
+                                        <td><%= expense.getExpenseDate() %></td>
+                                        <td><span class="badge badge-info"><%= expense.getExpenseCategory() %></span></td>
+                                        <td><%= expense.getExpenseDescription() %></td>
+                                        <td><%= expense.getVendorName() != null ? expense.getVendorName() : "-" %></td>
+                                        <td><%= expense.getPaymentMode() != null ? expense.getPaymentMode() : "-" %></td>
+                                        <td><strong>₹<%= String.format("%.2f", expense.getExpenseAmount()) %></strong></td>
+                                        <td>
+                                            <% if (expense.getReceiptNumber() != null && !expense.getReceiptNumber().isEmpty()) { %>
+                                                <span class="badge badge-success"><%= expense.getReceiptNumber() %></span>
+                                            <% } else { %>
+                                                <span style="color: #a0aec0;">-</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="edit-expense.jsp?expenseId=<%= expense.getExpenseId() %>" class="btn btn-primary btn-sm" title="Edit">
+                                                    ✏️ Edit
+                                                </a>
+                                                <form action="<%=request.getContextPath()%>/expense" method="post" style="display:inline; margin: 0;">
+                                                    <input type="hidden" name="action" value="delete">
+                                                    <input type="hidden" name="expenseId" value="<%= expense.getExpenseId() %>">
+                                                    <button type="submit" class="btn btn-danger btn-sm" 
+                                                            onclick="return confirm('Are you sure you want to delete this expense?')" title="Delete">
+                                                        🗑️ Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <div style="text-align: center; padding: 60px 20px; color: #718096;">
+                        <div style="font-size: 4rem; margin-bottom: 20px;">📊</div>
+                        <h3 style="color: #4a5568; margin-bottom: 10px;">No Expenses Yet</h3>
+                        <p style="margin-bottom: 20px;">Start tracking your election campaign expenses</p>
+                        <a href="add-expense.jsp" class="btn btn-success">➕ Add Your First Expense</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() { alert.remove(); }, 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

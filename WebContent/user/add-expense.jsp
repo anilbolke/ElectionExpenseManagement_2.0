@@ -1,0 +1,203 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.model.User, com.election.model.Candidate" %>
+<%
+    User user = (User) session.getAttribute("user");
+    Candidate candidate = (Candidate) session.getAttribute("candidate");
+    
+    if(user == null) {
+        response.sendRedirect("../login.jsp");
+        return;
+    }
+    
+    if(candidate == null || !candidate.isPaymentVerified()) {
+        response.sendRedirect("dashboard.jsp?error=Please select an active candidate first");
+        return;
+    }
+    
+    String success = request.getParameter("success");
+    String error = request.getParameter("error");
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense - Election Expense Management</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+        }
+        .container {
+            max-width: 900px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .page-header {
+            margin-bottom: 25px;
+        }
+        .page-header h1 {
+            color: #2d3748;
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .candidate-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="dashboard">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🗳️ Election Expense</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="manage-candidates.jsp">My Candidates</a></li>
+                <li><a href="add-expense.jsp" class="active">Add Expense</a></li>
+                <li><a href="expenses.jsp">View Expenses</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
+                <span><%= user.getFullName() %></span>
+                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1>Add New Expense</h1>
+            <div class="candidate-badge">
+                📌 Candidate: <%= candidate.getCandidateName() %>
+            </div>
+        </div>
+        
+        <% if(success != null) { %>
+            <div class="alert alert-success">
+                ✅ <%= success %>
+            </div>
+        <% } %>
+        
+        <% if(error != null) { %>
+            <div class="alert alert-error">
+                ❌ <%= error %>
+            </div>
+        <% } %>
+        
+        <div class="card">
+            <div class="card-body">
+                <form action="<%=request.getContextPath()%>/expense" method="post">
+                    <input type="hidden" name="action" value="add">
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="category">Expense Category: *</label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option value="">Select Category</option>
+                                    <option value="Advertisement">Advertisement</option>
+                                    <option value="Travel">Travel</option>
+                                    <option value="Meeting">Meeting/Rally</option>
+                                    <option value="Printing">Printing & Publicity</option>
+                                    <option value="Food">Food & Refreshments</option>
+                                    <option value="Venue">Venue Booking</option>
+                                    <option value="Staff">Staff Salary</option>
+                                    <option value="Miscellaneous">Miscellaneous</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="amount">Amount (₹): *</label>
+                                <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0" required>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="date">Expense Date: *</label>
+                                <input type="date" id="date" name="date" class="form-control" required>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="paymentMode">Payment Mode: *</label>
+                                <select id="paymentMode" name="paymentMode" class="form-control" required>
+                                    <option value="">Select Payment Mode</option>
+                                    <option value="Cash">Cash</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Cheque">Cheque</option>
+                                    <option value="UPI">UPI</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="vendorName">Vendor/Payee Name:</label>
+                                <input type="text" id="vendorName" name="vendorName" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="receiptNumber">Receipt Number:</label>
+                                <input type="text" id="receiptNumber" name="receiptNumber" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">Description: *</label>
+                        <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="remarks">Remarks:</label>
+                        <textarea id="remarks" name="remarks" class="form-control" rows="2"></textarea>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <button type="submit" class="btn btn-primary btn-block">💰 Add Expense</button>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="expenses.jsp" class="btn btn-secondary btn-block">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Set today's date as default
+        document.getElementById('date').valueAsDate = new Date();
+        
+        // Auto-hide success/error messages after 5 seconds
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 0.5s';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.remove();
+                }, 500);
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
