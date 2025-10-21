@@ -1,0 +1,11 @@
+INDEX VERSION 1.4+C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3463968385.index
+4118241030.index
+40141389.index
+3992899463.index
+3981011596.index
+273912823.index
+3084288054.index
+1504843371.index
+3974569767.index
+1679103890.index
