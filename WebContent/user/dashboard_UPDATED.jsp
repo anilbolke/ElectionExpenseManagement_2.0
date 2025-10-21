@@ -354,7 +354,7 @@
                             %>
                             <tr>
                                 <td><%= count %></td>
-                                <td><strong><%= c.getCandidateName() %></strong></td>
+                                <td><strong><%= c.getCandidateName() %><% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %> - <%= c.getNominationId() %><% } %></strong></td>
                                 <td><%= c.getPartyName() %></td>
                                 <td><%= c.getConstituency() %></td>
                                 <td>

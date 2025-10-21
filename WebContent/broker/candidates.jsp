@@ -32,7 +32,7 @@
     }
     
     // Pagination setup
-    int currentPage = 1;
+    int currentPage1 = 1;
     int pageSize = 10;
     
     String pageParam = request.getParameter("page");
@@ -40,9 +40,9 @@
     
     if (pageParam != null) {
         try {
-            currentPage = Integer.parseInt(pageParam);
+            currentPage1 = Integer.parseInt(pageParam);
         } catch (NumberFormatException e) {
-            currentPage = 1;
+            currentPage1 = 1;
         }
     }
     
@@ -55,16 +55,16 @@
     }
     
     // Create pagination object
-    PaginationUtil paginationUtil = new PaginationUtil(currentPage, pageSize, assignedCandidates.size());
+    PaginationUtil paginationUtil = new PaginationUtil(currentPage1, pageSize, assignedCandidates.size());
     List<Candidate> displayCandidates = paginationUtil.getPaginatedList(assignedCandidates);
     
     // Set pagination attributes for include
-    StringBuilder paginationUrl = new StringBuilder("candidates.jsp");
+    StringBuilder paginationUrl1 = new StringBuilder("candidates.jsp");
     if(filterStatus != null && !filterStatus.isEmpty()) {
-        paginationUrl.append("?status=").append(filterStatus);
+        paginationUrl1.append("?status=").append(filterStatus);
     }
     request.setAttribute("pagination", paginationUtil);
-    request.setAttribute("paginationBaseUrl", paginationUrl.toString());
+    request.setAttribute("paginationBaseUrl", paginationUrl1.toString());
 %>
 <!DOCTYPE html>
 <html>
@@ -267,7 +267,7 @@
                     <div class="candidate-card">
                         <div class="candidate-header">
                             <div>
-                                <h3 style="margin: 0 0 10px 0; color: #333;"><%= candidate.getCandidateName() %></h3>
+                                <h3 style="margin: 0 0 10px 0; color: #333;"><%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %></h3>
                                 <p style="margin: 0; color: #666; font-size: 14px;">
                                     <%= candidate.getConstituency() != null ? candidate.getConstituency() : "N/A" %> | 
                                     <%= candidate.getPartyName() != null ? candidate.getPartyName() : "Independent" %>

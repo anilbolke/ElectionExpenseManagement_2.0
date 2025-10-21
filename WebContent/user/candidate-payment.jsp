@@ -42,10 +42,79 @@
     <title>Candidate Registration Payment - Election Expense Management</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
         .payment-container {
+            flex: 1;
             max-width: 800px;
-            margin: 80px auto 50px;
-            padding: 0 20px;
+            margin: 0 auto;
+            padding: 40px 20px 40px;
+            width: 100%;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px 30px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .alert-info {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            color: #2c5282;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-size: 14px;
         }
         
         .payment-card {
@@ -177,21 +246,9 @@
         }
     </style>
 </head>
-<body class="dashboard">
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">🗳️ Election Expense</div>
-            <ul class="navbar-menu">
-                <li><a href="manage-candidates.jsp">My Candidates</a></li>
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-            </ul>
-            <div class="user-info">
-                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
-                <span><%= user.getFullName() %></span>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+<body>
+    <!-- Include Navbar -->
+    <%@ include file="../includes/user-navbar.jsp" %>
     
     <div class="payment-container">
         <div class="payment-card">
@@ -205,7 +262,7 @@
                 <h4 style="margin-bottom: 15px;">Candidate Details</h4>
                 <div class="detail-row">
                     <span class="detail-label">Candidate Name:</span>
-                    <span class="detail-value"><%= candidate.getCandidateName() %></span>
+                    <span class="detail-value"><%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %></span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Constituency:</span>
@@ -291,6 +348,10 @@
             </form>
         </div>
     </div>
+    
+    <footer>
+        <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
+    </footer>
     
     <script>
         function selectPaymentMethod(method) {

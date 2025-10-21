@@ -358,7 +358,7 @@
             <div class="breadcrumb">
                 <a href="dashboard.jsp">Dashboard</a> / 
                 <a href="view-candidates.jsp">Candidates</a> / 
-                <%= candidate.getCandidateName() %>
+                <%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %>
             </div>
         </div>
         
@@ -398,7 +398,7 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <label>Full Name</label>
-                        <div class="value"><%= candidate.getCandidateName() != null ? candidate.getCandidateName() : "N/A" %></div>
+                        <div class="value"><%= candidate.getCandidateName() != null ? candidate.getCandidateName() : "N/A" %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %></div>
                     </div>
                     <div class="info-item">
                         <label>Party Name</label>

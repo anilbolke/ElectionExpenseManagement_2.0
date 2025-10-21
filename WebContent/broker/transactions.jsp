@@ -299,7 +299,7 @@
                             BigDecimal commission = candidate.getPaymentAmount().multiply(new BigDecimal("0.10"));
                         %>
                         <tr>
-                            <td><strong><%= candidate.getCandidateName() %></strong></td>
+                            <td><strong><%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <%= candidate.getNominationId() %><% } %></strong></td>
                             <td><%= candidate.getConstituency() %></td>
                             <td><strong>₹<%= String.format("%.2f", candidate.getPaymentAmount()) %></strong></td>
                             <td><strong style="color: #4CAF50;">₹<%= String.format("%.2f", commission) %></strong></td>

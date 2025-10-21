@@ -635,7 +635,7 @@
                     %>
                     {
                         candidateId: <%= c.getCandidateId() %>,
-                        name: '<%= c.getCandidateName() != null ? c.getCandidateName().replace("'", "\\'") : "N/A" %>',
+                        name: '<%= c.getCandidateName() != null ? c.getCandidateName().replace("'", "\\'") : "N/A" %><% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %> - <%= c.getNominationId().replace("'", "\\'") %><% } %>',
                         email: '<%= c.getEmail() != null ? c.getEmail().replace("'", "\\'") : "N/A" %>',
                         mobile: '<%= c.getMobile() != null ? c.getMobile().replace("'", "\\'") : "N/A" %>',
                         constituency: '<%= c.getConstituency() != null ? c.getConstituency().replace("'", "\\'") : "N/A" %>',

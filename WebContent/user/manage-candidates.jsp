@@ -103,6 +103,136 @@
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <%@ include file="../includes/pagination-style.jsp" %>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-container {
+            flex: 1;
+            padding: 40px 30px 40px;
+            width: 100%;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px 30px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: #38a169;
+        }
+        
+        .btn-warning {
+            background: #ed8936;
+            color: white;
+        }
+        
+        .btn-warning:hover {
+            background: #dd6b20;
+        }
+        
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .btn-danger:hover {
+            background: #f56565;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-success {
+            background: #c6f6d5;
+            border: 1px solid #9ae6b4;
+            color: #22543d;
+        }
+        
+        .alert-danger {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+        }
+        
         .search-filter-section {
             background: white;
             border-radius: 8px;
@@ -316,25 +446,25 @@
         
         .add-candidate-btn {
             position: fixed;
-            bottom: 30px;
+            bottom: 40px;
             right: 30px;
             width: 60px;
             height: 60px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #007bff, #0056b3);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
             font-size: 28px;
-            box-shadow: 0 4px 12px rgba(0,123,255,0.4);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 1000;
         }
         
         .add-candidate-btn:hover {
-            background: linear-gradient(135deg, #0056b3, #003d82);
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
             transform: scale(1.1) rotate(90deg);
-            box-shadow: 0 6px 16px rgba(0,123,255,0.6);
+            box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
         }
         
         @media (max-width: 1024px) {
@@ -374,23 +504,12 @@
         }
     </style>
 </head>
-<body class="dashboard">
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">🗳️ Election Expense</div>
-            <ul class="navbar-menu">
-                <li><a href="manage-candidates.jsp" class="active">My Candidates</a></li>
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-            </ul>
-            <div class="user-info">
-                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
-                <span><%= user.getFullName() %></span>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+<body>
+    <!-- Include Navbar -->
+    <%@ include file="../includes/user-navbar.jsp" %>
     
-    <div class="container" style="margin-top: 80px; padding-bottom: 100px;">
+    <div class="main-container">
+        <div class="container">
         <h1 style="margin-bottom: 30px;">Manage Candidates</h1>
         
         <% if(message != null) { %>
@@ -480,8 +599,7 @@
                 <div class="candidate-card">
                     <div class="candidate-header">
                         <div class="candidate-name">
-                            <%= candidate.getCandidateName() %>
-                            <span class="candidate-id">(ID: #<%= candidate.getCandidateId() %>)</span>
+                            <%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %>
                         </div>
                         <span class="status-badge <%= statusClass %>"><%= statusText %></span>
                     </div>
@@ -533,9 +651,14 @@
             <%@ include file="../includes/pagination.jsp" %>
             
         <% } %>
+        </div>
     </div>
     
     <!-- Floating Add Button -->
     <button class="add-candidate-btn" onclick="window.location.href='add-candidate.jsp'" title="Add New Candidate">+</button>
+    
+    <footer>
+        <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
+    </footer>
 </body>
 </html>

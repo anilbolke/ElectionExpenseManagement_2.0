@@ -429,7 +429,7 @@
                 
                 <% if (selectedCandidate != null) { %>
                     <div class="alert alert-info">
-                        📌 <%= MessageBundle.getMessage(request, "user.managing") %>: <strong><%= selectedCandidate.getCandidateName() %></strong> 
+                        📌 <%= MessageBundle.getMessage(request, "user.managing") %>: <strong><%= selectedCandidate.getCandidateName() %><% if(selectedCandidate.getNominationId() != null && !selectedCandidate.getNominationId().trim().isEmpty()) { %> - <%= selectedCandidate.getNominationId() %><% } %></strong> 
                         <a href="<%=request.getContextPath()%>/select-candidate?action=clear" style="margin-left: 10px; color: #1e3a8a; text-decoration: underline; font-weight: 600;"><%= MessageBundle.getMessage(request, "user.switch.candidate") %></a>
                     </div>
                 <% } %>
@@ -445,7 +445,7 @@
                             <div class="candidate-compact <%= (selectedCandidate != null && selectedCandidate.getCandidateId() == c.getCandidateId()) ? "selected" : "" %>">
                                 <div class="candidate-header">
                                     <div style="flex: 1;">
-                                        <div class="candidate-name"><%= c.getCandidateName() %></div>
+                                        <div class="candidate-name"><%= c.getCandidateName() %><% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %> - <strong><%= c.getNominationId() %></strong><% } %></div>
                                         <div class="candidate-info">
                                             <strong><%= MessageBundle.getMessage(request, "candidate.party") %>:</strong> <%= c.getPartyName() != null ? c.getPartyName() : "Independent" %> | 
                                             <strong><%= MessageBundle.getMessage(request, "candidate.constituency") %>:</strong> <%= c.getConstituency() != null ? c.getConstituency() : "N/A" %>

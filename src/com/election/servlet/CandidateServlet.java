@@ -221,6 +221,7 @@ public class CandidateServlet extends HttpServlet {
         String aadharNumber = request.getParameter("aadharNumber");
         String voterId = request.getParameter("voterId");
         String constituency = request.getParameter("constituency");
+        String nominationId = request.getParameter("nominationId");
         String partyName = request.getParameter("partyName");
         String partySymbol = request.getParameter("partySymbol");
         String electionType = request.getParameter("electionType");
@@ -266,6 +267,7 @@ public class CandidateServlet extends HttpServlet {
         candidate.setAadharNumber(aadharNumber);
         candidate.setVoterId(voterId);
         candidate.setConstituency(constituency);
+        candidate.setNominationId(nominationId);
         candidate.setPartyName(partyName);
         candidate.setPartySymbol(partySymbol);
         candidate.setElectionType(electionType);
@@ -496,6 +498,11 @@ public class CandidateServlet extends HttpServlet {
         String constituency = request.getParameter("constituency");
         if (constituency != null && !constituency.trim().isEmpty()) {
             candidate.setConstituency(constituency);
+        }
+        
+        String nominationId = request.getParameter("nominationId");
+        if (nominationId != null && !nominationId.trim().isEmpty()) {
+            candidate.setNominationId(nominationId);
         }
         
         String partyName = request.getParameter("partyName");

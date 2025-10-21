@@ -3,7 +3,7 @@
 <%@ page import="com.election.model.User" %>
 <%
     User navUser = (User) session.getAttribute("user");
-    String currentPage = request.getRequestURI();
+    String currentPage1 = request.getRequestURI();
 %>
 
 <style>
@@ -130,20 +130,16 @@
         
         <ul class="multilang-navbar-menu">
             <li><a href="<%= request.getContextPath() %>/user/dashboard.jsp" 
-                   class="<%= currentPage.contains("dashboard") ? "active" : "" %>">
+                   class="<%= currentPage1.contains("dashboard") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.dashboard") %>
             </a></li>
             <li><a href="<%= request.getContextPath() %>/user/manage-candidates.jsp"
-                   class="<%= currentPage.contains("candidate") ? "active" : "" %>">
+                   class="<%= currentPage1.contains("candidate") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.candidates") %>
             </a></li>
             <li><a href="<%= request.getContextPath() %>/user/expenses.jsp"
-                   class="<%= currentPage.contains("expense") ? "active" : "" %>">
+                   class="<%= currentPage1.contains("expense") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.expenses") %>
-            </a></li>
-            <li><a href="<%= request.getContextPath() %>/user/subscription.jsp"
-                   class="<%= currentPage.contains("subscription") ? "active" : "" %>">
-                <%= MessageBundle.getMessage(request, "user.subscription") %>
             </a></li>
         </ul>
         

@@ -105,7 +105,7 @@
         <div class="page-header">
             <h1>✏️ Edit Expense</h1>
             <div class="candidate-badge">
-                📌 Candidate: <%= candidate.getCandidateName() %>
+                📌 Candidate: <%= candidate.getCandidateName() %><% if(candidate.getNominationId() != null && !candidate.getNominationId().trim().isEmpty()) { %> - <strong><%= candidate.getNominationId() %></strong><% } %>
             </div>
         </div>
         

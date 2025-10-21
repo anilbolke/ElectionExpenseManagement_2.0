@@ -391,7 +391,7 @@
                             <% for (Candidate c : userCandidates) { %>
                                 <tr>
                                     <td>#<%= c.getCandidateId() %></td>
-                                    <td><strong><%= c.getCandidateName() != null ? c.getCandidateName() : "N/A" %></strong></td>
+                                    <td><strong><%= c.getCandidateName() != null ? c.getCandidateName() : "N/A" %><% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %> - <%= c.getNominationId() %><% } %></strong></td>
                                     <td><%= c.getPartyName() != null ? c.getPartyName() : "Independent" %></td>
                                     <td><%= c.getConstituency() != null ? c.getConstituency() : "N/A" %></td>
                                     <td><%= c.getElectionType() != null ? c.getElectionType() : "N/A" %></td>

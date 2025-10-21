@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.election.model.User" %>
+<%@ page import="com.election.i18n.MessageBundle" %>
+<%@ page import="com.election.i18n.LocaleManager" %>
 <%
     User user = (User) session.getAttribute("user");
     
@@ -14,61 +16,190 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Candidate - Election Expense Management</title>
+    <title><%= MessageBundle.getMessage(request, "heading.add.new.candidate") %> - <%= MessageBundle.getMessage(request, "app.title") %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 40px 30px 40px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        footer {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px 30px;
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        footer p {
+            margin: 0;
+            font-size: 14px;
+        }
+        
+        .btn {
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+        
+        .btn-danger {
+            background: #fc8181;
+            color: white;
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
+        .btn-danger:hover {
+            background: #f56565;
+        }
+        
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 13px;
+        }
+        
         .form-section {
             background: white;
-            border-radius: 8px;
-            padding: 25px;
+            border-radius: 12px;
+            padding: 30px;
             margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         
         .section-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
-            color: #333;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid #007bff;
+            color: #2d3748;
+            margin-bottom: 25px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
         .form-row {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            margin-bottom: 20px;
+            margin-bottom: 0;
         }
         
-        .form-actions {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 30px;
+        .form-row.three-col {
+            grid-template-columns: repeat(3, 1fr);
         }
         
-        /* Validation Styles - Same as user registration */
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #4a5568;
+            font-size: 14px;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #2d3748;
+            background-color: #fff;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
+        }
+        
         .form-control.error {
-            border-color: #e53e3e;
+            border-color: #fc8181;
             background: #fff5f5;
         }
         
         .form-control.success {
-            border-color: #48bb78;
+            border-color: #68d391;
+        }
+        
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a5568' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 12px;
+            padding-right: 40px;
+        }
+        
+        textarea.form-control {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
         }
         
         .helper-text {
             font-size: 12px;
             color: #718096;
-            margin-top: 5px;
+            margin-top: 4px;
         }
         
         .error-message {
             font-size: 12px;
             color: #e53e3e;
-            margin-top: 5px;
+            margin-top: 4px;
             display: none;
         }
         
@@ -76,31 +207,69 @@
             display: block;
         }
         
-        @media (max-width: 768px) {
-            .form-row {
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+        
+        .alert {
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .alert-info {
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            color: #2c5282;
+        }
+        
+        .alert-danger {
+            background: #fff5f5;
+            border: 1px solid #feb2b2;
+            color: #c53030;
+        }
+        
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+        
+        @media (max-width: 992px) {
+            .form-row,
+            .form-row.three-col {
                 grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .form-section {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .container {
+                padding: 15px;
             }
         }
     </style>
 </head>
-<body class="dashboard">
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">🗳️ Election Expense</div>
-            <ul class="navbar-menu">
-                <li><a href="manage-candidates.jsp">My Candidates</a></li>
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-            </ul>
-            <div class="user-info">
-                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
-                <span><%= user.getFullName() %></span>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+<body>
+    <!-- Include Navbar -->
+    <%@ include file="../includes/user-navbar.jsp" %>
     
-    <div class="container" style="margin-top: 80px; padding-bottom: 50px;">
-        <h1 style="margin-bottom: 30px;">Add New Candidate</h1>
+    <div class="main-content">
+            <h1 style="margin-bottom: 30px;"><%= MessageBundle.getMessage(request, "heading.add.new.candidate") %></h1>
         
         <% if(error != null) { %>
             <div class="alert alert-danger"><%= error %></div>
@@ -111,179 +280,190 @@
             
             <!-- Personal Information -->
             <div class="form-section">
-                <div class="section-title">📋 Personal Information</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="candidateName">Candidate Name *</label>
-                        <input type="text" class="form-control" id="candidateName" name="candidateName" required maxlength="100">
-                        <div class="helper-text">Full name of the candidate</div>
-                        <div class="error-message" id="candidateName-error">Candidate name is required</div>
+                <div class="section-title">📋 <%= MessageBundle.getMessage(request, "profile.personal.info") %></div>
+                <div style="display: grid; gap: 20px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="candidateName"><%= MessageBundle.getMessage(request, "candidate.name") %> *</label>
+                            <input type="text" class="form-control" id="candidateName" name="candidateName" required maxlength="100">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="candidateName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="fatherName"><%= MessageBundle.getMessage(request, "candidate.father.name") %> *</label>
+                            <input type="text" class="form-control" id="fatherName" name="fatherName" required maxlength="100">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="fatherName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="fatherName">Father's Name *</label>
-                        <input type="text" class="form-control" id="fatherName" name="fatherName" required maxlength="100">
-                        <div class="helper-text">Father's full name</div>
-                        <div class="error-message" id="fatherName-error">Father's name is required</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="age"><%= MessageBundle.getMessage(request, "candidate.age") %> *</label>
+                            <input type="number" class="form-control" id="age" name="age" min="25" max="100" required>
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "candidate.age.min") %></div>
+                            <div class="error-message" id="age-error"><%= MessageBundle.getMessage(request, "validation.age") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="gender"><%= MessageBundle.getMessage(request, "candidate.gender") %> *</label>
+                            <select class="form-control" id="gender" name="gender" required>
+                                <option value=""><%= MessageBundle.getMessage(request, "gender.select") %></option>
+                                <option value="Male"><%= MessageBundle.getMessage(request, "gender.male") %></option>
+                                <option value="Female"><%= MessageBundle.getMessage(request, "gender.female") %></option>
+                                <option value="Other"><%= MessageBundle.getMessage(request, "gender.other") %></option>
+                            </select>
+                            <div class="error-message" id="gender-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="age">Age *</label>
-                        <input type="number" class="form-control" id="age" name="age" min="25" max="100" required>
-                        <div class="helper-text">Minimum 25 years required</div>
-                        <div class="error-message" id="age-error">Age must be between 25-100</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="gender">Gender *</label>
-                        <select class="form-control" id="gender" name="gender" required>
-                            <option value="">Select Gender</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </select>
-                        <div class="error-message" id="gender-error">Please select gender</div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="mobile">Mobile Number *</label>
-                        <input type="tel" class="form-control" id="mobile" name="mobile" pattern="[6-9][0-9]{9}" maxlength="10" required>
-                        <div class="helper-text">Starting with 6-9, 10 digits</div>
-                        <div class="error-message" id="mobile-error">Invalid mobile number</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" maxlength="100">
-                        <div class="helper-text">Optional, valid email format</div>
-                        <div class="error-message" id="email-error">Invalid email address</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="mobile"><%= MessageBundle.getMessage(request, "candidate.mobile") %> *</label>
+                            <input type="tel" class="form-control" id="mobile" name="mobile" pattern="[6-9][0-9]{9}" maxlength="10" required>
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.phone") %></div>
+                            <div class="error-message" id="mobile-error"><%= MessageBundle.getMessage(request, "validation.phone.invalid") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email"><%= MessageBundle.getMessage(request, "candidate.email") %></label>
+                            <input type="email" class="form-control" id="email" name="email" maxlength="100">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
+                            <div class="error-message" id="email-error"><%= MessageBundle.getMessage(request, "validation.email.invalid") %></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <!-- Address Information -->
             <div class="form-section">
-                <div class="section-title">📍 Address Information</div>
-                <div class="form-group">
-                    <label for="address">Address *</label>
-                    <textarea class="form-control" id="address" name="address" rows="2" required maxlength="200"></textarea>
-                    <div class="helper-text">Complete residential address</div>
-                    <div class="error-message" id="address-error">Address is required</div>
-                </div>
-                
-                <div class="form-row">
+                <div class="section-title">📍 <%= MessageBundle.getMessage(request, "profile.address.info") %></div>
+                <div style="display: grid; gap: 20px;">
                     <div class="form-group">
-                        <label for="city">City *</label>
-                        <input type="text" class="form-control" id="city" name="city" required maxlength="50">
-                        <div class="helper-text">City name</div>
-                        <div class="error-message" id="city-error">City is required</div>
+                        <label for="address"><%= MessageBundle.getMessage(request, "candidate.address") %> *</label>
+                        <textarea class="form-control" id="address" name="address" rows="2" required maxlength="200"></textarea>
+                        <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        <div class="error-message" id="address-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                     </div>
-                    <div class="form-group">
-                        <label for="state">State *</label>
-                        <input type="text" class="form-control" id="state" name="state" required maxlength="50">
-                        <div class="helper-text">State name</div>
-                        <div class="error-message" id="state-error">State is required</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="pincode">Pincode *</label>
-                        <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" maxlength="6" required>
-                        <div class="helper-text">6 digits</div>
-                        <div class="error-message" id="pincode-error">Invalid pincode</div>
+                    
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="city"><%= MessageBundle.getMessage(request, "candidate.city") %> *</label>
+                            <input type="text" class="form-control" id="city" name="city" required maxlength="50">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="city-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="state"><%= MessageBundle.getMessage(request, "candidate.state") %> *</label>
+                            <input type="text" class="form-control" id="state" name="state" required maxlength="50">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="state-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pincode"><%= MessageBundle.getMessage(request, "candidate.pincode") %> *</label>
+                            <input type="text" class="form-control" id="pincode" name="pincode" pattern="[0-9]{6}" maxlength="6" required>
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="pincode-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <!-- Identity Documents -->
             <div class="form-section">
-                <div class="section-title">🆔 Identity Documents</div>
+                <div class="section-title">🆔 <%= MessageBundle.getMessage(request, "candidate.identity.documents") %></div>
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="aadharNumber">Aadhar Number *</label>
+                        <label for="aadharNumber"><%= MessageBundle.getMessage(request, "candidate.aadhar") %> *</label>
                         <input type="text" class="form-control" id="aadharNumber" name="aadharNumber" pattern="[0-9]{12}" maxlength="12" required>
-                        <div class="helper-text">12 digits</div>
-                        <div class="error-message" id="aadharNumber-error">Invalid Aadhar number</div>
+                        <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        <div class="error-message" id="aadharNumber-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                     </div>
                     <div class="form-group">
-                        <label for="voterId">Voter ID *</label>
+                        <label for="voterId"><%= MessageBundle.getMessage(request, "candidate.voterid") %> *</label>
                         <input type="text" class="form-control" id="voterId" name="voterId" required maxlength="20">
-                        <div class="helper-text">Voter ID card number</div>
-                        <div class="error-message" id="voterId-error">Voter ID is required</div>
+                        <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        <div class="error-message" id="voterId-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                     </div>
                 </div>
             </div>
             
             <!-- Election Details -->
             <div class="form-section">
-                <div class="section-title">🗳️ Election Program Details</div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="constituency">Constituency *</label>
-                        <input type="text" class="form-control" id="constituency" name="constituency" required maxlength="100">
-                        <div class="helper-text">Electoral constituency name</div>
-                        <div class="error-message" id="constituency-error">Constituency is required</div>
+                <div class="section-title">🗳️ <%= MessageBundle.getMessage(request, "candidate.election.program") %></div>
+                <div style="display: grid; gap: 20px;">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="constituency"><%= MessageBundle.getMessage(request, "candidate.constituency") %> *</label>
+                            <input type="text" class="form-control" id="constituency" name="constituency" required maxlength="100">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="constituency-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="nominationId"><%= MessageBundle.getMessage(request, "candidate.nomination.id") %> *</label>
+                            <input type="text" class="form-control" id="nominationId" name="nominationId" required maxlength="50">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                            <div class="error-message" id="nominationId-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nominationId">Nomination ID *</label>
-                        <input type="text" class="form-control" id="nominationId" name="nominationId" required maxlength="50">
-                        <div class="helper-text">Official nomination number/ID</div>
-                        <div class="error-message" id="nominationId-error">Nomination ID is required</div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="electionType"><%= MessageBundle.getMessage(request, "candidate.election.type") %> *</label>
+                            <select class="form-control" id="electionType" name="electionType" required>
+                                <option value=""><%= MessageBundle.getMessage(request, "election.type.select") %></option>
+                                <option value="Municipal Elections"><%= MessageBundle.getMessage(request, "election.type.municipal") %></option>
+                                <option value="Municipal Council Elections"><%= MessageBundle.getMessage(request, "election.type.municipal.council") %></option>
+                                <option value="Panchayat Samiti Elections"><%= MessageBundle.getMessage(request, "election.type.panchayat.samiti") %></option>
+                                <option value="Zilla Parishad Elections"><%= MessageBundle.getMessage(request, "election.type.zilla.parishad") %></option>
+                                <option value="Assembly Elections"><%= MessageBundle.getMessage(request, "election.type.assembly") %></option>
+                                <option value="Teachers' Constituency Elections"><%= MessageBundle.getMessage(request, "election.type.teachers") %></option>
+                                <option value="Graduate Constituency Elections"><%= MessageBundle.getMessage(request, "election.type.graduate") %></option>
+                                <option value="Lok Sabha Elections"><%= MessageBundle.getMessage(request, "election.type.lok.sabha") %></option>
+                            </select>
+                            <div class="error-message" id="electionType-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="partyName"><%= MessageBundle.getMessage(request, "candidate.party") %> *</label>
+                            <input type="text" class="form-control" id="partyName" name="partyName" required maxlength="100">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "candidate.party.independent") %></div>
+                            <div class="error-message" id="partyName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="electionType">Election Type *</label>
-                        <select class="form-control" id="electionType" name="electionType" required>
-                            <option value="">Select Election Type</option>
-                            <option value="Municipal Elections">Municipal Elections</option>
-                            <option value="Municipal Council Elections">Municipal Council Elections</option>
-                            <option value="Panchayat Samiti Elections">Panchayat Samiti Elections</option>
-                            <option value="Zilla Parishad Elections">Zilla Parishad Elections</option>
-                            <option value="Assembly Elections">Assembly Elections</option>
-                            <option value="Teachers' Constituency Elections">Teachers' Constituency Elections</option>
-                            <option value="Graduate Constituency Elections">Graduate Constituency Elections</option>
-                            <option value="Lok Sabha Elections">Lok Sabha Elections</option>
-                        </select>
-                        <div class="error-message" id="electionType-error">Please select election type</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="partyName">Party Name *</label>
-                        <input type="text" class="form-control" id="partyName" name="partyName" required maxlength="100">
-                        <div class="helper-text">Enter "Independent" if not affiliated</div>
-                        <div class="error-message" id="partyName-error">Party name is required</div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="partySymbol">Party Symbol</label>
-                        <input type="text" class="form-control" id="partySymbol" name="partySymbol" maxlength="50">
-                        <div class="helper-text">Optional</div>
-                    </div>
-                        <label for="electionDate">Election Date</label>
-                        <input type="date" class="form-control" id="electionDate" name="electionDate">
-                        <div class="helper-text">Optional</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="boothNumber">Booth Number</label>
-                        <input type="text" class="form-control" id="boothNumber" name="boothNumber" maxlength="20">
-                        <div class="helper-text">Optional</div>
+                    
+                    <div class="form-row three-col">
+                        <div class="form-group">
+                            <label for="partySymbol"><%= MessageBundle.getMessage(request, "candidate.symbol") %></label>
+                            <input type="text" class="form-control" id="partySymbol" name="partySymbol" maxlength="50">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="electionDate"><%= MessageBundle.getMessage(request, "candidate.election.date") %></label>
+                            <input type="date" class="form-control" id="electionDate" name="electionDate">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="boothNumber">Ward/Prabhag/ZP/PS/VS/LS Number</label>
+                            <input type="text" class="form-control" id="boothNumber" name="boothNumber" maxlength="20">
+                            <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
+                        </div>
                     </div>
                 </div>
             </div>
             
             <div class="alert alert-info">
-                <strong>Note:</strong> After submitting this form, you will be redirected to the payment page. 
-                Payment of registration fee is mandatory to activate the candidate account.
+                <strong><%= MessageBundle.getMessage(request, "info.note") %>:</strong> <%= MessageBundle.getMessage(request, "info.payment.redirect") %> 
             </div>
             
             <div class="form-actions">
-                <a href="manage-candidates.jsp" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Proceed to Payment</button>
+                <a href="manage-candidates.jsp" class="btn btn-secondary"><%= MessageBundle.getMessage(request, "action.cancel") %></a>
+                <button type="submit" class="btn btn-primary"><%= MessageBundle.getMessage(request, "payment.proceed") %></button>
             </div>
         </form>
+        </div>
     </div>
+    
+    <footer>
+        <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
+    </footer>
     
     <script>
         // Form validation - Same patterns as user registration
