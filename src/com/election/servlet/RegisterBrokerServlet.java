@@ -40,6 +40,7 @@ public class RegisterBrokerServlet extends HttpServlet {
         String lastName = request.getParameter("lastName");
         String mobileNumber = request.getParameter("mobileNumber");
         String emailId = request.getParameter("emailId");
+        String address = request.getParameter("address");
         String username = request.getParameter("username");
         String referralCode = request.getParameter("referralCode");
         String password = request.getParameter("password");
@@ -48,10 +49,17 @@ public class RegisterBrokerServlet extends HttpServlet {
         // Validation
         if (!ValidationUtil.isNotEmpty(firstName) || !ValidationUtil.isNotEmpty(lastName) ||
             !ValidationUtil.isNotEmpty(mobileNumber) || !ValidationUtil.isNotEmpty(emailId) ||
-            !ValidationUtil.isNotEmpty(username) || !ValidationUtil.isNotEmpty(password) ||
-            !ValidationUtil.isNotEmpty(referralCode)) {
+            !ValidationUtil.isNotEmpty(address) || !ValidationUtil.isNotEmpty(username) || 
+            !ValidationUtil.isNotEmpty(password) || !ValidationUtil.isNotEmpty(referralCode)) {
             response.sendRedirect("admin/register-broker.jsp?error=" + 
                                 java.net.URLEncoder.encode("All required fields must be filled", "UTF-8"));
+            return;
+        }
+        
+        // Validate address length
+        if (address.trim().length() < 10 || address.trim().length() > 500) {
+            response.sendRedirect("admin/register-broker.jsp?error=" + 
+                                java.net.URLEncoder.encode("Address must be between 10-500 characters", "UTF-8"));
             return;
         }
         
@@ -120,6 +128,7 @@ public class RegisterBrokerServlet extends HttpServlet {
         broker.setLastName(lastName);
         broker.setMobile(mobileNumber);
         broker.setEmail(emailId);
+        broker.setAddress(address.trim());
         broker.setUsername(username);
         broker.setPassword(password);
         broker.setReferralCode(referralCode.toUpperCase());

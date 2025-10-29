@@ -433,6 +433,10 @@
                         <label>Mobile</label>
                         <div class="value"><%= broker.getMobile() != null ? broker.getMobile() : "N/A" %></div>
                     </div>
+                    <div class="info-item" style="grid-column: span 2;">
+                        <label>Address</label>
+                        <div class="value"><%= broker.getAddress() != null && !broker.getAddress().trim().isEmpty() ? broker.getAddress() : "N/A" %></div>
+                    </div>
                     <div class="info-item">
                         <label>City</label>
                         <div class="value"><%= broker.getCity() != null ? broker.getCity() : "N/A" %></div>

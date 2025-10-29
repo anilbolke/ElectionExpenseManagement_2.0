@@ -346,6 +346,15 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label>Address <span class="required">*</span></label>
+                    <textarea id="address" name="address" class="form-control" required 
+                              minlength="10" maxlength="500" rows="3" 
+                              placeholder="Enter complete address"></textarea>
+                    <div class="helper-text">Complete address (10-500 characters)</div>
+                    <div class="error-message" id="address-error">Address is required (minimum 10 characters)</div>
+                </div>
+                
                 <!-- Account Credentials -->
                 <h3 style="margin: 30px 0 20px 0; color: #1a202c; font-size: 1.1rem;">Account Credentials</h3>
                 
@@ -408,11 +417,11 @@
         // Validation rules
         const validationRules = {
             firstName: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
                 message: 'First name must be 2-50 characters (letters only)'
             },
             lastName: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
                 message: 'Last name must be 2-50 characters (letters only)'
             },
             mobileNumber: {
@@ -422,6 +431,11 @@
             emailId: {
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: 'Please enter a valid email address'
+            },
+            address: {
+                minLength: 10,
+                maxLength: 500,
+                message: 'Address must be between 10-500 characters'
             },
             username: {
                 pattern: /^[a-zA-Z0-9_]{4,30}$/,
@@ -565,14 +579,56 @@
             validateField(this);
         });
         
-        // Auto-uppercase referral code
-        document.getElementById('referralCode').addEventListener('input', function(e) {
+        // Auto-uppercase referral code and check for duplicates
+        let referralCheckTimeout = null;
+        const referralCodeField = document.getElementById('referralCode');
+        referralCodeField.addEventListener('input', function(e) {
             e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
             validateField(this);
+            
+            // Clear existing timeout
+            if (referralCheckTimeout) {
+                clearTimeout(referralCheckTimeout);
+            }
+            
+            const referralCode = e.target.value.trim();
+            const errorElement = document.getElementById('referralCode-error');
+            
+            // Only check if code has valid length (6-20 characters)
+            if (referralCode.length >= 6 && referralCode.length <= 20) {
+                // Debounce the API call
+                referralCheckTimeout = setTimeout(function() {
+                    // Make AJAX call to check if referral code exists
+                    fetch('<%= request.getContextPath() %>/check-referral-code?code=' + encodeURIComponent(referralCode))
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.exists) {
+                                // Show error - referral code already exists
+                                referralCodeField.classList.add('error');
+                                if (errorElement) {
+                                    errorElement.textContent = '✗ This referral code is already taken. Please choose a unique code.';
+                                    errorElement.classList.add('show');
+                                }
+                                // Clear the input field
+                                referralCodeField.value = '';
+                                referralCodeField.focus();
+                            } else {
+                                // Clear any duplicate error (but keep other validation errors)
+                                if (errorElement && errorElement.textContent.includes('already taken')) {
+                                    errorElement.classList.remove('show');
+                                    referralCodeField.classList.remove('error');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error checking referral code:', error);
+                        });
+                }, 500); // Wait 500ms after user stops typing
+            }
         });
         
         // Add blur event listeners to all form fields
-        const formFields = form.querySelectorAll('input[required], input[type="email"]');
+        const formFields = form.querySelectorAll('input[required], input[type="email"], textarea[required]');
         formFields.forEach(field => {
             field.addEventListener('blur', function() {
                 validateField(this);

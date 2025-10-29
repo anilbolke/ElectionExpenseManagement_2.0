@@ -286,7 +286,7 @@
                             <select id="paymentMode" name="paymentMode" class="form-control" required>
                                 <option value=""><%= MessageBundle.getMessage(request, "form.placeholder.select") %></option>
                                 <option value="Cash"><%= MessageBundle.getMessage(request, "expense.payment.mode.cash") %></option>
-                                <option value="Online"><%= MessageBundle.getMessage(request, "expense.payment.mode.online") %></option>
+                                <option value="Online Transfer"><%= MessageBundle.getMessage(request, "expense.payment.mode.online") %></option>
                                 <option value="Cheque"><%= MessageBundle.getMessage(request, "expense.payment.mode.cheque") %></option>
                                 <option value="UPI"><%= MessageBundle.getMessage(request, "expense.payment.mode.upi") %></option>
                             </select>
@@ -332,6 +332,53 @@
     <script>
         // Set today's date as default
         document.getElementById('date').valueAsDate = new Date();
+        
+        // Validation rules for text fields to support Marathi
+        const validationRules = {
+            vendorName: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s.&,-]{0,100}$/,
+                message: 'Vendor name can contain letters, spaces, and basic punctuation only'
+            },
+            description: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s0-9.,;:()\-&'"!?]+$/,
+                message: 'Description contains invalid characters'
+            },
+            remarks: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s0-9.,;:()\-&'"!?]*$/,
+                message: 'Remarks contains invalid characters'
+            }
+        };
+        
+        // Validate field
+        function validateField(field) {
+            const fieldId = field.id;
+            const fieldValue = field.value.trim();
+            
+            if (validationRules[fieldId] && fieldValue) {
+                const rule = validationRules[fieldId];
+                if (rule.pattern && !rule.pattern.test(fieldValue)) {
+                    field.style.borderColor = '#e74c3c';
+                    alert(rule.message);
+                    return false;
+                } else {
+                    field.style.borderColor = '#27ae60';
+                }
+            }
+            return true;
+        }
+        
+        // Add validation listeners
+        ['vendorName', 'description', 'remarks'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('blur', function() {
+                    validateField(this);
+                });
+                field.addEventListener('input', function() {
+                    this.style.borderColor = '';
+                });
+            }
+        });
         
         // Auto-hide success/error messages after 5 seconds
         setTimeout(function() {

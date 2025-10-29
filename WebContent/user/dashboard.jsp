@@ -414,6 +414,8 @@
                 <div class="quick-actions-compact">
                     <h3>⚡ <%= MessageBundle.getMessage(request, "action.quickactions") %></h3>
                     <a href="add-candidate.jsp" class="action-btn">➕ <%= MessageBundle.getMessage(request, "candidate.add") %></a>
+                    <a href="change-password.jsp" class="action-btn" style="background: #f56565;">🔒 <%= MessageBundle.getMessage(request, "user.change.password") %></a>
+                    <a href="map-referral-code.jsp" class="action-btn" style="background: #667eea;">🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %></a>
                     <% if (selectedCandidate != null && selectedCandidate.isPaymentVerified()) { %>
                     <a href="add-expense.jsp" class="action-btn secondary">💰 <%= MessageBundle.getMessage(request, "expense.add") %></a>
                     <a href="expenses.jsp" class="action-btn secondary">📊 <%= MessageBundle.getMessage(request, "expense.view") %></a>

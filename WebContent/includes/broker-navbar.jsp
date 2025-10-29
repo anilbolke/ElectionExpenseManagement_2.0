@@ -149,6 +149,10 @@
                    class="<%= currentPage.contains("transaction") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "broker.transactions") %>
             </a></li>
+            <li><a href="<%= request.getContextPath() %>/broker/bank-details.jsp"
+                   class="<%= currentPage.contains("bank-details") ? "active" : "" %>">
+                🏦 Bank Details
+            </a></li>
         </ul>
         
         <div class="multilang-user-section">
