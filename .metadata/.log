@@ -1544,3 +1544,364 @@ This warning can be switched off on the Team > Git > Confirmations and Warnings 
 
 !ENTRY org.eclipse.lsp4e 1 0 2025-10-21 15:39:13.948
 !MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-21 23:28:12.476
+!MESSAGE [Info] Language ID not found for extension: jsp
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 23:28:14.288
+!MESSAGE [Info]	[default] Context provider relatedFilesShim exceeded time budget of 150ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 23:39:24.791
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-21 23:39:24.792
+!MESSAGE [Info]	[fetchCompletions] Request 9da266c7-e981-4829-b479-22ee90e497a3 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 1490.7369999997318ms
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.027
+!MESSAGE [Info] Document is null for editor: add-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.027
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/add-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.053
+!MESSAGE [Info] Document is null for editor: manage-candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.054
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/manage-candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.073
+!MESSAGE [Info] Document is null for editor: candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.073
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/broker/candidates.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.098
+!MESSAGE [Info] Document is null for editor: user-navbar.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.099
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/includes/user-navbar.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.115
+!MESSAGE [Info] Document is null for editor: edit-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.115
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/edit-candidate.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.133
+!MESSAGE [Info] Document is null for editor: dashboard.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.134
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/WebContent/user/dashboard.jsp
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.151
+!MESSAGE [Info] Document is null for editor: messages_hi.properties
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-22 00:25:58.152
+!MESSAGE [Info] Completion handler is refreshed for the document: file:///C:/Users/Admin/Downloads/-ElectionExpenseManagement-main/-ElectionExpenseManagement-main/src/com/election/resources/i18n/messages_hi.properties
+!SESSION 2025-10-24 11:50:14.086 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-24 11:50:16.628
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-24 11:50:16.896
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-24 11:50:17.862
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-24 11:50:21.732
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY org.eclipse.ui 4 0 2025-10-24 11:50:21.976
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 11:50:22.816
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 11:50:22.819
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 11:50:22.851
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-24 11:50:22.858
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 11:50:24.389
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 11:50:24.407
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 11:50:24.544
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 4 0 2025-10-24 11:50:25.932
+!MESSAGE java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+!STACK 0
+java.util.concurrent.CompletionException: java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
+	at java.base/java.util.concurrent.CompletableFuture.uniExceptionally(CompletableFuture.java:994)
+	at java.base/java.util.concurrent.CompletableFuture$UniExceptionally.tryFire(CompletableFuture.java:974)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$9(LanguageServerWrapper.java:475)
+	at java.base/java.util.concurrent.CompletableFuture.uniExceptionally(CompletableFuture.java:990)
+	... 9 more
+Caused by: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770)
+	... 6 more
+Caused by: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:93)
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:80)
+	at org.eclipse.lsp4e.LanguageServerPlugin.getDefault(LanguageServerPlugin.java:77)
+	at org.eclipse.lsp4e.LoggingStreamConnectionProviderProxy.shouldLog(LoggingStreamConnectionProviderProxy.java:95)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$0(LanguageServerWrapper.java:390)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	... 6 more
+
+!ENTRY com.microsoft.copilot.eclipse 4 0 2025-10-24 11:50:25.934
+!MESSAGE [Error] java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+!STACK 0
+java.util.concurrent.CompletionException: java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
+	at java.base/java.util.concurrent.CompletableFuture.uniExceptionally(CompletableFuture.java:994)
+	at java.base/java.util.concurrent.CompletableFuture$UniExceptionally.tryFire(CompletableFuture.java:974)
+	at java.base/java.util.concurrent.CompletableFuture.postComplete(CompletableFuture.java:510)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1773)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.exec(CompletableFuture.java:1760)
+	at java.base/java.util.concurrent.ForkJoinTask.doExec(ForkJoinTask.java:387)
+	at java.base/java.util.concurrent.ForkJoinPool$WorkQueue.topLevelExec(ForkJoinPool.java:1312)
+	at java.base/java.util.concurrent.ForkJoinPool.scan(ForkJoinPool.java:1843)
+	at java.base/java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1808)
+	at java.base/java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:188)
+Caused by: java.lang.RuntimeException: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$9(LanguageServerWrapper.java:475)
+	at java.base/java.util.concurrent.CompletableFuture.uniExceptionally(CompletableFuture.java:990)
+	... 9 more
+Caused by: java.util.concurrent.CompletionException: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at java.base/java.util.concurrent.CompletableFuture.encodeThrowable(CompletableFuture.java:315)
+	at java.base/java.util.concurrent.CompletableFuture.completeThrowable(CompletableFuture.java:320)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1770)
+	... 6 more
+Caused by: org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:93)
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:80)
+	at org.eclipse.lsp4e.LanguageServerPlugin.getDefault(LanguageServerPlugin.java:77)
+	at org.eclipse.lsp4e.LoggingStreamConnectionProviderProxy.shouldLog(LoggingStreamConnectionProviderProxy.java:95)
+	at org.eclipse.lsp4e.LanguageServerWrapper.lambda$0(LanguageServerWrapper.java:390)
+	at java.base/java.util.concurrent.CompletableFuture$AsyncSupply.run(CompletableFuture.java:1768)
+	... 6 more
+
+!ENTRY org.eclipse.core.jobs 4 2 2025-10-24 11:50:25.942
+!MESSAGE An internal error occurred during: "Copilot initialization".
+!STACK 0
+java.lang.IllegalStateException: BundleContext is no longer valid com.microsoft.copilot.eclipse.ui_0.12.0.202510160637 [743]
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.checkValid(BundleContextImpl.java:1052)
+	at org.eclipse.osgi.internal.framework.BundleContextImpl.getServiceReference(BundleContextImpl.java:607)
+	at com.microsoft.copilot.eclipse.ui.CopilotUi$1.run(CopilotUi.java:88)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+
+!ENTRY org.eclipse.core.jobs 2 2 2025-10-24 11:50:26.932
+!MESSAGE Job found still running after platform shutdown.  Jobs should be canceled by the plugin that scheduled them during shutdown: com.microsoft.copilot.eclipse.ui.handlers.ShowStatusBarMenuHandler$SpinnerJob RUNNING
+	 at java.base/java.lang.Object.wait0(Native Method)
+	 at java.base/java.lang.Object.wait(Object.java:366)
+	 at java.base/java.lang.Object.wait(Object.java:339)
+	 at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:200)
+	 at org.eclipse.swt.widgets.Display.syncExec(Display.java:4894)
+	 at com.microsoft.copilot.eclipse.ui.utils.SwtUtils.invokeOnDisplayThread(SwtUtils.java:62)
+	 at com.microsoft.copilot.eclipse.ui.handlers.ShowStatusBarMenuHandler.setIconOnDisplayThread(ShowStatusBarMenuHandler.java:201)
+	 at com.microsoft.copilot.eclipse.ui.handlers.ShowStatusBarMenuHandler$SpinnerJob.run(ShowStatusBarMenuHandler.java:499)
+	 at org.eclipse.core.internal.jobs.Worker.run(Worker.java:63)
+!SESSION 2025-10-24 12:03:30.200 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-24 12:03:31.558
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-24 12:03:31.742
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-24 12:03:32.428
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY org.eclipse.ui 4 0 2025-10-24 12:03:35.850
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 12:03:36.717
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 12:03:36.719
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-24 12:03:36.739
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-24 12:03:36.775
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 12:03:38.282
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 12:03:38.303
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 12:03:38.428
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-24 12:03:39.577
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+!SESSION 2025-10-29 17:14:30.411 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-29 17:14:32.878
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-29 17:14:33.052
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY org.eclipse.core.resources 2 10035 2025-10-29 17:14:33.572
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-29 17:14:33.888
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 17:14:39.905
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 17:14:39.907
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-29 17:14:39.960
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 17:14:40.041
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:14:41.470
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:14:41.487
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:14:41.613
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:14:43.122
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
+
+!ENTRY org.eclipse.ui 4 0 2025-10-29 17:15:46.174
+!MESSAGE Abnormal Workbench Condition
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 17:27:05.721
+!MESSAGE [Info] Language ID not found for extension: jsp
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:27:06.866
+!MESSAGE [Info]	[default] Context provider relatedFilesShim exceeded time budget of 150ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:27:08.224
+!MESSAGE [Info]	[fetchCompletions] Request e79a4c1e-38b2-4b87-9542-d790f68ba392 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 1336.1305999999167ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 17:27:08.408
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 18:29:41.693
+!MESSAGE [Info]	[default] Context provider relatedFilesShim exceeded time budget of 150ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:07:44.873
+!MESSAGE [Info]	[fetchCompletions] Request 7f8f2d5a-0657-427c-b675-24d232cb2947 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 1345.9199999999255ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:07:44.941
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:07:45.646
+!MESSAGE [Info]	[fetchCompletions] Request b3bfb95d-b787-484a-b203-0db42d546196 at <https://proxy.individual.githubcopilot.com/v1/engines/gpt-41-copilot/completions> finished with 200 status after 569.6288000000641ms
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:07:45.885
+!MESSAGE [Info]	[streamChoices] solution 0 returned. finish reason: [stop]
+!SESSION 2025-10-29 19:45:25.140 -----------------------------------------------
+eclipse.buildId=4.37.0.20250905-1455
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_IN
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-29 19:45:27.686
+!MESSAGE Activated before the state location was initialized. Retry after the state location is initialized.
+
+!ENTRY org.eclipse.lemminx.uber-jar 4 0 2025-10-29 19:45:27.846
+!MESSAGE bundle org.eclipse.lemminx.uber-jar:0.31.0 (276) Component descriptor entry 'OSGI-INF/*.xml' not found
+
+!ENTRY org.eclipse.core.resources 2 10035 2025-10-29 19:45:32.800
+!MESSAGE The workspace exited with unsaved changes in the previous session; refreshing workspace to recover changes.
+
+!ENTRY ch.qos.logback.classic 1 0 2025-10-29 19:45:33.130
+!MESSAGE Logback config file: C:\Users\Admin\EMS\.metadata\.plugins\org.eclipse.m2e.logback\logback.2.7.100.20250418-1315.xml
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 19:45:40.718
+!MESSAGE [Info] Starting language server with binary lsp agent.
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 19:45:40.722
+!MESSAGE [Info] Found native binary in fragment bundle: com.microsoft.copilot.eclipse.core.agent.win32
+
+!ENTRY com.microsoft.copilot.eclipse 1 0 2025-10-29 19:45:40.766
+!MESSAGE [Info] Lsp agent started successfully.
+
+!ENTRY org.eclipse.egit.ui 2 0 2025-10-29 19:45:40.791
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\Admin'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:45:44.317
+!MESSAGE [Info]	[lsp] GitHub Copilot Language Server 1.381.0 initialized
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:45:44.361
+!MESSAGE [Info]	[default] Policy watcher started for GitHub Copilot Plugin
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:45:44.663
+!MESSAGE [Info]	[certificates] Removed 10 expired certificates
+
+!ENTRY org.eclipse.lsp4e 1 0 2025-10-29 19:45:45.739
+!MESSAGE [Info]	[CopilotMCP] MCP state changed from false to true
