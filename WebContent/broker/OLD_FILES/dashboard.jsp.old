@@ -1,0 +1,105 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.model.User, com.election.dao.*, java.util.List" %>
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null || !"broker".equals(user.getRole())) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+    
+    BrokerTransactionDAO transactionDAO = new BrokerTransactionDAO();
+    CandidateDAO candidateDAO = new CandidateDAO();
+    
+    double totalSales = transactionDAO.getTotalSalesByBroker(user.getUserId());
+    double pendingPayments = transactionDAO.getPendingPaymentsByBroker(user.getUserId());
+    int candidateCount = candidateDAO.getCandidateCountByBroker(user.getUserId());
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Broker Dashboard</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+</head>
+<body class="dashboard">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🗳️ Election Expense</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="candidates.jsp">Candidates</a></li>
+                <li><a href="transactions.jsp">Transactions</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
+                <span><%= user.getFullName() %></span>
+                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 30px;">Broker Dashboard - <%= user.getFullName() %></h1>
+        
+        <% if (session.getAttribute("success") != null) { %>
+            <div class="alert alert-success"><%= session.getAttribute("success") %></div>
+            <% session.removeAttribute("success"); %>
+        <% } %>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <h3>Total Sales</h3>
+                <div class="stat-value">₹<%= String.format("%.2f", totalSales) %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">⏳</span>
+                <h3>Pending Payments</h3>
+                <div class="stat-value">₹<%= String.format("%.2f", pendingPayments) %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <h3>Total Candidates</h3>
+                <div class="stat-value"><%= candidateCount %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">✅</span>
+                <h3>Completed Payments</h3>
+                <div class="stat-value">₹<%= String.format("%.2f", totalSales - pendingPayments) %></div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Quick Actions</h3>
+            </div>
+            <div class="card-body">
+                <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+                    <a href="candidates.jsp?action=add" class="btn btn-primary">➕ Add Candidate</a>
+                    <a href="transactions.jsp?action=add" class="btn btn-success">💳 New Transaction</a>
+                    <a href="candidates.jsp" class="btn btn-info">👥 View Candidates</a>
+                    <a href="transactions.jsp" class="btn btn-warning">📊 View Transactions</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Broker Information</h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Role:</strong> Campaign Products Broker</p>
+                <p><strong>Username:</strong> <%= user.getUsername() %></p>
+                <p><strong>Email:</strong> <%= user.getEmail() %></p>
+                <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+                <p style="margin-top: 20px; color: #666;">
+                    As a broker, you can manage candidates, track product sales, and monitor payment status. 
+                    Keep your transaction records up to date for accurate reporting.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

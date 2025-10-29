@@ -1,0 +1,205 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.model.*, com.election.dao.*, java.util.List" %>
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null || !"admin".equals(user.getRole())) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+    
+    UserDAO userDAO = new UserDAO();
+    ExpenseDAO expenseDAO = new ExpenseDAO();
+    BrokerTransactionDAO transactionDAO = new BrokerTransactionDAO();
+    
+    List<User> allUsers = userDAO.getAllUsers();
+    List<Expense> allExpenses = expenseDAO.getAllExpenses();
+    List<BrokerTransaction> allTransactions = transactionDAO.getAllTransactions();
+    
+    double totalSystemExpenses = 0;
+    for (Expense e : allExpenses) {
+        totalSystemExpenses += e.getExpenseAmount().doubleValue();
+    }
+    
+    double totalSystemSales = 0;
+    for (BrokerTransaction t : allTransactions) {
+        totalSystemSales += t.getTotalAmount();
+    }
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+</head>
+<body class="dashboard">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🗳️ Election Expense - ADMIN</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="users.jsp">All Users</a></li>
+                <li><a href="expenses.jsp">All Expenses</a></li>
+                <li><a href="transactions.jsp">All Transactions</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
+                <span><%= user.getFullName() %></span>
+                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 30px;">Admin Dashboard</h1>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-icon">👥</span>
+                <h3>Total Users</h3>
+                <div class="stat-value"><%= allUsers.size() %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">💰</span>
+                <h3>Total Expenses</h3>
+                <div class="stat-value">₹<%= String.format("%.2f", totalSystemExpenses) %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">💳</span>
+                <h3>Total Sales</h3>
+                <div class="stat-value">₹<%= String.format("%.2f", totalSystemSales) %></div>
+            </div>
+            
+            <div class="stat-card">
+                <span class="stat-icon">📊</span>
+                <h3>Total Transactions</h3>
+                <div class="stat-value"><%= allExpenses.size() + allTransactions.size() %></div>
+            </div>
+        </div>
+        
+        <!-- User Distribution -->
+        <div class="card">
+            <div class="card-header">
+                <h3>User Distribution</h3>
+            </div>
+            <div class="card-body">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Admin Users</h3>
+                        <div class="stat-value" style="font-size: 24px;">
+                            <%= userDAO.getUsersByRole("admin").size() %>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Regular Users</h3>
+                        <div class="stat-value" style="font-size: 24px;">
+                            <%= userDAO.getUsersByRole("user").size() %>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Brokers</h3>
+                        <div class="stat-value" style="font-size: 24px;">
+                            <%= userDAO.getUsersByRole("broker").size() %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Expenses -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Expenses</h3>
+                <a href="expenses.jsp" class="text-link">View All →</a>
+            </div>
+            <div class="card-body">
+                <% if (allExpenses != null && !allExpenses.isEmpty()) { 
+                    int count = 0;
+                %>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Category</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (Expense exp : allExpenses) { 
+                                    if (count++ >= 5) break;
+                                %>
+                                    <tr>
+                                        <td>Candidate ID: <%= exp.getCandidateId() %></td>
+                                        <td><span class="badge badge-info"><%= exp.getExpenseCategory() %></span></td>
+                                        <td><%= exp.getExpenseDescription() %></td>
+                                        <td>₹<%= String.format("%.2f", exp.getExpenseAmount()) %></td>
+                                        <td><%= exp.getExpenseDate() %></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p style="text-align: center; padding: 20px; color: #666;">No expenses recorded yet.</p>
+                <% } %>
+            </div>
+        </div>
+        
+        <!-- Recent Transactions -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Recent Broker Transactions</h3>
+                <a href="transactions.jsp" class="text-link">View All →</a>
+            </div>
+            <div class="card-body">
+                <% if (allTransactions != null && !allTransactions.isEmpty()) { 
+                    int count = 0;
+                %>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Broker</th>
+                                    <th>Candidate</th>
+                                    <th>Product</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (BrokerTransaction tx : allTransactions) { 
+                                    if (count++ >= 5) break;
+                                %>
+                                    <tr>
+                                        <td><%= tx.getBrokerName() %></td>
+                                        <td><%= tx.getCandidateName() %></td>
+                                        <td><%= tx.getProductName() %></td>
+                                        <td>₹<%= String.format("%.2f", tx.getTotalAmount()) %></td>
+                                        <td>
+                                            <% 
+                                            String statusClass = "";
+                                            switch(tx.getPaymentStatus()) {
+                                                case "completed": statusClass = "badge-success"; break;
+                                                case "partial": statusClass = "badge-warning"; break;
+                                                default: statusClass = "badge-danger";
+                                            }
+                                            %>
+                                            <span class="badge <%= statusClass %>"><%= tx.getPaymentStatus().toUpperCase() %></span>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p style="text-align: center; padding: 20px; color: #666;">No transactions recorded yet.</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

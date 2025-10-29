@@ -1,0 +1,251 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.model.*, com.election.dao.*, java.util.List" %>
+<%
+    User user = (User) session.getAttribute("user");
+    if (user == null || !"broker".equals(user.getRole())) {
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        return;
+    }
+    
+    BrokerTransactionDAO transactionDAO = new BrokerTransactionDAO();
+    CandidateDAO candidateDAO = new CandidateDAO();
+    ProductDAO productDAO = new ProductDAO();
+    
+    List<BrokerTransaction> transactions = transactionDAO.getTransactionsByBroker(user.getUserId());
+    List<Candidate> candidates = candidateDAO.getCandidatesByBroker(user.getUserId());
+    List<Product> products = productDAO.getAllProducts();
+%>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Transactions</title>
+    <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+</head>
+<body class="dashboard">
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">🗳️ Election Expense</div>
+            <ul class="navbar-menu">
+                <li><a href="dashboard.jsp">Dashboard</a></li>
+                <li><a href="candidates.jsp">Candidates</a></li>
+                <li><a href="transactions.jsp">Transactions</a></li>
+            </ul>
+            <div class="user-info">
+                <div class="user-avatar"><%= user.getFullName().substring(0, 1).toUpperCase() %></div>
+                <span><%= user.getFullName() %></span>
+                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 style="margin-bottom: 30px;">Sales Transactions</h1>
+        
+        <% if (session.getAttribute("success") != null) { %>
+            <div class="alert alert-success"><%= session.getAttribute("success") %></div>
+            <% session.removeAttribute("success"); %>
+        <% } %>
+        
+        <div class="card">
+            <div class="card-header">
+                <h3>Transaction List</h3>
+                <button onclick="showAddModal()" class="btn btn-primary btn-sm">Add New Transaction</button>
+            </div>
+            <div class="card-body">
+                <% if (transactions != null && !transactions.isEmpty()) { %>
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Candidate</th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Total Amount</th>
+                                    <th>Paid Amount</th>
+                                    <th>Payment Status</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (BrokerTransaction tx : transactions) { %>
+                                    <tr>
+                                        <td><%= tx.getTransactionId() %></td>
+                                        <td><strong><%= tx.getCandidateName() != null ? tx.getCandidateName() : "N/A" %></strong><br>
+                                            <small>Candidate ID: <%= tx.getCandidateId() %></small></td>
+                                        <td><%= tx.getProductName() %></td>
+                                        <td><%= tx.getQuantity() %></td>
+                                        <td>₹<%= String.format("%.2f", tx.getTotalAmount()) %></td>
+                                        <td>₹<%= String.format("%.2f", tx.getCommissionAmount()) %></td>
+                                        <td>
+                                            <% 
+                                            String statusClass = "";
+                                            switch(tx.getPaymentStatus()) {
+                                                case "completed": statusClass = "badge-success"; break;
+                                                case "partial": statusClass = "badge-warning"; break;
+                                                default: statusClass = "badge-danger";
+                                            }
+                                            %>
+                                            <span class="badge <%= statusClass %>"><%= tx.getPaymentStatus().toUpperCase() %></span>
+                                        </td>
+                                        <td><%= tx.getTransactionDate() %></td>
+                                        <td>
+                                            <button onclick="showUpdateModal(<%= tx.getTransactionId() %>, <%= tx.getTotalAmount() %>, <%= tx.getCommissionAmount() %>)" 
+                                                    class="btn btn-info btn-sm">Update</button>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                <% } else { %>
+                    <p style="text-align: center; padding: 40px; color: #666;">
+                        No transactions found. Add your first transaction.
+                    </p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="addModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Transaction</h3>
+                <button class="modal-close" onclick="closeModal('addModal')">&times;</button>
+            </div>
+            <form action="<%=request.getContextPath()%>/broker" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="addTransaction">
+                    
+                    <div class="form-group">
+                        <label>Select Candidate *</label>
+                        <select name="candidateId" required>
+                            <option value="">Choose Candidate</option>
+                            <% for (Candidate c : candidates) { %>
+                                <option value="<%= c.getCandidateId() %>"><%= c.getCandidateName() %> - <%= c.getPartyName() %></option>
+                            <% } %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Select Product *</label>
+                        <select name="productId" id="productSelect" onchange="calculateTotal()" required>
+                            <option value="">Choose Product</option>
+                            <% for (Product p : products) { %>
+                                <option value="<%= p.getProductId() %>" data-price="<%= p.getUnitPrice() %>">
+                                    <%= p.getProductName() %> - ₹<%= p.getUnitPrice() %>
+                                </option>
+                            <% } %>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Quantity *</label>
+                        <input type="number" name="quantity" id="quantity" min="1" value="1" onchange="calculateTotal()" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Total Amount *</label>
+                        <input type="number" name="totalAmount" id="totalAmount" step="0.01" readonly required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Paid Amount *</label>
+                        <input type="number" name="paidAmount" id="paidAmount" step="0.01" value="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Status *</label>
+                        <select name="paymentStatus" required>
+                            <option value="pending">Pending</option>
+                            <option value="partial">Partial</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Notes</label>
+                        <textarea name="notes" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save Transaction</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('addModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Update Payment Modal -->
+    <div id="updateModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Payment Status</h3>
+                <button class="modal-close" onclick="closeModal('updateModal')">&times;</button>
+            </div>
+            <form action="<%=request.getContextPath()%>/broker" method="post">
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="updatePayment">
+                    <input type="hidden" name="transactionId" id="updateTransactionId">
+                    
+                    <div class="form-group">
+                        <label>Total Amount</label>
+                        <input type="text" id="updateTotalAmount" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Paid Amount *</label>
+                        <input type="number" name="paidAmount" id="updatePaidAmount" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Payment Status *</label>
+                        <select name="paymentStatus" required>
+                            <option value="pending">Pending</option>
+                            <option value="partial">Partial</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update Payment</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('updateModal')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showAddModal() {
+            document.getElementById('addModal').classList.add('active');
+        }
+        
+        function showUpdateModal(txId, totalAmount, commissionAmount) {
+            document.getElementById('updateTransactionId').value = txId;
+            document.getElementById('updateTotalAmount').value = '₹' + totalAmount.toFixed(2);
+            document.getElementById('updatePaidAmount').value = commissionAmount;
+            document.getElementById('updateModal').classList.add('active');
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+        
+        function calculateTotal() {
+            var select = document.getElementById('productSelect');
+            var price = parseFloat(select.options[select.selectedIndex].getAttribute('data-price') || 0);
+            var quantity = parseInt(document.getElementById('quantity').value || 0);
+            var total = price * quantity;
+            document.getElementById('totalAmount').value = total.toFixed(2);
+        }
+        
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+    </script>
+</body>
+</html>
