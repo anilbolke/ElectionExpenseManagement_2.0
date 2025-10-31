@@ -30,6 +30,7 @@ public class Candidate {
     private String electionType;
     private Date electionDate;
     private String boothNumber;
+    private BigDecimal expenseLimit;
     
     // Payment Information
     private int brokerId;
@@ -194,6 +195,14 @@ public class Candidate {
 
     public void setBoothNumber(String boothNumber) {
         this.boothNumber = boothNumber;
+    }
+
+    public BigDecimal getExpenseLimit() {
+        return expenseLimit;
+    }
+
+    public void setExpenseLimit(BigDecimal expenseLimit) {
+        this.expenseLimit = expenseLimit;
     }
 
     public int getBrokerId() {

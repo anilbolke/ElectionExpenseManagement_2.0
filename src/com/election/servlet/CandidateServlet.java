@@ -122,7 +122,11 @@ public class CandidateServlet extends HttpServlet {
         candidate.setBoothNumber(boothNumber);
         
         // Inherit broker_id from user (if user was registered through a broker)
-        candidate.setBrokerId(user.getBrokerId());
+        if (user.getBrokerId() != null) {
+            candidate.setBrokerId(user.getBrokerId());
+        } else {
+            candidate.setBrokerId(0); // Default to 0 if no broker assigned
+        }
         
         // Save candidate
         int candidateId = candidateDAO.createCandidate(candidate);
@@ -227,6 +231,7 @@ public class CandidateServlet extends HttpServlet {
         String electionType = request.getParameter("electionType");
         String electionDateStr = request.getParameter("electionDate");
         String boothNumber = request.getParameter("boothNumber");
+        String expenseLimitStr = request.getParameter("expenseLimitStr");
         
         // Validation
         if (!ValidationUtil.isNotEmpty(candidateName) || !ValidationUtil.isNotEmpty(address) ||
@@ -277,7 +282,25 @@ public class CandidateServlet extends HttpServlet {
         }
         
         candidate.setBoothNumber(boothNumber);
-        candidate.setBrokerId(user.getBrokerId()); // Inherit broker from user
+        
+        // Set broker ID (handle null case)
+        if (user.getBrokerId() != null) {
+            candidate.setBrokerId(user.getBrokerId());
+        } else {
+            candidate.setBrokerId(0); // Default to 0 if no broker assigned
+        }
+        
+        // Set expense limit
+        if (expenseLimitStr != null && !expenseLimitStr.isEmpty()) {
+            try {
+                BigDecimal expenseLimit = new BigDecimal(expenseLimitStr);
+                candidate.setExpenseLimit(expenseLimit);
+            } catch (NumberFormatException e) {
+                candidate.setExpenseLimit(BigDecimal.ZERO);
+            }
+        } else {
+            candidate.setExpenseLimit(BigDecimal.ZERO);
+        }
         
         // Save candidate
         int candidateId = candidateDAO.createCandidate(candidate);

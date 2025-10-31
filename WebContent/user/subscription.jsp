@@ -361,7 +361,7 @@
                 <div style="background: #f8f9ff; padding: 15px; border-radius: 8px; margin: 20px 0;">
                     <p style="margin: 0; color: #666; font-size: 0.9rem;">
                         <strong>✓ Secure Payment</strong><br>
-                        This is a demo payment system. In production, this would integrate with payment gateways like Razorpay or Stripe.
+                        Your payment is processed securely through Razorpay. All transactions are encrypted and PCI-DSS compliant.
                         Click "Proceed to Pay" to complete your subscription.
                     </p>
                 </div>
@@ -377,6 +377,9 @@
             </form>
         </div>
     </div>
+    
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     
     <script>
         function openPaymentModal(planName, price) {
@@ -398,6 +401,119 @@
                 closePaymentModal();
             }
         });
+        
+        // Handle payment form submission with Razorpay
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const planName = document.getElementById('planName').value;
+            const amount = parseFloat(document.getElementById('planAmount').value);
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            // Create Razorpay order
+            initiateRazorpayPayment(planName, amount, paymentMethod.value);
+        });
+        
+        function initiateRazorpayPayment(planName, amount, paymentMethod) {
+            // Show loading
+            const submitBtn = document.querySelector('#paymentForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Processing...';
+            submitBtn.disabled = true;
+            
+            // Create order via backend
+            fetch('<%=request.getContextPath()%>/payment?action=createOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'planName=' + encodeURIComponent(planName) + 
+                      '&amount=' + encodeURIComponent(amount) + 
+                      '&paymentMethod=' + encodeURIComponent(paymentMethod)
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                if (!data.success) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                // Open Razorpay checkout
+                const options = {
+                    key: data.key_id,
+                    amount: data.amount,
+                    currency: data.currency,
+                    name: data.name,
+                    description: data.description,
+                    order_id: data.order_id,
+                    prefill: {
+                        name: data.prefill_name,
+                        email: data.prefill_email,
+                        contact: data.prefill_contact
+                    },
+                    theme: {
+                        color: '#667eea'
+                    },
+                    handler: function(response) {
+                        // Payment successful - verify signature
+                        verifyPayment(response);
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            closePaymentModal();
+                        }
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                alert('Error creating order: ' + error.message);
+            });
+        }
+        
+        function verifyPayment(razorpayResponse) {
+            // Show loading
+            const submitBtn = document.querySelector('#paymentForm button[type="submit"]');
+            submitBtn.innerHTML = '⏳ Verifying...';
+            submitBtn.disabled = true;
+            
+            // Verify payment signature
+            fetch('<%=request.getContextPath()%>/payment?action=verifyPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'razorpay_order_id=' + encodeURIComponent(razorpayResponse.razorpay_order_id) + 
+                      '&razorpay_payment_id=' + encodeURIComponent(razorpayResponse.razorpay_payment_id) + 
+                      '&razorpay_signature=' + encodeURIComponent(razorpayResponse.razorpay_signature)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Payment verified successfully
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Payment verification failed: ' + data.error);
+                    window.location.href = '<%=request.getContextPath()%>/user/subscription.jsp?error=verification_failed';
+                }
+            })
+            .catch(error => {
+                alert('Error verifying payment: ' + error.message);
+                window.location.href = '<%=request.getContextPath()%>/user/subscription.jsp?error=verification_error';
+            });
+        }
     </script>
 </body>
 </html>

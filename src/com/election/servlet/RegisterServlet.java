@@ -109,7 +109,8 @@ public class RegisterServlet extends HttpServlet {
         user.setUsername(username);
         user.setPassword(password);
         user.setBrokerId(brokerId);  // Will be null if no referral code, or broker's ID if referred
-        user.setRole(brokerId != null ? "user" : "broker");  // User if referred, Broker if not
+        System.out.println("brokerId" + brokerId);
+        user.setRole("user");  // User if referred, Broker if not
         user.setStatus("active");
         
         if (userDAO.registerUser(user)) {

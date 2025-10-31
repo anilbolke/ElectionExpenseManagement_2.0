@@ -18,6 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Successful - Election Expense Management</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+    <meta http-equiv="refresh" content="5;url=dashboard.jsp">
     <style>
         .success-container {
             max-width: 600px;
@@ -133,7 +134,7 @@
             <h1 class="success-title">Payment Successful!</h1>
             <p class="success-message">
                 Your candidate registration payment has been completed successfully. 
-                The candidate account is now active.
+                The candidate account is now active. You will be redirected to the dashboard in 5 seconds...
             </p>
             
             <div class="payment-details">
@@ -161,10 +162,29 @@
             </div>
             
             <div class="action-buttons">
-                <a href="manage-candidates.jsp" class="btn btn-primary">Go to My Candidates</a>
-                <a href="add-candidate.jsp" class="btn btn-secondary">Add Another Candidate</a>
+                <a href="dashboard.jsp" class="btn btn-primary" id="dashboardBtn">Go to Dashboard</a>
+                <a href="manage-candidates.jsp" class="btn btn-secondary">Manage Candidates</a>
             </div>
         </div>
     </div>
+    
+    <script>
+        // Auto redirect to dashboard after 5 seconds with countdown
+        let countdown = 5;
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                dashboardBtn.innerHTML = 'Go to Dashboard (' + countdown + 's)';
+            } else {
+                dashboardBtn.innerHTML = '⏳ Redirecting...';
+                clearInterval(countdownInterval);
+                window.location.href = 'dashboard.jsp';
+            }
+        }, 1000);
+        
+        console.log('Payment successful! Redirecting to dashboard...');
+    </script>
 </body>
 </html>

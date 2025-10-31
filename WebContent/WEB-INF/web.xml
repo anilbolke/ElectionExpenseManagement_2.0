@@ -169,6 +169,16 @@
         <url-pattern>/broker</url-pattern>
     </servlet-mapping>
     
+    <!-- Fund Detail Servlet -->
+    <servlet>
+        <servlet-name>FundDetailServlet</servlet-name>
+        <servlet-class>com.election.servlet.FundDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FundDetailServlet</servlet-name>
+        <url-pattern>/fundDetail</url-pattern>
+    </servlet-mapping>
+    
     <!-- Admin Update Plan Servlet -->
     <servlet>
         <servlet-name>UpdatePlanServlet</servlet-name>

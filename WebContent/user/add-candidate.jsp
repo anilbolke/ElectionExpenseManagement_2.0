@@ -448,6 +448,24 @@
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
                         </div>
                     </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expenseLimit">💰 Expense Limit Amount (₹) *</label>
+                            <input type="number" class="form-control" id="expenseLimit" name="expenseLimit" 
+                                   min="0" step="0.01" required placeholder="Enter expense limit amount">
+                            <div class="helper-text">Set the maximum expense limit for this candidate's campaign (e.g., 50000.00)</div>
+                            <div class="error-message" id="expenseLimit-error">Please enter a valid expense limit amount</div>
+                        </div>
+                        <div class="form-group">
+                            <div style="background: #e6f7ff; border-left: 4px solid #1890ff; padding: 15px; border-radius: 4px; margin-top: 28px;">
+                                <strong style="color: #0050b3;">ℹ️ About Expense Limit:</strong>
+                                <p style="margin: 8px 0 0 0; color: #595959; font-size: 13px;">
+                                    This limit will be used to track and control campaign expenses. You can monitor spending against this limit in reports.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -547,6 +565,10 @@
             partyName: {
                 minLength: 2,
                 message: VALIDATION_MESSAGES.partyNameRequired
+            },
+            expenseLimit: {
+                min: 0,
+                message: 'Expense limit must be a positive number'
             }
         };
         
@@ -655,6 +677,49 @@
             });
         });
         
+        // Real-time validation for expense limit
+        document.getElementById('expenseLimit').addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const errorElement = document.getElementById('expenseLimit-error');
+            
+            this.classList.remove('error', 'success');
+            
+            if (!this.value || this.value.trim() === '') {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is required';
+                    errorElement.classList.add('show');
+                }
+            } else if (isNaN(value) || value < 0) {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit must be a positive number';
+                    errorElement.classList.add('show');
+                }
+            } else if (value > 999999999.99) {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is too large';
+                    errorElement.classList.add('show');
+                }
+            } else {
+                this.classList.add('success');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+            }
+        });
+        
+        // Format expense limit on blur
+        document.getElementById('expenseLimit').addEventListener('blur', function() {
+            if (this.value && !isNaN(this.value)) {
+                const value = parseFloat(this.value);
+                if (value >= 0) {
+                    this.value = value.toFixed(2);
+                }
+            }
+        });
+        
         // Form submission validation
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -714,6 +779,41 @@
                     errorElement.classList.add('show');
                 }
                 if (!firstError) firstError = electionField;
+            }
+            
+            // Expense limit validation
+            const expenseLimit = document.getElementById('expenseLimit').value;
+            const expenseLimitNum = parseFloat(expenseLimit);
+            if (!expenseLimit || expenseLimit.trim() === '') {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is required';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
+            } else if (isNaN(expenseLimitNum) || expenseLimitNum < 0) {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit must be a positive number';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
+            } else if (expenseLimitNum > 999999999.99) {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is too large (max: ₹99,99,99,999.99)';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
             }
             
             if (isValid) {

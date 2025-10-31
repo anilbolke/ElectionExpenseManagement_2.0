@@ -337,8 +337,8 @@
                 </div>
                 
                 <div class="alert alert-info" style="margin-bottom: 20px;">
-                    <strong>📌 Important:</strong> Your candidate account will be activated immediately after successful payment. 
-                    You will receive a confirmation email with the transaction details.
+                    <strong>✓ Secure Payment via Razorpay:</strong> Your candidate account will be activated immediately after successful payment. 
+                    All transactions are encrypted and PCI-DSS compliant. You will receive a confirmation with transaction ID.
                 </div>
                 
                 <div style="display: flex; gap: 15px; justify-content: space-between;">
@@ -353,6 +353,9 @@
         <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
     </footer>
     
+    <!-- Razorpay Checkout Script -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    
     <script>
         function selectPaymentMethod(method) {
             // Remove selected class from all methods
@@ -365,6 +368,120 @@
             
             // Check the radio button
             document.querySelector(`input[value="${method}"]`).checked = true;
+        }
+        
+        // Handle form submission with Razorpay
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                return;
+            }
+            
+            const candidateId = document.querySelector('input[name="candidateId"]').value;
+            const amount = parseFloat(document.querySelector('input[name="amount"]').value);
+            
+            // Initiate Razorpay payment
+            initiateRazorpayPayment(candidateId, amount, paymentMethod.value);
+        });
+        
+        function initiateRazorpayPayment(candidateId, amount, paymentMethod) {
+            const submitBtn = document.querySelector('#paymentForm button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '⏳ Processing...';
+            submitBtn.disabled = true;
+            
+            // Create order via backend
+            fetch('<%=request.getContextPath()%>/payment?action=createOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'planName=Candidate Registration' +
+                      '&amount=' + encodeURIComponent(amount) + 
+                      '&paymentMethod=' + encodeURIComponent(paymentMethod) +
+                      '&candidateId=' + encodeURIComponent(candidateId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                if (!data.success) {
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                
+                // Open Razorpay checkout
+                const options = {
+                    key: data.key_id,
+                    amount: data.amount,
+                    currency: data.currency,
+                    name: data.name,
+                    description: 'Candidate Registration Fee - <%= candidate.getCandidateName() %>',
+                    order_id: data.order_id,
+                    prefill: {
+                        name: data.prefill_name,
+                        email: data.prefill_email,
+                        contact: data.prefill_contact
+                    },
+                    theme: {
+                        color: '#667eea'
+                    },
+                    handler: function(response) {
+                        // Payment successful - verify signature
+                        verifyPayment(response, candidateId);
+                    },
+                    modal: {
+                        ondismiss: function() {
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.open();
+            })
+            .catch(error => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                alert('Error creating order: ' + error.message);
+            });
+        }
+        
+        function verifyPayment(razorpayResponse, candidateId) {
+            const submitBtn = document.querySelector('#paymentForm button[type="submit"]');
+            submitBtn.innerHTML = '⏳ Verifying...';
+            submitBtn.disabled = true;
+            
+            // Verify payment signature
+            fetch('<%=request.getContextPath()%>/payment?action=verifyPayment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'razorpay_order_id=' + encodeURIComponent(razorpayResponse.razorpay_order_id) + 
+                      '&razorpay_payment_id=' + encodeURIComponent(razorpayResponse.razorpay_payment_id) + 
+                      '&razorpay_signature=' + encodeURIComponent(razorpayResponse.razorpay_signature) +
+                      '&candidateId=' + encodeURIComponent(candidateId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Payment verified successfully - redirect to dashboard
+                    window.location.href = '<%=request.getContextPath()%>/user/dashboard.jsp?success=Payment successful! Your candidate has been activated.';
+                } else {
+                    alert('Payment verification failed: ' + data.error);
+                    window.location.href = 'candidate-payment.jsp?candidateId=' + candidateId + '&error=verification_failed';
+                }
+            })
+            .catch(error => {
+                alert('Error verifying payment: ' + error.message);
+                window.location.href = 'candidate-payment.jsp?candidateId=' + candidateId + '&error=verification_error';
+            });
         }
     </script>
 </body>

@@ -417,7 +417,8 @@
                     <a href="change-password.jsp" class="action-btn" style="background: #f56565;">🔒 <%= MessageBundle.getMessage(request, "user.change.password") %></a>
                     <a href="map-referral-code.jsp" class="action-btn" style="background: #667eea;">🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %></a>
                     <% if (selectedCandidate != null && selectedCandidate.isPaymentVerified()) { %>
-                    <a href="add-expense.jsp" class="action-btn secondary">💰 <%= MessageBundle.getMessage(request, "expense.add") %></a>
+                    <a href="manage-funds.jsp" class="action-btn" style="background: #48bb78;">💰 Manage Funds</a>
+                    <a href="add-expense.jsp" class="action-btn secondary">💸 <%= MessageBundle.getMessage(request, "expense.add") %></a>
                     <a href="expenses.jsp" class="action-btn secondary">📊 <%= MessageBundle.getMessage(request, "expense.view") %></a>
                     <% } %>
                 </div>
@@ -466,6 +467,7 @@
                                 <div class="candidate-actions">
                                     <% if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) { %>
                                         <a href="<%=request.getContextPath()%>/select-candidate?candidateId=<%= c.getCandidateId() %>" class="btn btn-primary btn-sm"><%= MessageBundle.getMessage(request, "action.select") %></a>
+                                        <a href="manage-funds.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-success btn-sm">💰 Funds</a>
                                     <% } else { %>
                                         <a href="candidate-payment.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-warning btn-sm"><%= MessageBundle.getMessage(request, "payment.paynow") %></a>
                                     <% } %>
