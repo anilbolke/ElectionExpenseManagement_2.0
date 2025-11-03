@@ -1,5 +1,5 @@
-<%@page import="com.election.config.RazorpayConfig"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.util.RazorpayConfig" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -79,9 +79,9 @@
         <h1>🔍 Razorpay Configuration Test</h1>
         
         <%
-            String keyId = RazorpayConfig.KEY_ID;
-            String keySecret = RazorpayConfig.KEY_SECRET;
-            boolean isConfigured = true;
+            String keyId = RazorpayConfig.getKeyId();
+            String keySecret = RazorpayConfig.getKeySecret();
+            boolean isConfigured = RazorpayConfig.isConfigured();
             
             // Mask secret
             String maskedSecret = keySecret;
@@ -90,8 +90,8 @@
             }
             
             // Check environment variables directly
-            String envKeyId = keyId;
-            String envKeySecret = keySecret;
+            String envKeyId = System.getenv("RAZORPAY_KEY_ID");
+            String envKeySecret = System.getenv("RAZORPAY_KEY_SECRET");
         %>
         
         <div class="status <%= isConfigured ? "configured" : "not-configured" %>">
@@ -240,25 +240,15 @@
                 .then(response => response.json())
                 .then(config => {
                     console.log('Config response:', config);
-                    console.log('config.configured value:', config.configured);
-                    console.log('config.configured type:', typeof config.configured);
-                    console.log('Boolean check:', config.configured === true);
-                    
-                    // Force boolean conversion
-                    const isConfigured = Boolean(config.configured);
-                    const configType = typeof config.configured;
-                    console.log('Final isConfigured:', isConfigured);
-                    
-                    resultDiv.innerHTML = '<div style="background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 10px;">' +
-                        '<h4 style="margin-top: 0;">API Response:</h4>' +
-                        '<pre style="margin: 0; overflow-x: auto;">' + JSON.stringify(config, null, 2) + '</pre>' +
-                        '<p style="margin-top: 15px; font-weight: bold; color: ' + (isConfigured ? '#28a745' : '#dc3545') + ';">' +
-                        (isConfigured ? '✅ API is configured!' : '❌ API is NOT configured') +
-                        '</p>' +
-                        '<p style="margin-top: 10px; font-size: 12px; color: #666;">' +
-                        'Debug: configured=' + config.configured + ' (' + configType + ')' +
-                        '</p>' +
-                        '</div>';
+                    resultDiv.innerHTML = `
+                        <div style="background: #f4f4f4; padding: 15px; border-radius: 5px; margin-top: 10px;">
+                            <h4 style="margin-top: 0;">API Response:</h4>
+                            <pre style="margin: 0; overflow-x: auto;">${JSON.stringify(config, null, 2)}</pre>
+                            <p style="margin-top: 15px; font-weight: bold; color: ${config.configured ? '#28a745' : '#dc3545'};">
+                                ${config.configured ? '✅ API is configured!' : '❌ API is NOT configured'}
+                            </p>
+                        </div>
+                    `;
                 })
                 .catch(error => {
                     console.error('Config error:', error);

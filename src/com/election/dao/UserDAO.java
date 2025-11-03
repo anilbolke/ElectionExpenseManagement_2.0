@@ -211,28 +211,28 @@ public class UserDAO {
                       "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
-
+            
             pstmt.setString(1, user.getUsername());
             pstmt.setString(2, user.getFullName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getMobile());
-            pstmt.setString(5, user.getAddress());     // ✅ ADDRESS IS HERE!
+            pstmt.setString(5, user.getAddress());
             pstmt.setString(6, user.getPassword());
-
+            
             // Set broker_id - null for brokers
             if (user.getBrokerId() != null) {
                 pstmt.setInt(7, user.getBrokerId());
             } else {
                 pstmt.setNull(7, Types.INTEGER);
             }
-
+            
             pstmt.setString(8, user.getRole());
             pstmt.setString(9, user.getReferralCode());
             pstmt.setString(10, "active");
-
+            
             int result = pstmt.executeUpdate();
             return result > 0;
-
+            
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -349,27 +349,6 @@ public class UserDAO {
             }
         } catch (SQLException e) {
             // referral_code field might not be present in all queries
-        }
-        
-        // Handle bank details for brokers
-        try {
-            String bankName = rs.getString("bank_name");
-            String accountNumber = rs.getString("account_number");
-            String ifscCode = rs.getString("ifsc_code");
-            String branchName = rs.getString("branch_name");
-            String panNumber = rs.getString("pan_number");
-            
-            user.setBankName(bankName);
-            user.setAccountNumber(accountNumber);
-            user.setIfscCode(ifscCode);
-            user.setBranchName(branchName);
-            user.setPanNumber(panNumber);
-            
-            System.out.println("DEBUG: Bank details extracted - Bank: " + bankName + ", Account: " + accountNumber + 
-                              ", IFSC: " + ifscCode + ", Branch: " + branchName + ", PAN: " + panNumber);
-        } catch (SQLException e) {
-            System.err.println("WARNING: Could not extract bank details - columns may not exist in database: " + e.getMessage());
-            // bank details fields might not be present in all queries
         }
         
         // Additional fields that might be present
@@ -532,80 +511,5 @@ public class UserDAO {
             e.printStackTrace();
         }
         return 0;
-    }
-    
-    // Update bank details for broker
-    public boolean updateBankDetails(int userId, String bankName, String accountNumber, 
-                                      String ifscCode, String branchName, String panNumber) {
-        String query = "UPDATE users SET bank_name = ?, account_number = ?, ifsc_code = ?, " +
-                      "branch_name = ?, pan_number = ? WHERE user_id = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setString(1, bankName);
-            pstmt.setString(2, accountNumber);
-            pstmt.setString(3, ifscCode);
-            pstmt.setString(4, branchName);
-            pstmt.setString(5, panNumber);
-            pstmt.setInt(6, userId);
-            
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error updating bank details: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
-    
-    // Get bank details for broker
-    public User getBankDetails(int userId) {
-        String query = "SELECT user_id, bank_name, account_number, ifsc_code, branch_name, pan_number " +
-                      "FROM users WHERE user_id = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            
-            if (rs.next()) {
-                User user = new User();
-                user.setUserId(rs.getInt("user_id"));
-                user.setBankName(rs.getString("bank_name"));
-                user.setAccountNumber(rs.getString("account_number"));
-                user.setIfscCode(rs.getString("ifsc_code"));
-                user.setBranchName(rs.getString("branch_name"));
-                user.setPanNumber(rs.getString("pan_number"));
-                return user;
-            }
-            
-        } catch (SQLException e) {
-            System.err.println("Error fetching bank details: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return null;
-    }
-    
-    // Update user's broker (map referral code)
-    public boolean updateUserBroker(int userId, int brokerId) {
-        String query = "UPDATE users SET broker_id = ? WHERE user_id = ?";
-        
-        try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(query)) {
-            
-            pstmt.setInt(1, brokerId);
-            pstmt.setInt(2, userId);
-            
-            int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0;
-            
-        } catch (SQLException e) {
-            System.err.println("Error updating user broker: " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
     }
 }

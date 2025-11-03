@@ -1,5 +1,5 @@
-<%@page import="com.election.config.RazorpayConfig"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import="com.election.util.RazorpayConfig" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -125,9 +125,9 @@
         
         <%
             // Get configuration
-            String keyId = RazorpayConfig.KEY_ID;
-            String keySecret = RazorpayConfig.KEY_SECRET;
-            boolean isConfigured = true;
+            String keyId = RazorpayConfig.getKeyId();
+            String keySecret = RazorpayConfig.getKeySecret();
+            boolean isConfigured = RazorpayConfig.isConfigured();
             
             // Mask secret
             String maskedSecret = keySecret;
