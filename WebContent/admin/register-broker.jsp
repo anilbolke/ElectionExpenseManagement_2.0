@@ -346,6 +346,15 @@
                     </div>
                 </div>
                 
+                <div class="form-group">
+                    <label>Address <span class="required">*</span></label>
+                    <textarea id="address" name="address" class="form-control" required 
+                              minlength="10" maxlength="500" rows="3" 
+                              placeholder="Enter complete address"></textarea>
+                    <div class="helper-text">Complete address (10-500 characters)</div>
+                    <div class="error-message" id="address-error">Address is required (minimum 10 characters)</div>
+                </div>
+                
                 <!-- Account Credentials -->
                 <h3 style="margin: 30px 0 20px 0; color: #1a202c; font-size: 1.1rem;">Account Credentials</h3>
                 
@@ -422,6 +431,11 @@
             emailId: {
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: 'Please enter a valid email address'
+            },
+            address: {
+                minLength: 10,
+                maxLength: 500,
+                message: 'Address must be between 10-500 characters'
             },
             username: {
                 pattern: /^[a-zA-Z0-9_]{4,30}$/,
@@ -572,7 +586,7 @@
         });
         
         // Add blur event listeners to all form fields
-        const formFields = form.querySelectorAll('input[required], input[type="email"]');
+        const formFields = form.querySelectorAll('input[required], input[type="email"], textarea[required]');
         formFields.forEach(field => {
             field.addEventListener('blur', function() {
                 validateField(this);

@@ -1,0 +1,239 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║               LOGIN FLOW - QUICK REFERENCE CARD                            ║
+║          Election Expense Management System - 3 User Types                 ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                              SIMPLE FLOW                                  │
+└──────────────────────────────────────────────────────────────────────────┘
+
+    login.jsp → Enter Credentials → LoginServlet → Check Role → Dashboard
+                                           ↓
+                    ┌──────────────────────┼──────────────────────┐
+                    │                      │                      │
+                  ADMIN                 BROKER                  USER
+                    │                      │                      │
+            /admin/dashboard      /broker/dashboard      /user/dashboard
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                          3 USER TYPES AT A GLANCE                         │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────┐  ┌─────────────────────┐  ┌─────────────────────┐
+│     👨‍💼 ADMIN        │  │     🤝 BROKER       │  │     👤 USER         │
+├─────────────────────┤  ├─────────────────────┤  ├─────────────────────┤
+│ Role: admin         │  │ Role: broker        │  │ Role: user          │
+│ Access: ALL         │  │ Access: ASSIGNED    │  │ Access: OWN         │
+│                     │  │                     │  │                     │
+│ CAN DO:             │  │ CAN DO:             │  │ CAN DO:             │
+│ • View all users    │  │ • View assigned     │  │ • Add candidates    │
+│ • Register brokers  │  │   candidates        │  │ • Manage own data   │
+│ • System settings   │  │ • Track commission  │  │ • Track expenses    │
+│ • Full control      │  │ • Generate reports  │  │ • View own reports  │
+│                     │  │                     │  │                     │
+│ Dashboard URL:      │  │ Dashboard URL:      │  │ Dashboard URL:      │
+│ /admin/             │  │ /broker/            │  │ /user/              │
+│ dashboard.jsp       │  │ dashboard.jsp       │  │ dashboard.jsp       │
+└─────────────────────┘  └─────────────────────┘  └─────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         LOGIN STEP-BY-STEP                                │
+└──────────────────────────────────────────────────────────────────────────┘
+
+STEP 1: Open Browser
+        URL: http://localhost:8080/ElectionExpenseManagement/login.jsp
+
+STEP 2: Enter Credentials
+        ┌────────────────────────┐
+        │ Username: [_________] │
+        │ Password: [_________] │
+        │ Language: English ▼   │
+        │                       │
+        │    [🔑 LOGIN]         │
+        └────────────────────────┘
+
+STEP 3: System Validates
+        ✓ Check username exists
+        ✓ Verify password matches
+        ✓ Identify user role
+
+STEP 4: Role-Based Redirect
+        IF role = "admin"  → /admin/dashboard.jsp
+        IF role = "broker" → /broker/dashboard.jsp
+        IF role = "user"   → /user/dashboard.jsp
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                       TEST CREDENTIALS (Example)                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────┐
+│ ADMIN LOGIN                                                              │
+│ Username: admin              Expected Result:                           │
+│ Password: admin123           → Redirects to /admin/dashboard.jsp        │
+│                              → Full system access                        │
+├─────────────────────────────────────────────────────────────────────────┤
+│ BROKER LOGIN                                                             │
+│ Username: broker01           Expected Result:                           │
+│ Password: broker123          → Redirects to /broker/dashboard.jsp       │
+│                              → Access to assigned candidates only        │
+├─────────────────────────────────────────────────────────────────────────┤
+│ USER LOGIN                                                               │
+│ Username: john_doe           Expected Result:                           │
+│ Password: user123            → Redirects to /user/dashboard.jsp         │
+│                              → Access to own candidates only             │
+└─────────────────────────────────────────────────────────────────────────┘
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    PERMISSIONS COMPARISON TABLE                           │
+└──────────────────────────────────────────────────────────────────────────┘
+
+Feature                         │ Admin │ Broker │ User
+────────────────────────────────┼───────┼────────┼──────
+View All Users                  │   ✓   │   ✗    │  ✗
+Register Brokers                │   ✓   │   ✗    │  ✗
+View All Candidates             │   ✓   │   ✗    │  ✗
+View Assigned Candidates        │   ✓   │   ✓    │  ✗
+View Own Candidates             │   ✓   │   ✗    │  ✓
+Add Candidates                  │   ✓   │   ✗    │  ✓
+Edit Any Candidate              │   ✓   │   ✗    │  ✗
+Edit Assigned Candidates        │   ✗   │   ✓    │  ✗
+Edit Own Candidates             │   ✗   │   ✗    │  ✓
+Add Expenses                    │   ✓   │   ✓    │  ✓
+View All Reports                │   ✓   │   ✗    │  ✗
+View Assigned Reports           │   ✗   │   ✓    │  ✗
+View Own Reports                │   ✗   │   ✗    │  ✓
+System Configuration            │   ✓   │   ✗    │  ✗
+Commission Tracking             │   ✓   │   ✓    │  ✗
+Generate Documents              │   ✓   │   ✓    │  ✓
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         SESSION INFORMATION                               │
+└──────────────────────────────────────────────────────────────────────────┘
+
+After successful login, the following data is stored in session:
+
+All Roles:
+  • session.user          = Full user object
+  • session.userId        = User ID number
+  • session.username      = Username string
+  • session.userRole      = "admin" / "broker" / "user"
+  • session.fullName      = User's full name
+  • session.language      = Selected language (en/hi)
+
+Broker & User Only (Additional):
+  • session.candidate     = First candidate object
+  • session.candidateId   = Candidate ID
+  • session.candidateName = Candidate name
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           ERROR MESSAGES                                  │
+└──────────────────────────────────────────────────────────────────────────┘
+
+❌ "Invalid username or password"
+   → Check spelling and try again
+   → Verify caps lock is off
+
+❌ "Please enter username and password"
+   → Both fields are required
+   → Cannot be empty
+
+❌ "Invalid user role"
+   → Contact system administrator
+   → Account may need setup
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                       KEY FILES IN PROJECT                                │
+└──────────────────────────────────────────────────────────────────────────┘
+
+Login Page:
+  WebContent/login.jsp
+
+Login Processing:
+  src/com/election/servlet/LoginServlet.java
+
+User Validation:
+  src/com/election/dao/UserDAO.java
+
+Dashboards:
+  WebContent/admin/dashboard.jsp
+  WebContent/broker/dashboard.jsp
+  WebContent/user/dashboard.jsp
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                        SECURITY FEATURES                                  │
+└──────────────────────────────────────────────────────────────────────────┘
+
+✓ Password encryption/hashing
+✓ Session-based authentication
+✓ Role-based access control (RBAC)
+✓ SQL injection prevention (prepared statements)
+✓ XSS protection
+✓ CSRF token validation
+✓ Authentication filters on protected pages
+✓ Automatic session timeout
+
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│                         TROUBLESHOOTING                                   │
+└──────────────────────────────────────────────────────────────────────────┘
+
+Problem: Can't login
+Solution: 
+  1. Verify username spelling
+  2. Check password is correct
+  3. Ensure account is active
+  4. Try different browser
+  5. Clear browser cache
+
+Problem: Wrong dashboard after login
+Solution:
+  1. Check user role in database
+  2. Verify LoginServlet role detection
+  3. Check redirect logic
+
+Problem: Session expires quickly
+Solution:
+  1. Check web.xml session timeout
+  2. Increase timeout value
+  3. Re-login if needed
+
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                              SUMMARY                                       ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+✓ ONE LOGIN PAGE for all users: /login.jsp
+✓ THREE USER TYPES: Admin, Broker, User
+✓ AUTOMATIC REDIRECT based on role
+✓ ROLE-BASED PERMISSIONS for security
+✓ SAME CREDENTIALS, DIFFERENT ACCESS
+
+                    All users start here
+                            ↓
+                      [login.jsp]
+                            ↓
+                    System checks role
+                            ↓
+                ┌───────────┼───────────┐
+                ↓           ↓           ↓
+             ADMIN       BROKER       USER
+
+
+═══════════════════════════════════════════════════════════════════════════
+
+For detailed flowchart, open:
+  • LOGIN_FLOWCHART.md (text version)
+  • LOGIN_FLOWCHART.html (visual version - open in browser)
+
+Date: November 3, 2025
+Status: ✅ Documentation Complete
+
+═══════════════════════════════════════════════════════════════════════════

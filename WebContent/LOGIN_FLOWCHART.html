@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Flowchart - 3 User Types</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #718096;
+            margin-bottom: 40px;
+            font-size: 18px;
+        }
+        
+        /* Flowchart Styles */
+        .flowchart {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .flow-box {
+            background: white;
+            border: 3px solid #667eea;
+            border-radius: 12px;
+            padding: 20px 40px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            min-width: 300px;
+        }
+        
+        .flow-box.start {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        .flow-box.validate {
+            background: #fef5e7;
+            border-color: #f39c12;
+        }
+        
+        .flow-arrow {
+            font-size: 30px;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .roles-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 30px 0;
+            width: 100%;
+        }
+        
+        .role-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+        }
+        
+        .role-card.admin {
+            border-top: 5px solid #e74c3c;
+        }
+        
+        .role-card.broker {
+            border-top: 5px solid #f39c12;
+        }
+        
+        .role-card.user {
+            border-top: 5px solid #3498db;
+        }
+        
+        .role-icon {
+            font-size: 50px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .role-title {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+            color: #2d3748;
+        }
+        
+        .role-features {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .role-features li {
+            padding: 8px 0;
+            color: #4a5568;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .role-features li:before {
+            content: "✓";
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .dashboard-link {
+            display: block;
+            margin-top: 15px;
+            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+            transition: transform 0.2s ease;
+        }
+        
+        .dashboard-link:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Credentials Section */
+        .credentials-section {
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        
+        .credentials-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2d3748;
+            text-align: center;
+        }
+        
+        .credentials-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .credential-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .credential-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .credential-box p {
+            color: #4a5568;
+            margin: 5px 0;
+            font-family: monospace;
+        }
+        
+        /* Permissions Table */
+        .permissions-section {
+            margin-top: 40px;
+        }
+        
+        .permissions-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #2d3748;
+            text-align: center;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        tr:hover {
+            background: #f7fafc;
+        }
+        
+        .check-yes {
+            color: #48bb78;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .check-no {
+            color: #fc8181;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        @media (max-width: 768px) {
+            .roles-container,
+            .credentials-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Login Flow - 3 User Types</h1>
+        <p class="subtitle">Election Expense Management System</p>
+        
+        <!-- Main Flowchart -->
+        <div class="flowchart">
+            <div class="flow-box start">
+                🌐 LOGIN PAGE
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-box">
+                <strong>Enter Credentials</strong><br>
+                👤 Username<br>
+                🔒 Password<br>
+                🌍 Language (Optional)
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-box validate">
+                <strong>⚙️ LoginServlet Validates</strong><br>
+                Checks username & password<br>
+                Identifies user role
+            </div>
+            
+            <div class="flow-arrow">↓</div>
+            
+            <div class="flow-box">
+                <strong>🎯 Role Detection</strong>
+            </div>
+        </div>
+        
+        <!-- Three Roles -->
+        <div class="roles-container">
+            <!-- Admin Card -->
+            <div class="role-card admin">
+                <div class="role-icon">👨‍💼</div>
+                <div class="role-title">ADMIN</div>
+                <ul class="role-features">
+                    <li>Full System Access</li>
+                    <li>Manage All Users</li>
+                    <li>Register Brokers</li>
+                    <li>View All Data</li>
+                    <li>System Settings</li>
+                    <li>Generate Reports</li>
+                </ul>
+                <a href="#" class="dashboard-link">/admin/dashboard.jsp</a>
+            </div>
+            
+            <!-- Broker Card -->
+            <div class="role-card broker">
+                <div class="role-icon">🤝</div>
+                <div class="role-title">BROKER</div>
+                <ul class="role-features">
+                    <li>View Assigned Candidates</li>
+                    <li>Manage Candidates</li>
+                    <li>Track Commission</li>
+                    <li>View Reports</li>
+                    <li>Update Profile</li>
+                    <li>Generate Documents</li>
+                </ul>
+                <a href="#" class="dashboard-link">/broker/dashboard.jsp</a>
+            </div>
+            
+            <!-- User Card -->
+            <div class="role-card user">
+                <div class="role-icon">👤</div>
+                <div class="role-title">USER</div>
+                <ul class="role-features">
+                    <li>Add Own Candidates</li>
+                    <li>Manage Own Data</li>
+                    <li>Track Expenses</li>
+                    <li>View Own Reports</li>
+                    <li>Budget Monitoring</li>
+                    <li>Generate Proformas</li>
+                </ul>
+                <a href="#" class="dashboard-link">/user/dashboard.jsp</a>
+            </div>
+        </div>
+        
+        <!-- Test Credentials -->
+        <div class="credentials-section">
+            <div class="credentials-title">🔑 Test Login Credentials</div>
+            <div class="credentials-grid">
+                <div class="credential-box">
+                    <h4>👨‍💼 Admin Login</h4>
+                    <p><strong>Username:</strong> admin</p>
+                    <p><strong>Password:</strong> admin123</p>
+                    <p><strong>Access:</strong> Full System</p>
+                </div>
+                
+                <div class="credential-box">
+                    <h4>🤝 Broker Login</h4>
+                    <p><strong>Username:</strong> broker01</p>
+                    <p><strong>Password:</strong> broker123</p>
+                    <p><strong>Access:</strong> Assigned Only</p>
+                </div>
+                
+                <div class="credential-box">
+                    <h4>👤 User Login</h4>
+                    <p><strong>Username:</strong> john_doe</p>
+                    <p><strong>Password:</strong> user123</p>
+                    <p><strong>Access:</strong> Own Data Only</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Permissions Table -->
+        <div class="permissions-section">
+            <div class="permissions-title">📊 Role Permissions Matrix</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Feature / Permission</th>
+                        <th>Admin</th>
+                        <th>Broker</th>
+                        <th>User</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>View All Users</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Register Brokers</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>View All Candidates</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>View Assigned Candidates</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>View Own Candidates</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Add Candidates</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Edit Any Candidate</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Edit Assigned Candidates</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Edit Own Candidates</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>Add Expenses</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>View All Reports</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>View Assigned Reports</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>View Own Reports</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                    <tr>
+                        <td>System Configuration</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Commission Tracking</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-no">✗</td>
+                    </tr>
+                    <tr>
+                        <td>Generate Documents</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                        <td class="check-yes">✓</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 40px; text-align: center; color: #718096; font-size: 14px;">
+            <p><strong>URL:</strong> http://localhost:8080/ElectionExpenseManagement/login.jsp</p>
+            <p>All users login through the same page but are redirected based on their role.</p>
+            <p style="margin-top: 20px;">© 2024 Election Expense Management System</p>
+        </div>
+    </div>
+</body>
+</html>

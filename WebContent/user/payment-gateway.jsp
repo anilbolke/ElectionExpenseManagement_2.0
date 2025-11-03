@@ -192,10 +192,15 @@
             <p>Election Expense Management</p>
         </div>
         
-        <div class="demo-note">
+        <div class="demo-note" id="demoNote" style="display: none;">
             <strong>⚠️ Demo Payment System</strong>
-            This is a demonstration payment page. No actual payment will be processed.
-            In production, this would integrate with Razorpay, PayPal, or Stripe.
+            Razorpay is not configured. Using demo payment mode. 
+            To enable Razorpay, set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.
+        </div>
+        
+        <div class="demo-note" id="razorpayNote" style="background: #d4edda; border-color: #c3e6cb; color: #155724; display: none;">
+            <strong>✓ Razorpay Integration Active</strong>
+            You will be redirected to Razorpay secure payment gateway.
         </div>
         
         <div class="payment-details">
@@ -299,8 +304,147 @@
         </div>
     </div>
     
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
-        // Add card number formatting
+        let razorpayConfig = null;
+        let isRazorpayConfigured = false;
+        let configLoaded = false;
+        
+        // Load Razorpay configuration
+        console.log('Loading Razorpay config from:', '<%=request.getContextPath()%>/payment?action=config');
+        fetch('<%=request.getContextPath()%>/payment?action=config')
+            .then(response => response.json())
+            .then(config => {
+                console.log('Razorpay Config Loaded:', config);
+                razorpayConfig = config;
+                isRazorpayConfigured = config.configured;
+                configLoaded = true;
+                
+                if (isRazorpayConfigured) {
+                    console.log('✅ Razorpay API is CONFIGURED - Will use real payment');
+                    document.getElementById('razorpayNote').style.display = 'block';
+                } else {
+                    console.log('⚠️ Razorpay API NOT configured - Will use demo mode');
+                    console.log('Key ID:', config.keyId);
+                    document.getElementById('demoNote').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Failed to load Razorpay config:', error);
+                document.getElementById('demoNote').style.display = 'block';
+                configLoaded = true;
+            });
+        
+        // Handle form submission
+        document.querySelector('.payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Wait for config to load if still loading
+            if (!configLoaded) {
+                console.log('⏳ Waiting for config to load...');
+                setTimeout(() => {
+                    document.querySelector('.payment-form').dispatchEvent(new Event('submit'));
+                }, 500);
+                return;
+            }
+            
+            console.log('💳 Processing payment...');
+            console.log('isRazorpayConfigured:', isRazorpayConfigured);
+            
+            if (isRazorpayConfigured) {
+                console.log('🚀 Using Razorpay API');
+                initiateRazorpayPayment();
+            } else {
+                console.log('⚠️ Using fallback demo payment');
+                console.log('Reason: Environment variables not set or invalid');
+                // Fallback to demo payment
+                HTMLFormElement.prototype.submit.call(this);
+            }
+        });
+        
+        function initiateRazorpayPayment() {
+            const amount = <%= amount %>;
+            const planName = '<%= planName %>';
+            
+            // Create Razorpay order
+            fetch('<%=request.getContextPath()%>/payment?action=createOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'amount=' + amount + '&paymentType=subscription&entityId=' + encodeURIComponent(planName)
+            })
+            .then(response => response.json())
+            .then(orderData => {
+                if (orderData.error) {
+                    alert('Failed to create order: ' + orderData.error);
+                    return;
+                }
+                
+                // Initialize Razorpay payment
+                const options = {
+                    key: razorpayConfig.keyId,
+                    amount: orderData.amount,
+                    currency: orderData.currency,
+                    name: razorpayConfig.companyName,
+                    description: planName + ' Subscription',
+                    image: razorpayConfig.companyLogo,
+                    order_id: orderData.id,
+                    handler: function (response) {
+                        verifyPayment(response);
+                    },
+                    prefill: {
+                        name: '<%= user.getFullName() %>',
+                        email: '<%= user.getEmail() %>',
+                        contact: '<%= user.getPhoneNumber() != null ? user.getPhoneNumber() : "" %>'
+                    },
+                    theme: {
+                        color: '#667eea'
+                    }
+                };
+                
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function (response) {
+                    alert('Payment failed: ' + response.error.description);
+                });
+                rzp.open();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to initiate payment. Please try again.');
+            });
+        }
+        
+        function verifyPayment(paymentResponse) {
+            const params = new URLSearchParams({
+                action: 'verifyPayment',
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature
+            });
+            
+            fetch('<%=request.getContextPath()%>/payment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: params.toString()
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = data.redirectUrl;
+                } else {
+                    alert('Payment verification failed: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Payment verification failed. Please contact support with payment ID: ' + paymentResponse.razorpay_payment_id);
+            });
+        }
+        
+        // Add card number formatting (for demo mode)
         document.querySelectorAll('input[placeholder*="Card Number"]').forEach(input => {
             input.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\s/g, '');
@@ -309,7 +453,7 @@
             });
         });
         
-        // Add expiry date formatting
+        // Add expiry date formatting (for demo mode)
         document.querySelectorAll('input[placeholder*="MM/YY"]').forEach(input => {
             input.addEventListener('input', function(e) {
                 let value = e.target.value.replace(/\D/g, '');

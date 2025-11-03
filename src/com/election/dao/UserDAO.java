@@ -207,8 +207,8 @@ public class UserDAO {
     
     // Register broker with referral code
     public boolean registerBroker(User user) {
-        String query = "INSERT INTO users (username, full_name, email, mobile, password, broker_id, user_role, referral_code, subscription_status, created_date) " +
-                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
+        String query = "INSERT INTO users (username, full_name, email, mobile, address, password, broker_id, user_role, referral_code, subscription_status, created_date) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
@@ -216,18 +216,19 @@ public class UserDAO {
             pstmt.setString(2, user.getFullName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getMobile());
-            pstmt.setString(5, user.getPassword());
+            pstmt.setString(5, user.getAddress());
+            pstmt.setString(6, user.getPassword());
             
             // Set broker_id - null for brokers
             if (user.getBrokerId() != null) {
-                pstmt.setInt(6, user.getBrokerId());
+                pstmt.setInt(7, user.getBrokerId());
             } else {
-                pstmt.setNull(6, Types.INTEGER);
+                pstmt.setNull(7, Types.INTEGER);
             }
             
-            pstmt.setString(7, user.getRole());
-            pstmt.setString(8, user.getReferralCode());
-            pstmt.setString(9, "active");
+            pstmt.setString(8, user.getRole());
+            pstmt.setString(9, user.getReferralCode());
+            pstmt.setString(10, "active");
             
             int result = pstmt.executeUpdate();
             return result > 0;
