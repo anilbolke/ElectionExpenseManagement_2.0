@@ -23,6 +23,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payment Success - Election Expense Management</title>
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
+    <meta http-equiv="refresh" content="5;url=dashboard.jsp">
     <style>
         body {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -164,7 +165,7 @@
         <div class="subscription-badge">🎉 Subscription Activated</div>
         
         <p class="success-message">
-            <%= successMessage %>
+            <%= successMessage %> You will be redirected to the dashboard in 5 seconds...
         </p>
         
         <div class="transaction-box">
@@ -191,11 +192,11 @@
         </div>
         
         <div class="action-buttons">
-            <a href="<%=request.getContextPath()%>/user/dashboard.jsp" class="btn btn-primary btn-lg">
+            <a href="<%=request.getContextPath()%>/user/dashboard.jsp" class="btn btn-primary btn-lg" id="dashboardBtn">
                 📊 Go to Dashboard
             </a>
-            <a href="<%=request.getContextPath()%>/user/subscription.jsp" class="btn btn-secondary btn-lg">
-                View Subscription
+            <a href="<%=request.getContextPath()%>/user/manage-candidates.jsp" class="btn btn-secondary btn-lg">
+                Manage Candidates
             </a>
         </div>
         
@@ -212,6 +213,21 @@
             session.removeAttribute("success");
             session.removeAttribute("transactionId");
         %>
+        
+        // Auto redirect to dashboard after 5 seconds
+        let countdown = 5;
+        const dashboardBtn = document.getElementById('dashboardBtn');
+        
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+                dashboardBtn.innerHTML = '📊 Go to Dashboard (' + countdown + 's)';
+            } else {
+                dashboardBtn.innerHTML = '📊 Redirecting...';
+                clearInterval(countdownInterval);
+                window.location.href = '<%=request.getContextPath()%>/user/dashboard.jsp';
+            }
+        }, 1000);
         
         // Confetti animation (optional)
         console.log('Payment successful! Transaction ID: <%= transactionId %>');

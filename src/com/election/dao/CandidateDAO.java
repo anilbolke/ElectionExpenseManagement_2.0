@@ -13,7 +13,7 @@ public class CandidateDAO {
     public int createCandidate(Candidate candidate) {
         String query = "INSERT INTO candidates (user_id, candidate_name, father_name, age, gender, mobile, email, address, city, state, pincode, " +
                       "aadhar_number, voter_id, constituency, nomination_id, party_name, party_symbol, election_type, election_date, " +
-                      "booth_number, broker_id, account_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                      "booth_number, broker_id, expense_limit, account_status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -39,7 +39,8 @@ public class CandidateDAO {
             pstmt.setDate(19, candidate.getElectionDate());
             pstmt.setString(20, candidate.getBoothNumber());
             pstmt.setInt(21, candidate.getBrokerId());
-            pstmt.setString(22, "pending_payment");
+            pstmt.setBigDecimal(22, candidate.getExpenseLimit());
+            pstmt.setString(23, "pending_payment");
             
             int result = pstmt.executeUpdate();
             if (result > 0) {
@@ -166,15 +167,16 @@ public class CandidateDAO {
     // Update payment status
     public boolean updatePaymentStatus(int candidateId, String status, String transactionId) {
         String query = "UPDATE candidates SET payment_status = ?, transaction_id = ?, payment_date = CURRENT_TIMESTAMP, " +
-                      "account_status = ? WHERE candidate_id = ?";
+                      "is_payment_verified = ?, account_status = ? WHERE candidate_id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setString(1, status);
             pstmt.setString(2, transactionId);
-            pstmt.setString(3, status.equals("completed") ? "active" : "pending_payment");
-            pstmt.setInt(4, candidateId);
+            pstmt.setInt(3, status.equals("completed") ? 1 : 0);
+            pstmt.setString(4, status.equals("completed") ? "active" : "pending_payment");
+            pstmt.setInt(5, candidateId);
             
             int result = pstmt.executeUpdate();
             return result > 0;
@@ -317,6 +319,7 @@ public class CandidateDAO {
         candidate.setElectionDate(rs.getDate("election_date"));
         candidate.setBoothNumber(rs.getString("booth_number"));
         candidate.setBrokerId(rs.getInt("broker_id"));
+        candidate.setExpenseLimit(rs.getBigDecimal("expense_limit"));
         candidate.setPaymentStatus(rs.getString("payment_status"));
         candidate.setPaymentAmount(rs.getBigDecimal("payment_amount"));
         candidate.setPaymentDate(rs.getTimestamp("payment_date"));

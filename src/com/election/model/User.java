@@ -81,6 +81,13 @@ public class User {
     private BigDecimal brokerCommissionRate;
     private String referralCode;  // Unique referral code for brokers
     
+    // Bank Details (for brokers)
+    private String bankName;
+    private String accountNumber;
+    private String ifscCode;
+    private String branchName;
+    private String panNumber;
+    
     // Timestamps
     private Timestamp createdAt;
     private Timestamp updatedAt;
@@ -553,6 +560,47 @@ public class User {
 
     public void setReferralCode(String referralCode) {
         this.referralCode = referralCode;
+    }
+
+    // Bank Details Getters and Setters
+    public String getBankName() {
+        return bankName;
+    }
+    
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+    
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+    
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+    
+    public String getIfscCode() {
+        return ifscCode;
+    }
+    
+    public void setIfscCode(String ifscCode) {
+        this.ifscCode = ifscCode;
+    }
+    
+    public String getBranchName() {
+        return branchName;
+    }
+    
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+    
+    public String getPanNumber() {
+        return panNumber;
+    }
+    
+    public void setPanNumber(String panNumber) {
+        this.panNumber = panNumber;
     }
 
     public Timestamp getCreatedAt() {

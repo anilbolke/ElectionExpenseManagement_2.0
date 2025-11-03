@@ -463,16 +463,19 @@
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="electionType">Election Type *</label>
+                        <label for="electionType"><%= MessageBundle.getMessage(request, "candidate.election.type") %> *</label>
                         <select class="form-control" id="electionType" name="electionType" required>
-                            <option value="">Select Election Type</option>
-                            <option value="Lok Sabha (General / Parliamentary) elections" <%= "Lok Sabha (General / Parliamentary) elections".equals(candidate.getElectionType()) ? "selected" : "" %>>Lok Sabha (General / Parliamentary) elections</option>
-                            <option value="State Legislative Assembly (Vidhan Sabha) elections" <%= "State Legislative Assembly (Vidhan Sabha) elections".equals(candidate.getElectionType()) ? "selected" : "" %>>State Legislative Assembly (Vidhan Sabha) elections</option>
-                            <option value="Rajya Sabha elections (for upper house of Parliament)" <%= "Rajya Sabha elections (for upper house of Parliament)".equals(candidate.getElectionType()) ? "selected" : "" %>>Rajya Sabha elections (for upper house of Parliament)</option>
-                            <option value="State Legislative Council (Vidhan Parishad) elections (in states which have them)" <%= "State Legislative Council (Vidhan Parishad) elections (in states which have them)".equals(candidate.getElectionType()) ? "selected" : "" %>>State Legislative Council (Vidhan Parishad) elections (in states which have them)</option>
-                            <option value="Municipal / Local body elections (Municipal Corporation, Municipality, Nagar Panchayat)" <%= "Municipal / Local body elections (Municipal Corporation, Municipality, Nagar Panchayat)".equals(candidate.getElectionType()) ? "selected" : "" %>>Municipal / Local body elections (Municipal Corporation, Municipality, Nagar Panchayat)</option>
-                            <option value="Panchayat elections (Gram Panchayat, Panchayat Samiti, Zilla Parishad)" <%= "Panchayat elections (Gram Panchayat, Panchayat Samiti, Zilla Parishad)".equals(candidate.getElectionType()) ? "selected" : "" %>>Panchayat elections (Gram Panchayat, Panchayat Samiti, Zilla Parishad)</option>
-                            <option value="By-elections (to fill vacancies in Lok Sabha, State Assembly etc.)" <%= "By-elections (to fill vacancies in Lok Sabha, State Assembly etc.)".equals(candidate.getElectionType()) ? "selected" : "" %>>By-elections (to fill vacancies in Lok Sabha, State Assembly etc.)</option>
+                            <option value=""><%= MessageBundle.getMessage(request, "election.type.select") %></option>
+                            <option value="Municipal Corporations Elections" <%= "Municipal Corporations Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.municipal.corporations") %></option>
+                            <option value="Municipal Councils Elections" <%= "Municipal Councils Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.municipal.councils") %></option>
+                            <option value="Nagar Panchayat Elections" <%= "Nagar Panchayat Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.nagar.panchayat") %></option>
+                            <option value="Zilla Parishad Elections" <%= "Zilla Parishad Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.zilla.parishad") %></option>
+                            <option value="Panchayat Samiti Elections" <%= "Panchayat Samiti Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.panchayat.samiti") %></option>
+                            <option value="Gram Panchayat Elections" <%= "Gram Panchayat Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.gram.panchayat") %></option>
+                            <option value="Assembly Elections" <%= "Assembly Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.assembly") %></option>
+                            <option value="Teachers' Constituency Elections" <%= "Teachers' Constituency Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.teachers") %></option>
+                            <option value="Graduate Constituency Elections" <%= "Graduate Constituency Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.graduate") %></option>
+                            <option value="Lok Sabha Elections" <%= "Lok Sabha Elections".equals(candidate.getElectionType()) ? "selected" : "" %>><%= MessageBundle.getMessage(request, "election.type.lok.sabha") %></option>
                         </select>
                     </div>
                 </div>
@@ -494,7 +497,7 @@
                         <input type="date" class="form-control" id="electionDate" name="electionDate" value="<%= candidate.getElectionDate() != null ? candidate.getElectionDate().toString() : "" %>">
                     </div>
                     <div class="form-group">
-                        <label for="boothNumber">Ward/Prabhag/ZP/PS/VS/LS Number</label>
+                        <label for="boothNumber"><%= MessageBundle.getMessage(request, "candidate.ward.number") %></label>
                         <input type="text" class="form-control" id="boothNumber" name="boothNumber" value="<%= candidate.getBoothNumber() != null ? candidate.getBoothNumber() : "" %>">
                     </div>
                 </div>

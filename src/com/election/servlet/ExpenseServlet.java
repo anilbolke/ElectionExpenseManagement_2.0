@@ -10,6 +10,8 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 public class ExpenseServlet extends HttpServlet {
     
@@ -100,7 +102,8 @@ public class ExpenseServlet extends HttpServlet {
             expense.setCreatedBy(userId);
             
             if (expenseDAO.addExpense(expense)) {
-                response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp?success=Expense added successfully! ₹" + String.format("%.2f", amount) + " for " + category);
+                String successMessage = "Expense added successfully! ₹" + String.format("%.2f", amount) + " for " + category;
+                response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp?success=" + URLEncoder.encode(successMessage, StandardCharsets.UTF_8.toString()));
             } else {
                 response.sendRedirect(request.getContextPath() + "/user/add-expense.jsp?error=Failed to add expense");
             }

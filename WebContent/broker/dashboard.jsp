@@ -410,6 +410,7 @@
                     <h3>⚡ Quick Actions</h3>
                     <a href="my-users.jsp" class="action-btn">👥 View My Users</a>
                     <a href="my-candidates.jsp" class="action-btn secondary">🗳️ View Candidates</a>
+                    <a href="bank-details.jsp" class="action-btn" style="background: #4299e1;">🏦 Bank Details</a>
                 </div>
                 
                 <!-- Broker Info -->

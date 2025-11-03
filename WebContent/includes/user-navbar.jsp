@@ -141,6 +141,14 @@
                    class="<%= currentPage1.contains("expense") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.expenses") %>
             </a></li>
+            <li><a href="<%= request.getContextPath() %>/user/change-password.jsp"
+                   class="<%= currentPage1.contains("change-password") ? "active" : "" %>">
+                🔒 <%= MessageBundle.getMessage(request, "user.change.password") %>
+            </a></li>
+            <li><a href="<%= request.getContextPath() %>/user/map-referral-code.jsp"
+                   class="<%= currentPage1.contains("map-referral-code") ? "active" : "" %>">
+                🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %>
+            </a></li>
         </ul>
         
         <div class="multilang-user-section">

@@ -322,11 +322,11 @@
         // Validation rules
         const validationRules = {
             firstName: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
                 message: 'First name must be 2-50 characters (letters only)'
             },
             lastName: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
                 message: 'Last name must be 2-50 characters (letters only)'
             },
             mobileNumber: {

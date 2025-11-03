@@ -1,0 +1,34 @@
+# Razorpay Configuration Properties
+# Copy this file to razorpay.properties and update with your actual credentials
+# DO NOT commit razorpay.properties to version control
+
+# Razorpay API Credentials
+# Get these from: https://dashboard.razorpay.com/app/keys
+razorpay.key.id=rzp_test_YOUR_KEY_ID
+razorpay.key.secret=YOUR_KEY_SECRET
+
+# Use test mode for development, live for production
+razorpay.mode=test
+
+# Live Mode Credentials (uncomment when going to production)
+# razorpay.key.id.live=rzp_live_YOUR_LIVE_KEY_ID
+# razorpay.key.secret.live=YOUR_LIVE_KEY_SECRET
+
+# Currency
+razorpay.currency=INR
+
+# Company Details (shown on Razorpay checkout)
+razorpay.company.name=Election Expense Management
+razorpay.company.logo=
+
+# Webhook Secret (for payment verification)
+# Get this from: https://dashboard.razorpay.com/app/webhooks
+razorpay.webhook.secret=YOUR_WEBHOOK_SECRET
+
+# Callback URLs
+razorpay.callback.success=/user/payment-success.jsp
+razorpay.callback.failure=/user/payment-failure.jsp
+
+# Payment Settings
+razorpay.auto.capture=true
+razorpay.timeout=900

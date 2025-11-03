@@ -300,7 +300,7 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="age"><%= MessageBundle.getMessage(request, "candidate.age") %> *</label>
-                            <input type="number" class="form-control" id="age" name="age" min="25" max="100" required>
+                            <input type="number" class="form-control" id="age" name="age" min="21" max="100" required>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "candidate.age.min") %></div>
                             <div class="error-message" id="age-error"><%= MessageBundle.getMessage(request, "validation.age") %></div>
                         </div>
@@ -410,10 +410,12 @@
                             <label for="electionType"><%= MessageBundle.getMessage(request, "candidate.election.type") %> *</label>
                             <select class="form-control" id="electionType" name="electionType" required>
                                 <option value=""><%= MessageBundle.getMessage(request, "election.type.select") %></option>
-                                <option value="Municipal Elections"><%= MessageBundle.getMessage(request, "election.type.municipal") %></option>
-                                <option value="Municipal Council Elections"><%= MessageBundle.getMessage(request, "election.type.municipal.council") %></option>
-                                <option value="Panchayat Samiti Elections"><%= MessageBundle.getMessage(request, "election.type.panchayat.samiti") %></option>
+                                <option value="Municipal Corporations Elections"><%= MessageBundle.getMessage(request, "election.type.municipal.corporations") %></option>
+                                <option value="Municipal Councils Elections"><%= MessageBundle.getMessage(request, "election.type.municipal.councils") %></option>
+                                <option value="Nagar Panchayat Elections"><%= MessageBundle.getMessage(request, "election.type.nagar.panchayat") %></option>
                                 <option value="Zilla Parishad Elections"><%= MessageBundle.getMessage(request, "election.type.zilla.parishad") %></option>
+                                <option value="Panchayat Samiti Elections"><%= MessageBundle.getMessage(request, "election.type.panchayat.samiti") %></option>
+                                <option value="Gram Panchayat Elections"><%= MessageBundle.getMessage(request, "election.type.gram.panchayat") %></option>
                                 <option value="Assembly Elections"><%= MessageBundle.getMessage(request, "election.type.assembly") %></option>
                                 <option value="Teachers' Constituency Elections"><%= MessageBundle.getMessage(request, "election.type.teachers") %></option>
                                 <option value="Graduate Constituency Elections"><%= MessageBundle.getMessage(request, "election.type.graduate") %></option>
@@ -441,9 +443,27 @@
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
                         </div>
                         <div class="form-group">
-                            <label for="boothNumber">Ward/Prabhag/ZP/PS/VS/LS Number</label>
+                            <label for="boothNumber"><%= MessageBundle.getMessage(request, "candidate.ward.number") %></label>
                             <input type="text" class="form-control" id="boothNumber" name="boothNumber" maxlength="20">
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "form.optional") %></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expenseLimit">💰 Expense Limit Amount (₹) *</label>
+                            <input type="number" class="form-control" id="expenseLimit" name="expenseLimit" 
+                                   min="0" step="0.01" required placeholder="Enter expense limit amount">
+                            <div class="helper-text">Set the maximum expense limit for this candidate's campaign (e.g., 50000.00)</div>
+                            <div class="error-message" id="expenseLimit-error">Please enter a valid expense limit amount</div>
+                        </div>
+                        <div class="form-group">
+                            <div style="background: #e6f7ff; border-left: 4px solid #1890ff; padding: 15px; border-radius: 4px; margin-top: 28px;">
+                                <strong style="color: #0050b3;">ℹ️ About Expense Limit:</strong>
+                                <p style="margin: 8px 0 0 0; color: #595959; font-size: 13px;">
+                                    This limit will be used to track and control campaign expenses. You can monitor spending against this limit in reports.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -466,64 +486,89 @@
     </footer>
     
     <script>
+        // Inject validation messages from server-side message bundle for multi-language support
+        const VALIDATION_MESSAGES = {
+            namePattern: '<%= MessageBundle.getMessage(request, "validation.name.pattern") %>',
+            ageRange: '<%= MessageBundle.getMessage(request, "validation.age.range") %>',
+            mobilePattern: '<%= MessageBundle.getMessage(request, "validation.mobile.pattern") %>',
+            emailInvalid: '<%= MessageBundle.getMessage(request, "validation.email.invalid") %>',
+            cityPattern: '<%= MessageBundle.getMessage(request, "validation.city.pattern") %>',
+            statePattern: '<%= MessageBundle.getMessage(request, "validation.state.pattern") %>',
+            pincodePattern: '<%= MessageBundle.getMessage(request, "validation.pincode.pattern") %>',
+            aadharPattern: '<%= MessageBundle.getMessage(request, "validation.aadhar.pattern") %>',
+            voterIdMinLength: '<%= MessageBundle.getMessage(request, "validation.voterid.minlength") %>',
+            constituencyRequired: '<%= MessageBundle.getMessage(request, "validation.constituency.required") %>',
+            nominationIdMinLength: '<%= MessageBundle.getMessage(request, "validation.nominationid.minlength") %>',
+            partyNameRequired: '<%= MessageBundle.getMessage(request, "validation.partyname.required") %>',
+            fieldRequired: '<%= MessageBundle.getMessage(request, "validation.field.required") %>',
+            selectRequired: '<%= MessageBundle.getMessage(request, "validation.select.required") %>',
+            genderRequired: '<%= MessageBundle.getMessage(request, "validation.gender.required") %>',
+            electionTypeRequired: '<%= MessageBundle.getMessage(request, "validation.electiontype.required") %>',
+            formErrors: '<%= MessageBundle.getMessage(request, "validation.form.errors") %>'
+        };
+        
         // Form validation - Same patterns as user registration
         const form = document.getElementById('candidateForm');
         
         // Validation rules
         const validationRules = {
             candidateName: {
-                pattern: /^[a-zA-Z\s]{2,100}$/,
-                message: 'Name must be 2-100 characters (letters only)'
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,100}$/,
+                message: VALIDATION_MESSAGES.namePattern
             },
             fatherName: {
-                pattern: /^[a-zA-Z\s]{2,100}$/,
-                message: 'Name must be 2-100 characters (letters only)'
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,100}$/,
+                message: VALIDATION_MESSAGES.namePattern
             },
             age: {
-                min: 25,
+                min: 21,
                 max: 100,
-                message: 'Age must be between 25 and 100'
+                message: VALIDATION_MESSAGES.ageRange
             },
             mobile: {
                 pattern: /^[6-9][0-9]{9}$/,
-                message: 'Mobile must start with 6-9 and be 10 digits'
+                message: VALIDATION_MESSAGES.mobilePattern
             },
             email: {
                 pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Please enter a valid email address',
+                message: VALIDATION_MESSAGES.emailInvalid,
                 optional: true
             },
             city: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
-                message: 'City name must be 2-50 characters (letters only)'
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
+                message: VALIDATION_MESSAGES.cityPattern
             },
             state: {
-                pattern: /^[a-zA-Z\s]{2,50}$/,
-                message: 'State name must be 2-50 characters (letters only)'
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
+                message: VALIDATION_MESSAGES.statePattern
             },
             pincode: {
                 pattern: /^[0-9]{6}$/,
-                message: 'Pincode must be exactly 6 digits'
+                message: VALIDATION_MESSAGES.pincodePattern
             },
             aadharNumber: {
                 pattern: /^[0-9]{12}$/,
-                message: 'Aadhar must be exactly 12 digits'
+                message: VALIDATION_MESSAGES.aadharPattern
             },
             voterId: {
                 minLength: 3,
-                message: 'Voter ID must be at least 3 characters'
+                message: VALIDATION_MESSAGES.voterIdMinLength
             },
             constituency: {
                 minLength: 2,
-                message: 'Constituency name is required'
+                message: VALIDATION_MESSAGES.constituencyRequired
             },
             nominationId: {
                 minLength: 3,
-                message: 'Nomination ID must be at least 3 characters'
+                message: VALIDATION_MESSAGES.nominationIdMinLength
             },
             partyName: {
                 minLength: 2,
-                message: 'Party name is required'
+                message: VALIDATION_MESSAGES.partyNameRequired
+            },
+            expenseLimit: {
+                min: 0,
+                message: 'Expense limit must be a positive number'
             }
         };
         
@@ -597,7 +642,7 @@
             if (field.tagName === 'SELECT' && field.hasAttribute('required') && !fieldValue) {
                 field.classList.add('error');
                 if (errorElement) {
-                    errorElement.textContent = 'Please make a selection';
+                    errorElement.textContent = VALIDATION_MESSAGES.selectRequired;
                     errorElement.classList.add('show');
                 }
                 return false;
@@ -632,6 +677,49 @@
             });
         });
         
+        // Real-time validation for expense limit
+        document.getElementById('expenseLimit').addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const errorElement = document.getElementById('expenseLimit-error');
+            
+            this.classList.remove('error', 'success');
+            
+            if (!this.value || this.value.trim() === '') {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is required';
+                    errorElement.classList.add('show');
+                }
+            } else if (isNaN(value) || value < 0) {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit must be a positive number';
+                    errorElement.classList.add('show');
+                }
+            } else if (value > 999999999.99) {
+                this.classList.add('error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is too large';
+                    errorElement.classList.add('show');
+                }
+            } else {
+                this.classList.add('success');
+                if (errorElement) {
+                    errorElement.classList.remove('show');
+                }
+            }
+        });
+        
+        // Format expense limit on blur
+        document.getElementById('expenseLimit').addEventListener('blur', function() {
+            if (this.value && !isNaN(this.value)) {
+                const value = parseFloat(this.value);
+                if (value >= 0) {
+                    this.value = value.toFixed(2);
+                }
+            }
+        });
+        
         // Form submission validation
         form.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -653,13 +741,13 @@
             
             // Additional validation
             const age = parseInt(document.getElementById('age').value);
-            if (age < 25 || age > 100) {
+            if (age < 21 || age > 100) {
                 isValid = false;
                 const ageField = document.getElementById('age');
                 ageField.classList.add('error');
                 const errorElement = document.getElementById('age-error');
                 if (errorElement) {
-                    errorElement.textContent = 'Age must be between 25 and 100';
+                    errorElement.textContent = VALIDATION_MESSAGES.ageRange;
                     errorElement.classList.add('show');
                 }
                 if (!firstError) firstError = ageField;
@@ -673,7 +761,7 @@
                 genderField.classList.add('error');
                 const errorElement = document.getElementById('gender-error');
                 if (errorElement) {
-                    errorElement.textContent = 'Please select gender';
+                    errorElement.textContent = VALIDATION_MESSAGES.genderRequired;
                     errorElement.classList.add('show');
                 }
                 if (!firstError) firstError = genderField;
@@ -687,10 +775,45 @@
                 electionField.classList.add('error');
                 const errorElement = document.getElementById('electionType-error');
                 if (errorElement) {
-                    errorElement.textContent = 'Please select election type';
+                    errorElement.textContent = VALIDATION_MESSAGES.electionTypeRequired;
                     errorElement.classList.add('show');
                 }
                 if (!firstError) firstError = electionField;
+            }
+            
+            // Expense limit validation
+            const expenseLimit = document.getElementById('expenseLimit').value;
+            const expenseLimitNum = parseFloat(expenseLimit);
+            if (!expenseLimit || expenseLimit.trim() === '') {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is required';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
+            } else if (isNaN(expenseLimitNum) || expenseLimitNum < 0) {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit must be a positive number';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
+            } else if (expenseLimitNum > 999999999.99) {
+                isValid = false;
+                const expenseLimitField = document.getElementById('expenseLimit');
+                expenseLimitField.classList.add('error');
+                const errorElement = document.getElementById('expenseLimit-error');
+                if (errorElement) {
+                    errorElement.textContent = 'Expense limit is too large (max: ₹99,99,99,999.99)';
+                    errorElement.classList.add('show');
+                }
+                if (!firstError) firstError = expenseLimitField;
             }
             
             if (isValid) {
@@ -698,7 +821,7 @@
                 this.submit();
             } else {
                 // Show error alert
-                alert('❌ Please fix all errors before submitting!');
+                alert('❌ ' + VALIDATION_MESSAGES.formErrors);
                 
                 // Scroll to first error
                 if (firstError) {

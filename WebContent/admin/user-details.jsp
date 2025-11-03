@@ -336,6 +336,15 @@
                         <div class="value"><%= viewUser.getCity() != null ? viewUser.getCity() : "N/A" %></div>
                     </div>
                     <div class="info-item">
+                        <label>Password</label>
+                        <div class="value" style="display: flex; align-items: center; gap: 10px;">
+                            <span id="passwordDisplay" style="font-family: monospace;">••••••••</span>
+                            <button onclick="togglePassword()" class="btn-toggle" style="padding: 5px 12px; font-size: 12px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                                <span id="toggleIcon">👁️ Show</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="info-item">
                         <label>User Role</label>
                         <div class="value">
                             <% 
@@ -430,10 +439,98 @@
         </div>
         <% } %>
         
+        <!-- Broker Bank Details (ADMIN VIEW ONLY - Read Only) -->
+        <!-- This section ONLY appears in admin panel when viewing broker users -->
+        <!-- Brokers cannot see this in their own view, only admins can -->
+        <% if ("broker".equals(viewUser.getUserRole())) { %>
+        <%
+            // Debug output
+            System.out.println("========== ADMIN VIEWING BROKER BANK DETAILS ==========");
+            System.out.println("Admin User: " + adminUser.getUsername());
+            System.out.println("Viewing Broker ID: " + viewUser.getUserId());
+            System.out.println("Broker Username: " + viewUser.getUsername());
+            System.out.println("Bank Name: " + viewUser.getBankName());
+            System.out.println("Account Number: " + viewUser.getAccountNumber());
+            System.out.println("IFSC Code: " + viewUser.getIfscCode());
+            System.out.println("Branch Name: " + viewUser.getBranchName());
+            System.out.println("PAN Number: " + viewUser.getPanNumber());
+            System.out.println("======================================================");
+        %>
+        <div class="card">
+            <div class="card-header">
+                <h3>🏦 Bank Account Details (Admin View)</h3>
+                <span class="badge badge-info">Admin View Only - Read Only</span>
+            </div>
+            <div class="card-body">
+                <% 
+                    boolean hasBankDetails = viewUser.getBankName() != null && !viewUser.getBankName().isEmpty();
+                %>
+                <% if (hasBankDetails) { %>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label>Bank Name</label>
+                            <div class="value"><%= viewUser.getBankName() != null ? viewUser.getBankName() : "N/A" %></div>
+                        </div>
+                        <div class="info-item">
+                            <label>Account Number</label>
+                            <div class="value" style="font-family: monospace; letter-spacing: 1px;">
+                                <%= viewUser.getAccountNumber() != null ? viewUser.getAccountNumber() : "N/A" %>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label>IFSC Code</label>
+                            <div class="value" style="font-family: monospace; font-weight: 600; color: #2d3748;">
+                                <%= viewUser.getIfscCode() != null ? viewUser.getIfscCode() : "N/A" %>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <label>Branch Name</label>
+                            <div class="value"><%= viewUser.getBranchName() != null ? viewUser.getBranchName() : "N/A" %></div>
+                        </div>
+                        <div class="info-item">
+                            <label>PAN Number</label>
+                            <div class="value" style="font-family: monospace; font-weight: 600; color: #2d3748;">
+                                <%= viewUser.getPanNumber() != null ? viewUser.getPanNumber() : "N/A" %>
+                            </div>
+                        </div>
+                    </div>
+                <% } else { %>
+                    <div class="empty-state">
+                        <div class="icon">🏦</div>
+                        <h3 style="color: #4a5568; margin-bottom: 10px;">No Bank Details Added</h3>
+                        <p>This broker hasn't added their bank account details yet.</p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        <% } %>
+        
         <!-- Actions -->
         <div style="display: flex; gap: 15px; margin-top: 30px;">
             <a href="view-users.jsp" class="btn btn-primary">← Back to All Users</a>
         </div>
     </div>
+    
+    <script>
+        let passwordVisible = false;
+        const actualPassword = '<%= viewUser.getPassword() != null ? viewUser.getPassword().replace("'", "\\'").replace("\"", "\\\"") : "" %>';
+        
+        function togglePassword() {
+            const passwordDisplay = document.getElementById('passwordDisplay');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordVisible) {
+                // Hide password
+                passwordDisplay.textContent = '••••••••';
+                toggleIcon.textContent = '👁️ Show';
+                passwordVisible = false;
+            } else {
+                // Show password
+                passwordDisplay.textContent = actualPassword;
+                toggleIcon.textContent = '🙈 Hide';
+                passwordVisible = true;
+            }
+        }
+    </script>
 </body>
 </html>

@@ -11,20 +11,26 @@ public class PaymentDAO {
     
     // Add new payment
     public boolean addPayment(Payment payment) {
-        String query = "INSERT INTO payments (candidate_id, broker_id, payment_type, amount, payment_method, " +
-                      "transaction_id, payment_status, remarks) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        // Updated to match actual database schema
+        String query = "INSERT INTO payments (candidate_id, user_id, payment_amount, payment_status, " +
+                      "payment_method, transaction_id, payment_gateway, gateway_response, " +
+                      "razorpay_order_id, razorpay_payment_id, razorpay_signature) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setInt(1, payment.getCandidateId());
-            pstmt.setInt(2, payment.getBrokerId());
-            pstmt.setString(3, payment.getPaymentType());
-            pstmt.setBigDecimal(4, payment.getAmount());
+            pstmt.setInt(2, payment.getBrokerId()); // Using as user_id
+            pstmt.setBigDecimal(3, payment.getAmount());
+            pstmt.setString(4, payment.getPaymentStatus());
             pstmt.setString(5, payment.getPaymentMethod());
             pstmt.setString(6, payment.getTransactionId());
-            pstmt.setString(7, payment.getPaymentStatus());
-            pstmt.setString(8, payment.getRemarks());
+            pstmt.setString(7, "Razorpay"); // payment_gateway
+            pstmt.setString(8, payment.getRemarks()); // gateway_response
+            pstmt.setString(9, payment.getRazorpayOrderId());
+            pstmt.setString(10, payment.getRazorpayPaymentId());
+            pstmt.setString(11, payment.getRazorpaySignature());
             
             int result = pstmt.executeUpdate();
             return result > 0;
@@ -42,6 +48,44 @@ public class PaymentDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setString(1, transactionId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return extractPaymentFromResultSet(rs);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // Get payment by Razorpay payment ID
+    public Payment getPaymentByRazorpayPaymentId(String razorpayPaymentId) {
+        String query = "SELECT * FROM payments WHERE razorpay_payment_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, razorpayPaymentId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return extractPaymentFromResultSet(rs);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // Get payment by Razorpay order ID
+    public Payment getPaymentByRazorpayOrderId(String razorpayOrderId) {
+        String query = "SELECT * FROM payments WHERE razorpay_order_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, razorpayOrderId);
             ResultSet rs = pstmt.executeQuery();
             
             if (rs.next()) {
@@ -185,6 +229,12 @@ public class PaymentDAO {
         payment.setAmount(rs.getBigDecimal("amount"));
         payment.setPaymentMethod(rs.getString("payment_method"));
         payment.setTransactionId(rs.getString("transaction_id"));
+        
+        // Razorpay specific fields (may be null for older records)
+        payment.setRazorpayOrderId(rs.getString("razorpay_order_id"));
+        payment.setRazorpayPaymentId(rs.getString("razorpay_payment_id"));
+        payment.setRazorpaySignature(rs.getString("razorpay_signature"));
+        
         payment.setPaymentStatus(rs.getString("payment_status"));
         payment.setPaymentDate(rs.getTimestamp("payment_date"));
         payment.setVerifiedBy(rs.getInt("verified_by"));
