@@ -89,6 +89,26 @@ public class ExpenseServlet extends HttpServlet {
             BigDecimal amount = new BigDecimal(amountStr);
             Date expenseDate = Date.valueOf(dateStr);
             
+            // Check expense limit before adding expense
+            BigDecimal expenseLimit = candidate.getExpenseLimit();
+            if (expenseLimit == null) expenseLimit = BigDecimal.ZERO;
+            
+            BigDecimal totalExpenses = expenseDAO.getTotalExpensesByCandidate(candidateId);
+            if (totalExpenses == null) totalExpenses = BigDecimal.ZERO;
+            
+            BigDecimal newTotalExpenses = totalExpenses.add(amount);
+            BigDecimal remainingLimit = expenseLimit.subtract(newTotalExpenses);
+            
+            // Check if expenses would exceed limit
+            if (remainingLimit.compareTo(BigDecimal.ZERO) < 0) {
+                String errorMessage = "Cannot add expense! This would exceed expense limit. Limit: ₹" + 
+                    String.format("%.2f", expenseLimit) + ", Current Expenses: ₹" + String.format("%.2f", totalExpenses) + 
+                    ", Available: ₹" + String.format("%.2f", expenseLimit.subtract(totalExpenses)) + 
+                    ", Attempting to add: ₹" + String.format("%.2f", amount);
+                response.sendRedirect(request.getContextPath() + "/user/add-expense.jsp?error=" + URLEncoder.encode(errorMessage, StandardCharsets.UTF_8.toString()));
+                return;
+            }
+            
             Expense expense = new Expense();
             expense.setCandidateId(candidateId);
             expense.setExpenseCategory(category);
@@ -102,7 +122,8 @@ public class ExpenseServlet extends HttpServlet {
             expense.setCreatedBy(userId);
             
             if (expenseDAO.addExpense(expense)) {
-                String successMessage = "Expense added successfully! ₹" + String.format("%.2f", amount) + " for " + category;
+                String successMessage = "Expense added successfully! ₹" + String.format("%.2f", amount) + " for " + category + 
+                    ". Remaining limit: ₹" + String.format("%.2f", remainingLimit);
                 response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp?success=" + URLEncoder.encode(successMessage, StandardCharsets.UTF_8.toString()));
             } else {
                 response.sendRedirect(request.getContextPath() + "/user/add-expense.jsp?error=Failed to add expense");

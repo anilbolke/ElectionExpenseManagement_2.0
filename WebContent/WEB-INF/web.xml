@@ -179,6 +179,36 @@
         <url-pattern>/fundDetail</url-pattern>
     </servlet-mapping>
     
+    <!-- Generate Proforma Servlet -->
+    <servlet>
+        <servlet-name>GenerateProformaServlet</servlet-name>
+        <servlet-class>com.election.servlet.GenerateProformaServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GenerateProformaServlet</servlet-name>
+        <url-pattern>/generateProforma</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Generate Form-2 Expense Report Servlet -->
+    <servlet>
+        <servlet-name>GenerateForm2PDFServlet</servlet-name>
+        <servlet-class>com.election.servlet.GenerateForm2PDFServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GenerateForm2PDFServlet</servlet-name>
+        <url-pattern>/generateForm2PDF</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Generate Proforma-2 from Template Servlet -->
+    <servlet>
+        <servlet-name>GenerateProforma2Servlet</servlet-name>
+        <servlet-class>com.election.servlet.GenerateProforma2Servlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GenerateProforma2Servlet</servlet-name>
+        <url-pattern>/generateProforma2</url-pattern>
+    </servlet-mapping>
+    
     <!-- Admin Update Plan Servlet -->
     <servlet>
         <servlet-name>UpdatePlanServlet</servlet-name>

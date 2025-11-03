@@ -439,6 +439,9 @@
                     <a href="manage-payments.jsp" class="action-btn" style="background: #4299e1;">💳 <%= MessageBundle.getMessage(request, "admin.payment.activity") %></a>
                 </div>
                 
+                <!-- Social Media Links -->
+                <jsp:include page="/includes/social-media-footer.jsp" />
+                
                 <!-- User Distribution -->
                 <div class="quick-actions-compact">
                     <h3>📊 <%= MessageBundle.getMessage(request, "admin.user.distribution") %></h3>
@@ -859,6 +862,9 @@
                 </p>
             </div>
         </div>
+        
+        <!-- Social Media Footer -->
+        <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
 </body>
 </html>

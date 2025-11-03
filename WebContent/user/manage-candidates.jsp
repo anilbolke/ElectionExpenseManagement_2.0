@@ -638,10 +638,13 @@
                                 <input type="hidden" name="candidateId" value="<%= candidate.getCandidateId() %>">
                                 <button type="submit" class="btn btn-success">📊 View Dashboard</button>
                             </form>
+                            <a href="<%=request.getContextPath()%>/generateForm2PDF?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-primary" target="_blank">📋 Form-2 (नमुना-२)</a>
+                            <a href="<%=request.getContextPath()%>/generateProforma2?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-primary" style="background: #f57c00;" target="_blank">📑 Proforma-2 (Template)</a>
                         <% } else if("pending_payment".equals(candidate.getAccountStatus())) { %>
                             <a href="candidate-payment.jsp?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-warning">💳 Complete Payment</a>
                         <% } %>
                         
+                        <a href="<%=request.getContextPath()%>/generateProforma?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-primary" target="_blank">📄 Generate Proforma</a>
                         <a href="edit-candidate.jsp?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-secondary">✏️ Edit Details</a>
                     </div>
                 </div>

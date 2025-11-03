@@ -501,6 +501,21 @@
                         <input type="text" class="form-control" id="boothNumber" name="boothNumber" value="<%= candidate.getBoothNumber() != null ? candidate.getBoothNumber() : "" %>">
                     </div>
                 </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="expenseLimit">💰 Expense Limit (₹) *</label>
+                        <input type="text" class="form-control" id="expenseLimit" name="expenseLimit" 
+                               value="<%= candidate.getExpenseLimit() != null ? candidate.getExpenseLimit().toString() : "" %>" 
+                               pattern="^\d+(\.\d{1,2})?$" 
+                               title="Please enter a valid amount (numbers only, up to 2 decimal places)"
+                               placeholder="e.g., 1000000 or 1000000.50"
+                               required>
+                        <small style="color: #6b7280; font-size: 11px; margin-top: 4px; display: block;">
+                            Maximum amount that can be spent during the campaign (as per election rules). Enter numbers only.
+                        </small>
+                    </div>
+                </div>
             </div>
             
             <div class="form-actions">
@@ -546,8 +561,80 @@
                 return false;
             }
             
+            // Validate expense limit
+            const expenseLimit = document.getElementById('expenseLimit').value;
+            if(expenseLimit && expenseLimit.trim() !== '') {
+                // Check if it's a valid number
+                const amountPattern = /^\d+(\.\d{1,2})?$/;
+                if(!amountPattern.test(expenseLimit)) {
+                    alert('Please enter a valid expense limit (numbers only, up to 2 decimal places).\nExample: 1000000 or 1000000.50');
+                    return false;
+                }
+                
+                // Check if amount is positive
+                const amount = parseFloat(expenseLimit);
+                if(amount <= 0) {
+                    alert('Expense limit must be greater than 0.');
+                    return false;
+                }
+                
+                // Check if amount is not too large
+                if(amount > 999999999999.99) {
+                    alert('Expense limit is too large. Please enter a reasonable amount.');
+                    return false;
+                }
+            } else {
+                alert('Expense limit is required.');
+                return false;
+            }
+            
             return true;
         }
+        
+        // Real-time validation for expense limit
+        document.addEventListener('DOMContentLoaded', function() {
+            const expenseLimitInput = document.getElementById('expenseLimit');
+            
+            if(expenseLimitInput) {
+                expenseLimitInput.addEventListener('input', function(e) {
+                    let value = e.target.value;
+                    
+                    // Remove any non-numeric characters except decimal point
+                    value = value.replace(/[^\d.]/g, '');
+                    
+                    // Ensure only one decimal point
+                    const parts = value.split('.');
+                    if(parts.length > 2) {
+                        value = parts[0] + '.' + parts.slice(1).join('');
+                    }
+                    
+                    // Limit to 2 decimal places
+                    if(parts.length === 2 && parts[1].length > 2) {
+                        value = parts[0] + '.' + parts[1].substring(0, 2);
+                    }
+                    
+                    e.target.value = value;
+                });
+                
+                // Add visual feedback on blur
+                expenseLimitInput.addEventListener('blur', function(e) {
+                    const value = e.target.value.trim();
+                    if(value !== '') {
+                        const amountPattern = /^\d+(\.\d{1,2})?$/;
+                        if(!amountPattern.test(value) || parseFloat(value) <= 0) {
+                            e.target.style.borderColor = '#f56565';
+                        } else {
+                            e.target.style.borderColor = '#48bb78';
+                        }
+                    }
+                });
+                
+                // Remove color on focus
+                expenseLimitInput.addEventListener('focus', function(e) {
+                    e.target.style.borderColor = '';
+                });
+            }
+        });
     </script>
 </body>
 </html>

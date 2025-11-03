@@ -11,20 +11,47 @@
     
     // Get user's candidates
     CandidateDAO candidateDAO = new CandidateDAO();
-    List<Candidate> myCandidates = candidateDAO.getCandidatesByUserId(user.getUserId());
+    List<Candidate> allCandidates = candidateDAO.getCandidatesByUserId(user.getUserId());
+    
+    // Pagination parameters
+    int pageSize = 5; // Show 5 candidates per page
+    int currentPage = 1;
+    String pageParam = request.getParameter("page");
+    if (pageParam != null) {
+        try {
+            currentPage = Integer.parseInt(pageParam);
+        } catch (NumberFormatException e) {
+            currentPage = 1;
+        }
+    }
+    
+    // Calculate pagination
+    int totalCandidates = allCandidates != null ? allCandidates.size() : 0;
+    int totalPages = (int) Math.ceil((double) totalCandidates / pageSize);
+    if (currentPage < 1) currentPage = 1;
+    if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+    
+    int startIndex = (currentPage - 1) * pageSize;
+    int endIndex = Math.min(startIndex + pageSize, totalCandidates);
+    
+    // Get candidates for current page
+    List<Candidate> myCandidates = null;
+    if (allCandidates != null && !allCandidates.isEmpty()) {
+        myCandidates = allCandidates.subList(startIndex, endIndex);
+    }
     
     // Get currently selected candidate (if any)
     Candidate selectedCandidate = (Candidate) session.getAttribute("candidate");
     
-    // Calculate statistics
-    int totalCandidates = myCandidates != null ? myCandidates.size() : 0;
+    // Calculate statistics (using all candidates)
+    List<Candidate> candidatesForStats = allCandidates;
     int activeCandidates = 0;
     int pendingPayments = 0;
     BigDecimal totalExpenses = BigDecimal.ZERO;
     
-    if (myCandidates != null) {
+    if (candidatesForStats != null) {
         ExpenseDAO expenseDAO = new ExpenseDAO();
-        for (Candidate c : myCandidates) {
+        for (Candidate c : candidatesForStats) {
             if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) {
                 activeCandidates++;
                 try {
@@ -285,6 +312,79 @@
         }
         .alert-success { background: #f0fdf4; color: #22543d; border-left-color: #48bb78; }
         .alert-info { background: #eff6ff; color: #1e3a8a; border-left-color: #3b82f6; }
+        .alert-warning { background: #fffbeb; color: #78350f; border-left-color: #f59e0b; }
+        .alert-danger { background: #fef2f2; color: #991b1b; border-left-color: #ef4444; }
+        .alert-critical { background: #7f1d1d; color: #fff; border-left-color: #dc2626; font-weight: 600; }
+        
+        /* Fund Alert Box */
+        .fund-alert-box {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: none;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        .fund-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .fund-alert-details {
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .fund-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .fund-stat-item {
+            background: rgba(255,255,255,0.5);
+            padding: 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        .fund-stat-label {
+            font-size: 10px;
+            opacity: 0.8;
+            text-transform: uppercase;
+        }
+        .fund-stat-value {
+            font-size: 14px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 8px;
+            position: relative;
+        }
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+        }
         
         /* Compact Candidate Cards */
         .candidates-list {
@@ -379,6 +479,67 @@
             .stats-compact { grid-template-columns: repeat(2, 1fr); }
             .sidebar { grid-template-columns: 1fr; }
         }
+        
+        /* Pagination Styles */
+        .pagination-container {
+            margin-top: 20px;
+            padding: 15px;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .page-link {
+            display: inline-block;
+            padding: 8px 14px;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            color: #4a5568;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .page-link:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-1px);
+        }
+        
+        .page-link.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .page-link.active:hover {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            transform: translateY(-1px);
+        }
+        
+        .page-ellipsis {
+            padding: 8px 4px;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+        
+        @media (max-width: 480px) {
+            .page-link {
+                padding: 6px 10px;
+                font-size: 12px;
+                min-width: 35px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -417,11 +578,15 @@
                     <a href="change-password.jsp" class="action-btn" style="background: #f56565;">🔒 <%= MessageBundle.getMessage(request, "user.change.password") %></a>
                     <a href="map-referral-code.jsp" class="action-btn" style="background: #667eea;">🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %></a>
                     <% if (selectedCandidate != null && selectedCandidate.isPaymentVerified()) { %>
+                    <a href="<%=request.getContextPath()%>/generateProforma2?candidateId=<%= selectedCandidate.getCandidateId() %>" class="action-btn" style="background: #f57c00;" target="_blank">📑 Proforma-2 (Template)</a>
                     <a href="manage-funds.jsp" class="action-btn" style="background: #48bb78;">💰 Manage Funds</a>
                     <a href="add-expense.jsp" class="action-btn secondary">💸 <%= MessageBundle.getMessage(request, "expense.add") %></a>
                     <a href="expenses.jsp" class="action-btn secondary">📊 <%= MessageBundle.getMessage(request, "expense.view") %></a>
                     <% } %>
                 </div>
+                
+                <!-- Social Media Links -->
+                <jsp:include page="/includes/social-media-footer.jsp" />
             </div>
             
             <!-- Main Content -->
@@ -430,11 +595,55 @@
                     <div class="alert alert-success">✅ <%= request.getParameter("success") %></div>
                 <% } %>
                 
+                <!-- Expense Limit Warnings for All Candidates -->
+                <% 
+                if (myCandidates != null && !myCandidates.isEmpty()) {
+                    for (Candidate c : myCandidates) {
+                        if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) {
+                            boolean needsExpenseLimit = (c.getExpenseLimit() == null || c.getExpenseLimit().compareTo(java.math.BigDecimal.ZERO) <= 0);
+                            if (needsExpenseLimit) {
+                %>
+                    <div class="alert" style="background: #fff3cd; border-left-color: #ffc107; color: #856404; display: flex; align-items: center; justify-content: space-between;">
+                        <div>
+                            <strong>⚠️ Action Required:</strong> Candidate <strong><%= c.getCandidateName() %></strong> does not have an expense limit set. Please set the expense limit to track expenses properly.
+                        </div>
+                        <a href="edit-candidate.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-warning btn-sm" style="white-space: nowrap; margin-left: 10px;">Set Limit</a>
+                    </div>
+                <%
+                            }
+                        }
+                    }
+                }
+                %>
+                
                 <% if (selectedCandidate != null) { %>
                     <div class="alert alert-info">
                         📌 <%= MessageBundle.getMessage(request, "user.managing") %>: <strong><%= selectedCandidate.getCandidateName() %><% if(selectedCandidate.getNominationId() != null && !selectedCandidate.getNominationId().trim().isEmpty()) { %> - <%= selectedCandidate.getNominationId() %><% } %></strong> 
                         <a href="<%=request.getContextPath()%>/select-candidate?action=clear" style="margin-left: 10px; color: #1e3a8a; text-decoration: underline; font-weight: 600;"><%= MessageBundle.getMessage(request, "user.switch.candidate") %></a>
                     </div>
+                    
+                    <%
+                    // Check if selected candidate needs expense limit
+                    boolean selectedNeedsLimit = (selectedCandidate.getExpenseLimit() == null || 
+                                                  selectedCandidate.getExpenseLimit().compareTo(java.math.BigDecimal.ZERO) <= 0);
+                    if (selectedNeedsLimit) {
+                    %>
+                    <div class="alert" style="background: #fef2f2; border-left-color: #ef4444; color: #991b1b; animation: pulse 2s infinite;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="flex: 1;">
+                                <strong>🚨 Critical:</strong> Expense limit is not set for <strong><%= selectedCandidate.getCandidateName() %></strong>. 
+                                You cannot add expenses or track spending without setting an expense limit first.
+                            </div>
+                            <a href="edit-candidate.jsp?candidateId=<%= selectedCandidate.getCandidateId() %>" 
+                               class="btn" style="background: #dc2626; color: white; white-space: nowrap; margin-left: 15px; font-weight: 600;">
+                                Set Expense Limit Now
+                            </a>
+                        </div>
+                    </div>
+                    <% } %>
+                    
+                    <!-- Fund Alert Notification (Dynamic via AJAX) -->
+                    <div id="fundAlertBox" class="fund-alert-box"></div>
                 <% } %>
                 
                 <div class="content-header">
@@ -475,6 +684,46 @@
                                 </div>
                             </div>
                         <% } %>
+                        
+                        <!-- Pagination -->
+                        <% if (totalPages > 1) { %>
+                        <div class="pagination-container" style="margin-top: 20px; text-align: center;">
+                            <div class="pagination">
+                                <% if (currentPage > 1) { %>
+                                    <a href="?page=<%= currentPage - 1 %>" class="page-link">← <%= MessageBundle.getMessage(request, "pagination.previous") %></a>
+                                <% } %>
+                                
+                                <% 
+                                int startPage = Math.max(1, currentPage - 2);
+                                int endPage = Math.min(totalPages, currentPage + 2);
+                                
+                                if (startPage > 1) { %>
+                                    <a href="?page=1" class="page-link">1</a>
+                                    <% if (startPage > 2) { %>
+                                        <span class="page-ellipsis">...</span>
+                                    <% } %>
+                                <% }
+                                
+                                for (int i = startPage; i <= endPage; i++) { %>
+                                    <a href="?page=<%= i %>" class="page-link <%= (i == currentPage) ? "active" : "" %>"><%= i %></a>
+                                <% }
+                                
+                                if (endPage < totalPages) { 
+                                    if (endPage < totalPages - 1) { %>
+                                        <span class="page-ellipsis">...</span>
+                                    <% } %>
+                                    <a href="?page=<%= totalPages %>" class="page-link"><%= totalPages %></a>
+                                <% } %>
+                                
+                                <% if (currentPage < totalPages) { %>
+                                    <a href="?page=<%= currentPage + 1 %>" class="page-link"><%= MessageBundle.getMessage(request, "pagination.next") %> →</a>
+                                <% } %>
+                            </div>
+                            <div style="margin-top: 10px; color: #718096; font-size: 13px;">
+                                <%= MessageBundle.getMessage(request, "pagination.showing") %> <%= startIndex + 1 %>-<%= endIndex %> <%= MessageBundle.getMessage(request, "pagination.of") %> <%= totalCandidates %>
+                            </div>
+                        </div>
+                        <% } %>
                     <% } else { %>
                         <div class="empty-state">
                             <div class="icon">🗳️</div>
@@ -486,6 +735,100 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Social Media Footer -->
+        <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
+    
+    <% if (selectedCandidate != null) { %>
+    <script>
+        // Fetch fund statistics when candidate is selected
+        function loadFundStatistics() {
+            fetch('<%=request.getContextPath()%>/getFundStatistics')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        console.log('No fund statistics available:', data.error);
+                        return;
+                    }
+                    
+                    // Check if expense limit is set
+                    if (!data.totalFunds || parseFloat(data.totalFunds) <= 0) {
+                        console.log('Expense limit not set for this candidate');
+                        return;
+                    }
+                    
+                    // Only show alert if usage >= 50%
+                    if (data.hasAlert) {
+                        displayFundAlert(data);
+                    }
+                })
+                .catch(error => console.error('Error loading fund statistics:', error));
+        }
+        
+        function displayFundAlert(stats) {
+            const alertBox = document.getElementById('fundAlertBox');
+            if (!alertBox) return;
+            
+            let alertClass = 'alert-warning';
+            let icon = '⚠️';
+            let title = 'Expense Limit Warning';
+            let progressColor = '#f59e0b';
+            
+            if (stats.usagePercentage >= 90) {
+                alertClass = 'alert-critical';
+                icon = '🚨';
+                title = 'CRITICAL: Expense Limit Exceeded';
+                progressColor = '#dc2626';
+            } else if (stats.usagePercentage >= 75) {
+                alertClass = 'alert-danger';
+                icon = '⛔';
+                title = 'High Expense Usage Alert';
+                progressColor = '#ef4444';
+            }
+            
+            const formatCurrency = (amount) => {
+                return '₹' + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            
+            alertBox.className = 'fund-alert-box alert ' + alertClass;
+            alertBox.style.display = 'block';
+            alertBox.innerHTML = 
+                '<div class="fund-alert-header">' +
+                    '<span style="font-size: 18px;">' + icon + '</span>' +
+                    '<span>' + title + '</span>' +
+                '</div>' +
+                '<div class="fund-alert-details">' +
+                    '<strong>' + stats.candidateName + '</strong> has used <strong>' + stats.usagePercentage.toFixed(2) + '%</strong> of expense limit.' +
+                    '<div class="fund-stats-row">' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Expense Limit</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.totalFunds) + '</div>' +
+                        '</div>' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Used</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.totalExpenses) + '</div>' +
+                        '</div>' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Remaining</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.remainingFunds) + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="progress-bar">' +
+                        '<div class="progress-fill" style="width: ' + Math.min(stats.usagePercentage, 100) + '%; background: ' + progressColor + ';">' +
+                            stats.usagePercentage.toFixed(1) + '%' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }
+        
+        // Load statistics on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFundStatistics();
+            // Refresh every 30 seconds
+            setInterval(loadFundStatistics, 30000);
+        });
+    </script>
+    <% } %>
 </body>
 </html>

@@ -328,6 +328,9 @@
             </div>
         </div>
         
+        <!-- Social Media Links -->
+        <jsp:include page="/includes/social-media-footer.jsp" />
+        
         <!-- Recent Candidates -->
         <div class="recent-section">
             <h2 class="section-title"><%= MessageBundle.getMessage(request, "candidate.list") %></h2>
@@ -390,6 +393,9 @@
                 </p>
             <% } %>
         </div>
+        
+        <!-- Social Media Footer -->
+        <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
 </body>
 </html>

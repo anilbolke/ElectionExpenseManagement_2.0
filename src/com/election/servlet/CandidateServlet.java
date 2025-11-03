@@ -553,6 +553,19 @@ public class CandidateServlet extends HttpServlet {
             candidate.setBoothNumber(boothNumber);
         }
         
+        // Update expense limit
+        String expenseLimitStr = request.getParameter("expenseLimit");
+        if (expenseLimitStr != null && !expenseLimitStr.trim().isEmpty()) {
+            try {
+                BigDecimal expenseLimit = new BigDecimal(expenseLimitStr);
+                candidate.setExpenseLimit(expenseLimit);
+                System.out.println("Expense Limit updated to: " + expenseLimit);
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid expense limit format: " + expenseLimitStr);
+                // Keep existing expense limit
+            }
+        }
+        
         System.out.println("After update - Gender: [" + candidate.getGender() + "]");
         System.out.println("After update - Mobile: [" + candidate.getMobile() + "]");
         System.out.println("After update - Email: [" + candidate.getEmail() + "]");

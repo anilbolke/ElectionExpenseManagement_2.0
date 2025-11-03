@@ -412,7 +412,10 @@
                     <a href="my-candidates.jsp" class="action-btn secondary">🗳️ View Candidates</a>
                     <a href="bank-details.jsp" class="action-btn" style="background: #4299e1;">🏦 Bank Details</a>
                 </div>
-                
+
+                <!-- Social Media Links -->
+                <jsp:include page="/includes/social-media-footer.jsp" />
+
                 <!-- Broker Info -->
                 <div class="info-box">
                     <h4>ℹ️ Broker Info</h4>
@@ -506,6 +509,9 @@
                 </div>
             </div>
         </div>
+        
+        <!-- Social Media Footer -->
+        <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
 </body>
 </html>

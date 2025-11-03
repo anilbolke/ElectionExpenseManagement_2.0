@@ -208,6 +208,85 @@
             color: #c53030;
         }
         
+        .alert-warning {
+            background: #fffbeb;
+            border: 1px solid #fcd34d;
+            color: #78350f;
+        }
+        
+        .alert-critical {
+            background: #7f1d1d;
+            border: 1px solid #dc2626;
+            color: #fff;
+            font-weight: 600;
+        }
+        
+        .fund-alert-box {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .fund-alert-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-weight: 700;
+            font-size: 14px;
+        }
+        
+        .fund-alert-details {
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        
+        .fund-stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .fund-stat-item {
+            background: rgba(255,255,255,0.5);
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .fund-stat-label {
+            font-size: 11px;
+            opacity: 0.9;
+            text-transform: uppercase;
+        }
+        
+        .fund-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 24px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 12px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 700;
+        }
+        
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -248,8 +327,32 @@
             </div>
         <% } %>
         
-        <div class="form-section">
-            <form action="<%=request.getContextPath()%>/expense" method="post">
+        <%
+        // Check if candidate needs expense limit
+        boolean needsExpenseLimit = (candidate.getExpenseLimit() == null || 
+                                    candidate.getExpenseLimit().compareTo(java.math.BigDecimal.ZERO) <= 0);
+        if (needsExpenseLimit) {
+        %>
+        <div class="alert" style="background: #fef2f2; border: 2px solid #ef4444; color: #991b1b; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="font-size: 24px;">🚨</div>
+                <div style="flex: 1;">
+                    <strong>Cannot Add Expense:</strong> Expense limit is not set for <%= candidate.getCandidateName() %>. 
+                    Please set the expense limit before adding expenses.
+                </div>
+                <a href="edit-candidate.jsp?candidateId=<%= candidate.getCandidateId() %>" 
+                   class="btn" style="background: #dc2626; color: white; white-space: nowrap; font-weight: 600;">
+                    Set Expense Limit
+                </a>
+            </div>
+        </div>
+        <% } %>
+        
+        <!-- Fund Alert Notification -->
+        <div id="fundAlertBox" class="fund-alert-box" style="display: none;"></div>
+        
+        <div class="form-section" <%= needsExpenseLimit ? "style='opacity: 0.5; pointer-events: none;'" : "" %>>
+            <form action="<%=request.getContextPath()%>/expense" method="post" onsubmit="return <%= !needsExpenseLimit %>">
                 <input type="hidden" name="action" value="add">
                 
                 <div style="display: grid; gap: 20px;">
@@ -382,7 +485,7 @@
         
         // Auto-hide success/error messages after 5 seconds
         setTimeout(function() {
-            var alerts = document.querySelectorAll('.alert');
+            var alerts = document.querySelectorAll('.alert:not(#fundAlertBox)');
             alerts.forEach(function(alert) {
                 alert.style.transition = 'opacity 0.5s';
                 alert.style.opacity = '0';
@@ -391,6 +494,81 @@
                 }, 500);
             });
         }, 5000);
+        
+        // Load fund statistics
+        function loadFundStatistics() {
+            fetch('<%=request.getContextPath()%>/getFundStatistics')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        return;
+                    }
+                    
+                    if (data.hasAlert) {
+                        displayFundAlert(data);
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+        }
+        
+        function displayFundAlert(stats) {
+            const alertBox = document.getElementById('fundAlertBox');
+            if (!alertBox) return;
+            
+            let alertClass = 'alert-warning';
+            let icon = '⚠️';
+            let title = 'Expense Limit Warning';
+            let progressColor = '#f59e0b';
+            
+            if (stats.usagePercentage >= 90) {
+                alertClass = 'alert-critical';
+                icon = '🚨';
+                title = 'CRITICAL: Expense Limit Exceeded';
+                progressColor = '#dc2626';
+            } else if (stats.usagePercentage >= 75) {
+                alertClass = 'alert-danger';
+                icon = '⛔';
+                title = 'High Expense Usage Alert';
+                progressColor = '#ef4444';
+            }
+            
+            const formatCurrency = (amount) => {
+                return '₹' + parseFloat(amount).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            };
+            
+            alertBox.className = 'fund-alert-box alert ' + alertClass;
+            alertBox.style.display = 'block';
+            alertBox.innerHTML = 
+                '<div class="fund-alert-header">' +
+                    '<span style="font-size: 20px;">' + icon + '</span>' +
+                    '<span>' + title + '</span>' +
+                '</div>' +
+                '<div class="fund-alert-details">' +
+                    '<strong><%= candidate.getCandidateName() %></strong> has used <strong>' + stats.usagePercentage.toFixed(2) + '%</strong> of expense limit.' +
+                    '<div class="fund-stats-row">' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Expense Limit</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.totalFunds) + '</div>' +
+                        '</div>' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Used</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.totalExpenses) + '</div>' +
+                        '</div>' +
+                        '<div class="fund-stat-item">' +
+                            '<div class="fund-stat-label">Remaining</div>' +
+                            '<div class="fund-stat-value">' + formatCurrency(stats.remainingFunds) + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="progress-bar">' +
+                        '<div class="progress-fill" style="width: ' + Math.min(stats.usagePercentage, 100) + '%; background: ' + progressColor + ';">' +
+                            stats.usagePercentage.toFixed(1) + '%' +
+                        '</div>' +
+                    '</div>' +
+                '</div>';
+        }
+        
+        // Load on page load
+        loadFundStatistics();
     </script>
 </body>
 </html>

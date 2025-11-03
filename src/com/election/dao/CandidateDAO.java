@@ -119,7 +119,7 @@ public class CandidateDAO {
     public boolean updateCandidate(Candidate candidate) {
         String query = "UPDATE candidates SET candidate_name = ?, father_name = ?, age = ?, gender = ?, mobile = ?, email = ?, address = ?, city = ?, " +
                       "state = ?, pincode = ?, aadhar_number = ?, voter_id = ?, constituency = ?, nomination_id = ?, party_name = ?, " +
-                      "party_symbol = ?, election_type = ?, election_date = ?, booth_number = ? WHERE candidate_id = ?";
+                      "party_symbol = ?, election_type = ?, election_date = ?, booth_number = ?, expense_limit = ? WHERE candidate_id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -130,6 +130,7 @@ public class CandidateDAO {
             System.out.println("Gender: " + candidate.getGender());
             System.out.println("Mobile: " + candidate.getMobile());
             System.out.println("Email: " + candidate.getEmail());
+            System.out.println("Expense Limit: " + candidate.getExpenseLimit());
             System.out.println("==========================================");
             
             pstmt.setString(1, candidate.getCandidateName());
@@ -151,7 +152,8 @@ public class CandidateDAO {
             pstmt.setString(17, candidate.getElectionType());
             pstmt.setDate(18, candidate.getElectionDate());
             pstmt.setString(19, candidate.getBoothNumber());
-            pstmt.setInt(20, candidate.getCandidateId());
+            pstmt.setBigDecimal(20, candidate.getExpenseLimit());
+            pstmt.setInt(21, candidate.getCandidateId());
             
             int result = pstmt.executeUpdate();
             System.out.println("Update result: " + result + " row(s) affected");
