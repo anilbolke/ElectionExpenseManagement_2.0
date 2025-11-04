@@ -2,6 +2,8 @@
 <%@ page import="com.election.model.User, com.election.model.Candidate" %>
 <%@ page import="com.election.dao.CandidateDAO" %>
 <%@ page import="java.util.List" %>
+<%@ page import="com.election.i18n.MessageBundle" %>
+<%@ page import="com.election.i18n.LocaleManager" %>
 <%
     User user = (User) session.getAttribute("user");
     if(user == null) {
@@ -25,13 +27,16 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Fund Details - Election Expense Management</title>
+    <title><%= MessageBundle.getMessage(request, "heading.add.fund") %> - <%= MessageBundle.getMessage(request, "app.title") %></title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="<%=request.getContextPath()%>/css/style.css">
     <style>
         body.dashboard {
             background: #f5f7fa;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-family: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
         
         .main-container {
@@ -222,17 +227,17 @@
     <div class="main-container">
         <main class="main-content">
             <div class="form-container">
-                <h1 class="form-title">💰 Add Fund Details</h1>
-                <p class="form-subtitle">Add financial details for your candidate</p>
+                <h1 class="form-title">💰 <%= MessageBundle.getMessage(request, "heading.add.fund") %></h1>
+                <p class="form-subtitle"><%= MessageBundle.getMessage(request, "fund.subtitle") %></p>
                 
                 <% if (error != null) { %>
                     <div class="alert alert-danger">
-                        <strong>Error!</strong> <%= error %>
+                        <strong><%= MessageBundle.getMessage(request, "alert.error") %></strong> <%= error %>
                     </div>
                 <% } %>
                 
                 <div class="alert alert-info">
-                    <strong>📌 Selected Candidate:</strong> <%= selectedCandidate.getCandidateName() %> 
+                    <strong>📌 <%= MessageBundle.getMessage(request, "fund.selected.candidate") %></strong> <%= selectedCandidate.getCandidateName() %> 
                     <% if(selectedCandidate.getNominationId() != null && !selectedCandidate.getNominationId().trim().isEmpty()) { %>
                         - <%= selectedCandidate.getNominationId() %>
                     <% } %>
@@ -245,68 +250,67 @@
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Date <span class="required">*</span></label>
+                            <label class="form-label"><%= MessageBundle.getMessage(request, "fund.date") %> <span class="required">*</span></label>
                             <input type="date" name="fundDate" id="fundDate" class="form-input" required>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">Fund Type <span class="required">*</span></label>
+                            <label class="form-label"><%= MessageBundle.getMessage(request, "fund.type") %> <span class="required">*</span></label>
                             <select name="fundType" id="fundType" class="form-select" required>
-                                <option value="">-- Select Fund Type --</option>
-                                <option value="Cash in Hand">💵 Cash in Hand</option>
-                                <option value="Bank Balance">🏦 Bank Balance</option>
-                                <option value="Hand Loan">🤝 Hand Loan</option>
-                                <option value="Donation">🎁 Donation</option>
-                                <option value="Other">📋 Other</option>
+                                <option value=""><%= MessageBundle.getMessage(request, "form.placeholder.select") %></option>
+                                <option value="Cash in Hand">💵 <%= MessageBundle.getMessage(request, "fund.type.cash") %></option>
+                                <option value="Bank Balance">🏦 <%= MessageBundle.getMessage(request, "fund.type.bank") %></option>
+                                <option value="Hand Loan">🤝 <%= MessageBundle.getMessage(request, "fund.type.loan") %></option>
+                                <option value="Donation">🎁 <%= MessageBundle.getMessage(request, "fund.type.donation") %></option>
+                                <option value="Other">📋 <%= MessageBundle.getMessage(request, "fund.type.other") %></option>
                             </select>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Amount (₹) <span class="required">*</span></label>
+                        <label class="form-label"><%= MessageBundle.getMessage(request, "fund.amount") %> (₹) <span class="required">*</span></label>
                         <input type="number" name="amount" id="amount" class="form-input" 
-                               placeholder="Enter amount" required min="1" step="0.01">
+                               placeholder="<%= MessageBundle.getMessage(request, "fund.amount.placeholder") %>" required min="1" step="0.01">
                         <small style="color: #666; font-size: 11px; display: block; margin-top: 5px;">
-                            💵 Enter amount greater than zero (e.g., 5000.00)
+                            💵 <%= MessageBundle.getMessage(request, "fund.amount.hint") %>
                         </small>
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
-                            <label class="form-label">Funder Name <span class="required">*</span></label>
+                            <label class="form-label"><%= MessageBundle.getMessage(request, "fund.funder.name") %> <span class="required">*</span></label>
                             <input type="text" name="funderName" id="funderName" class="form-input" 
-                                   placeholder="Enter funder name" required pattern="[a-zA-Z\s.]{2,100}"
-                                   title="Name should contain only letters and spaces (2-100 characters)">
+                                   placeholder="<%= MessageBundle.getMessage(request, "fund.funder.name.placeholder") %>" required pattern="[a-zA-Z\u0900-\u097F\s.]{2,100}"
+                                   title="<%= MessageBundle.getMessage(request, "fund.funder.name.hint") %>">
                             <small style="color: #666; font-size: 11px; display: block; margin-top: 5px;">
-                                📝 Only letters, spaces, and dots allowed (2-100 characters)
+                                📝 <%= MessageBundle.getMessage(request, "fund.funder.name.hint") %>
                             </small>
                         </div>
                         
                         <div class="form-group">
-                            <label class="form-label">Funder Mobile <span class="required">*</span></label>
+                            <label class="form-label"><%= MessageBundle.getMessage(request, "fund.funder.mobile") %> <span class="required">*</span></label>
                             <input type="tel" name="funderMobile" id="funderMobile" class="form-input" 
-                                   placeholder="Enter 10-digit mobile number" required pattern="[6-9][0-9]{9}"
-                                   title="Please enter a valid 10-digit mobile number starting with 6-9" maxlength="10">
+                                   placeholder="<%= MessageBundle.getMessage(request, "fund.funder.mobile.placeholder") %>" required pattern="[6-9][0-9]{9}"
+                                   title="<%= MessageBundle.getMessage(request, "fund.funder.mobile.hint") %>" maxlength="10">
                             <small style="color: #666; font-size: 11px; display: block; margin-top: 5px;">
-                                📱 10-digit number starting with 6, 7, 8, or 9
+                                📱 <%= MessageBundle.getMessage(request, "fund.funder.mobile.hint") %>
                             </small>
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label class="form-label">Description (Optional)</label>
+                        <label class="form-label"><%= MessageBundle.getMessage(request, "fund.description") %></label>
                         <textarea name="description" id="description" class="form-textarea" 
-                                  placeholder="Enter additional details about this fund..."></textarea>
+                                  placeholder="<%= MessageBundle.getMessage(request, "fund.description.placeholder") %>"></textarea>
                     </div>
                     
                     <div class="alert alert-info">
-                        <strong>💡 Note:</strong> All fields marked with <span class="required">*</span> are mandatory. 
-                        Please ensure all information is accurate.
+                        <strong>💡 <%= MessageBundle.getMessage(request, "note") %></strong> <%= MessageBundle.getMessage(request, "fund.note.message") %>
                     </div>
                     
                     <div class="form-actions">
-                        <a href="manage-funds.jsp" class="btn btn-secondary">Cancel</a>
-                        <button type="submit" class="btn btn-primary">💾 Save Fund Details</button>
+                        <a href="manage-funds.jsp" class="btn btn-secondary"><%= MessageBundle.getMessage(request, "action.cancel") %></a>
+                        <button type="submit" class="btn btn-primary">💾 <%= MessageBundle.getMessage(request, "fund.submit") %></button>
                     </div>
                 </form>
             </div>
@@ -376,22 +380,6 @@
                 showSuccess('fundType');
             } else {
                 showError('fundType', 'Please select a fund type');
-            }
-        });
-        
-        document.getElementById('amount').addEventListener('input', function() {
-            const amount = parseFloat(this.value);
-            
-            if (!this.value || this.value.trim() === '') {
-                showError('amount', 'Amount is required');
-            } else if (isNaN(amount) || amount <= 0) {
-                showError('amount', 'Amount must be greater than zero');
-            } else if (amount > 999999999.99) {
-                showError('amount', 'Amount is too large (max: ₹99,99,99,999.99)');
-            } else {
-                showSuccess('amount');
-                // Format display
-                this.value = amount.toFixed(2);
             }
         });
         
@@ -498,8 +486,8 @@
                 showError('funderName', 'Name must not exceed 100 characters');
                 errors.push('Name must not exceed 100 characters');
                 isValid = false;
-            } else if (!/^[a-zA-Z\s.]{2,100}$/.test(funderName)) {
-                showError('funderName', 'Name should contain only letters, spaces, and dots');
+            } else if (!/^[a-zA-Z\u0900-\u097F\s.]{2,100}$/.test(funderName)) {
+                showError('funderName', 'Name should contain only letters (English/Hindi/Marathi), spaces, and dots');
                 errors.push('Invalid name format');
                 isValid = false;
             }
@@ -555,12 +543,12 @@
             }
         });
         
-        // Amount formatting on blur
+        // Format amount on blur
         document.getElementById('amount').addEventListener('blur', function() {
             if (this.value && !isNaN(this.value)) {
-                const amount = parseFloat(this.value);
-                if (amount > 0) {
-                    this.value = amount.toFixed(2);
+                const value = parseFloat(this.value);
+                if (value > 0) {
+                    this.value = value.toFixed(2);
                 }
             }
         });

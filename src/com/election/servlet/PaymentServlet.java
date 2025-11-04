@@ -398,7 +398,9 @@ public class PaymentServlet extends HttpServlet {
     }
     
     /**
-     * Legacy payment processing (fallback for non-Razorpay payments)
+     * Legacy payment processing - DISABLED
+     * This was a demo fallback that bypassed real payment processing
+     * All payments must go through Razorpay createOrder -> verifyPayment flow
      */
     private void processPayment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -411,51 +413,27 @@ public class PaymentServlet extends HttpServlet {
             return;
         }
         
-        String planName = request.getParameter("planName");
-        String paymentMethod = request.getParameter("paymentMethod");
-        String amountStr = request.getParameter("amount");
         String candidateIdStr = request.getParameter("candidateId");
+        String planName = request.getParameter("planName");
         
-        if (amountStr == null) {
-            response.sendRedirect("user/subscription.jsp?error=Invalid amount");
-            return;
-        }
+        // Reject direct payment processing - force Razorpay integration
+        String errorMsg = "Payment gateway not configured. Please set up Razorpay credentials: " +
+                         "RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables. " +
+                         "Contact administrator for assistance.";
         
         try {
-            double amount = Double.parseDouble(amountStr);
-            String transactionId = "TXN" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-            
-            boolean success = false;
-            
             if (candidateIdStr != null) {
-                // Candidate payment
-                int candidateId = Integer.parseInt(candidateIdStr);
-                success = processCandidatePayment(user, candidateId, amount, transactionId);
-                
-                if (success) {
-                    session.setAttribute("transactionId", transactionId);
-                    session.setAttribute("paymentAmount", amount);
-                    response.sendRedirect("user/payment-success-candidate.jsp");
-                } else {
-                    response.sendRedirect("user/candidate-payment.jsp?candidateId=" + candidateId + "&error=Payment failed");
-                }
+                response.sendRedirect("user/candidate-payment.jsp?candidateId=" + candidateIdStr + 
+                    "&error=" + java.net.URLEncoder.encode(errorMsg, "UTF-8"));
             } else if (planName != null) {
-                // Subscription payment
-                success = processSubscriptionPayment(user, planName, amount, transactionId);
-                
-                if (success) {
-                    session.setAttribute("transactionId", transactionId);
-                    session.setAttribute("paymentAmount", amount);
-                    response.sendRedirect("user/payment-success.jsp");
-                } else {
-                    response.sendRedirect("user/subscription.jsp?error=Payment failed");
-                }
+                response.sendRedirect("user/subscription.jsp?error=" + 
+                    java.net.URLEncoder.encode(errorMsg, "UTF-8"));
             } else {
-                response.sendRedirect("user/dashboard.jsp?error=Invalid payment request");
+                response.sendRedirect("user/dashboard.jsp?error=" + 
+                    java.net.URLEncoder.encode(errorMsg, "UTF-8"));
             }
-            
-        } catch (NumberFormatException e) {
-            response.sendRedirect("user/subscription.jsp?error=Invalid amount format");
+        } catch (Exception e) {
+            response.sendRedirect("user/dashboard.jsp?error=Payment configuration error");
         }
     }
     

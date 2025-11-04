@@ -408,10 +408,17 @@
                 console.log('🚀 Using Razorpay API');
                 initiateRazorpayPayment();
             } else {
-                console.log('⚠️ Using fallback demo payment');
-                console.log('Reason: Environment variables not set or invalid');
-                // Fallback to demo payment via CandidateServlet
-                HTMLFormElement.prototype.submit.call(this);
+                console.log('❌ Razorpay not configured!');
+                alert('⚠️ Payment Gateway Not Configured!\n\n' +
+                      'Razorpay credentials are not set up.\n\n' +
+                      'To enable real payments:\n' +
+                      '1. Get credentials from https://razorpay.com\n' +
+                      '2. Set environment variables:\n' +
+                      '   - RAZORPAY_KEY_ID\n' +
+                      '   - RAZORPAY_KEY_SECRET\n' +
+                      '3. Restart the server\n\n' +
+                      'Please contact administrator to configure payment gateway.');
+                return false;
             }
         });
         
@@ -449,7 +456,7 @@
                     prefill: {
                         name: '<%= user.getFullName() %>',
                         email: '<%= user.getEmail() %>',
-                        contact: '<%= user.getPhoneNumber() != null ? user.getPhoneNumber() : "" %>'
+                        contact: '<%= user.getMobile() != null ? user.getMobile() : "" %>'
                     },
                     theme: {
                         color: '#667eea'

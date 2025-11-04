@@ -360,6 +360,17 @@ public class UserDAO {
             // These fields might not be present in all queries
         }
         
+        // Bank details (for brokers)
+        try {
+            user.setBankName(rs.getString("bank_name"));
+            user.setAccountNumber(rs.getString("account_number"));
+            user.setIfscCode(rs.getString("ifsc_code"));
+            user.setBranchName(rs.getString("branch_name"));
+            user.setPanNumber(rs.getString("pan_number"));
+        } catch (SQLException e) {
+            // These fields might not be present in all queries
+        }
+        
         return user;
     }
     
@@ -511,5 +522,47 @@ public class UserDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+    
+    // Update broker bank details
+    public boolean updateBankDetails(int userId, String bankName, String accountNumber, 
+                                     String ifscCode, String branchName, String panNumber) {
+        String query = "UPDATE users SET bank_name = ?, account_number = ?, ifsc_code = ?, " +
+                      "branch_name = ?, pan_number = ? WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, bankName);
+            pstmt.setString(2, accountNumber);
+            pstmt.setString(3, ifscCode);
+            pstmt.setString(4, branchName);
+            pstmt.setString(5, panNumber);
+            pstmt.setInt(6, userId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Update user's broker (map referral code)
+    public boolean updateUserBroker(int userId, int brokerId) {
+        String query = "UPDATE users SET broker_id = ? WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, brokerId);
+            pstmt.setInt(2, userId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

@@ -607,7 +607,7 @@
                         <div>
                             <strong>⚠️ Action Required:</strong> Candidate <strong><%= c.getCandidateName() %></strong> does not have an expense limit set. Please set the expense limit to track expenses properly.
                         </div>
-                        <a href="edit-candidate.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-warning btn-sm" style="white-space: nowrap; margin-left: 10px;">Set Limit</a>
+                        <a href="edit-candidate.jsp?candidateId=<%= c.getCandidateId() %>&focusLimit=true" class="btn btn-warning btn-sm" style="white-space: nowrap; margin-left: 10px;">Set Limit</a>
                     </div>
                 <%
                             }
@@ -634,7 +634,7 @@
                                 <strong>🚨 Critical:</strong> Expense limit is not set for <strong><%= selectedCandidate.getCandidateName() %></strong>. 
                                 You cannot add expenses or track spending without setting an expense limit first.
                             </div>
-                            <a href="edit-candidate.jsp?candidateId=<%= selectedCandidate.getCandidateId() %>" 
+                            <a href="edit-candidate.jsp?candidateId=<%= selectedCandidate.getCandidateId() %>&focusLimit=true" 
                                class="btn" style="background: #dc2626; color: white; white-space: nowrap; margin-left: 15px; font-weight: 600;">
                                 Set Expense Limit Now
                             </a>

@@ -120,9 +120,14 @@
         .required {
             color: #e53e3e;
         }
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
         .form-control {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 45px 12px 15px;
             border: 2px solid #e2e8f0;
             border-radius: 8px;
             font-size: 14px;
@@ -149,6 +154,88 @@
             display: none;
         }
         .error-message.show {
+            display: block;
+        }
+        
+        /* Voice Input Styles */
+        .voice-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+        .voice-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #718096;
+            transition: fill 0.3s ease;
+        }
+        .voice-btn:hover svg {
+            fill: #667eea;
+        }
+        .voice-btn.listening svg {
+            fill: #e53e3e;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .voice-status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .voice-status.active {
+            display: flex;
+        }
+        .voice-status .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulseDot 1s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .voice-not-supported {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .voice-not-supported.show {
             display: block;
         }
         .form-control.error {
@@ -293,6 +380,11 @@
 
     <!-- Main Content -->
     <div class="container">
+        <!-- Voice Input Not Supported Warning -->
+        <div class="voice-not-supported" id="voiceNotSupported">
+            ⚠️ Voice input is not supported in your browser. Please use Chrome, Edge, or Safari for voice typing feature.
+        </div>
+        
         <div class="card">
             <div class="card-header">
                 <h1>🤝 Register New Broker</h1>
@@ -318,13 +410,29 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>First Name <span class="required">*</span></label>
-                        <input type="text" id="firstName" name="firstName" class="form-control" required maxlength="50">
+                        <div class="input-wrapper">
+                            <input type="text" id="firstName" name="firstName" class="form-control" required maxlength="50">
+                            <button type="button" class="voice-btn" data-field="firstName" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">2-50 characters, letters only</div>
                         <div class="error-message" id="firstName-error">First name is required</div>
                     </div>
                     <div class="form-group">
                         <label>Last Name <span class="required">*</span></label>
-                        <input type="text" id="lastName" name="lastName" class="form-control" required maxlength="50">
+                        <div class="input-wrapper">
+                            <input type="text" id="lastName" name="lastName" class="form-control" required maxlength="50">
+                            <button type="button" class="voice-btn" data-field="lastName" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">2-50 characters, letters only</div>
                         <div class="error-message" id="lastName-error">Last name is required</div>
                     </div>
@@ -333,14 +441,30 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Mobile Number <span class="required">*</span></label>
-                        <input type="text" id="mobileNumber" name="mobileNumber" class="form-control" required 
-                               pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 digits">
+                        <div class="input-wrapper">
+                            <input type="text" id="mobileNumber" name="mobileNumber" class="form-control" required 
+                                   pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 digits">
+                            <button type="button" class="voice-btn" data-field="mobileNumber" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">Starting with 6-9, 10 digits</div>
                         <div class="error-message" id="mobileNumber-error">Invalid mobile number</div>
                     </div>
                     <div class="form-group">
                         <label>Email Address <span class="required">*</span></label>
-                        <input type="email" id="emailId" name="emailId" class="form-control" required maxlength="100">
+                        <div class="input-wrapper">
+                            <input type="email" id="emailId" name="emailId" class="form-control" required maxlength="100">
+                            <button type="button" class="voice-btn" data-field="emailId" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">Valid email format</div>
                         <div class="error-message" id="emailId-error">Invalid email address</div>
                     </div>
@@ -348,9 +472,17 @@
                 
                 <div class="form-group">
                     <label>Address <span class="required">*</span></label>
-                    <textarea id="address" name="address" class="form-control" required 
-                              minlength="10" maxlength="500" rows="3" 
-                              placeholder="Enter complete address"></textarea>
+                    <div class="input-wrapper">
+                        <textarea id="address" name="address" class="form-control" required 
+                                  minlength="10" maxlength="500" rows="3" 
+                                  placeholder="Enter complete address"></textarea>
+                        <button type="button" class="voice-btn" data-field="address" title="Voice Input" style="top: 12px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                            </svg>
+                        </button>
+                    </div>
                     <div class="helper-text">Complete address (10-500 characters)</div>
                     <div class="error-message" id="address-error">Address is required (minimum 10 characters)</div>
                 </div>
@@ -361,16 +493,32 @@
                 <div class="form-row">
                     <div class="form-group">
                         <label>Username <span class="required">*</span></label>
-                        <input type="text" id="username" name="username" class="form-control" required 
-                               minlength="4" maxlength="30" pattern="[a-zA-Z0-9_]+">
+                        <div class="input-wrapper">
+                            <input type="text" id="username" name="username" class="form-control" required 
+                                   minlength="4" maxlength="30" pattern="[a-zA-Z0-9_]+">
+                            <button type="button" class="voice-btn" data-field="username" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">4-30 characters (letters, numbers, underscore)</div>
                         <div class="error-message" id="username-error">Invalid username</div>
                     </div>
                     <div class="form-group referral-field">
                         <label>Referral Code <span class="required">*</span></label>
-                        <input type="text" id="referralCode" name="referralCode" class="form-control" required 
-                               minlength="6" maxlength="20" pattern="[A-Z0-9]+" 
-                               style="text-transform: uppercase;" placeholder="e.g., BROKER123">
+                        <div class="input-wrapper">
+                            <input type="text" id="referralCode" name="referralCode" class="form-control" required 
+                                   minlength="6" maxlength="20" pattern="[A-Z0-9]+" 
+                                   style="text-transform: uppercase;" placeholder="e.g., BROKER123">
+                            <button type="button" class="voice-btn" data-field="referralCode" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text">Unique code (A-Z, 0-9, 6-20 characters)</div>
                         <div class="error-message" id="referralCode-error">Invalid referral code</div>
                     </div>
@@ -409,7 +557,154 @@
         </div>
     </div>
 
+    <!-- Voice Status Indicator -->
+    <div class="voice-status" id="voiceStatus">
+        <div class="pulse-dot"></div>
+        <span>Listening...</span>
+    </div>
+
     <script>
+        // Voice Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let currentField = null;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+            
+            recognition.onstart = function() {
+                console.log('Voice recognition started for field:', currentField);
+                document.getElementById('voiceStatus').classList.add('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.add('listening');
+                }
+            };
+            
+            recognition.onresult = function(event) {
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript;
+                const isFinal = event.results[resultIndex].isFinal;
+                
+                console.log('Transcript:', transcript, 'Final:', isFinal);
+                
+                const field = document.getElementById(currentField);
+                
+                if (field && isFinal) {
+                    // Special handling for different field types
+                    if (currentField === 'mobileNumber') {
+                        // Extract only numbers from speech
+                        const numbers = transcript.replace(/\D/g, '');
+                        field.value = numbers.substring(0, 10);
+                    } else if (currentField === 'referralCode') {
+                        // Convert to uppercase and remove spaces
+                        field.value = transcript.toUpperCase().replace(/\s+/g, '');
+                    } else if (currentField === 'emailId') {
+                        // Handle common speech-to-text email corrections
+                        let email = transcript.toLowerCase().replace(/\s+/g, '');
+                        email = email.replace(/\bat\b/g, '@');
+                        email = email.replace(/\bdot\b/g, '.');
+                        field.value = email;
+                    } else if (currentField === 'username') {
+                        // Remove spaces and special characters
+                        field.value = transcript.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
+                    } else {
+                        // For text fields, just set the value
+                        if (field.tagName === 'TEXTAREA') {
+                            field.value += (field.value ? ' ' : '') + transcript;
+                        } else {
+                            field.value = transcript;
+                        }
+                    }
+                    
+                    // Trigger input event for validation
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                    
+                    // Stop recognition after successful transcription
+                    setTimeout(() => {
+                        recognition.stop();
+                    }, 500);
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+                
+                if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                    alert('🎤 Microphone access denied. Please allow microphone access in your browser settings.');
+                } else if (event.error === 'no-speech') {
+                    alert('🎤 No speech detected. Please try speaking again.');
+                } else if (event.error === 'network') {
+                    alert('🎤 Network error. Please check your internet connection.');
+                } else {
+                    alert('🎤 Error: ' + event.error + '. Please try again.');
+                }
+            };
+            
+            recognition.onend = function() {
+                console.log('Voice recognition ended');
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+            };
+            
+            recognition.onspeechstart = function() {
+                console.log('Speech detected!');
+            };
+            
+            recognition.onspeechend = function() {
+                console.log('Speech ended');
+            };
+            
+            // Add click event to all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const fieldId = this.getAttribute('data-field');
+                    
+                    // If already listening to this field, stop
+                    if (currentField === fieldId && this.classList.contains('listening')) {
+                        recognition.stop();
+                        return;
+                    }
+                    
+                    // Stop any ongoing recognition
+                    try {
+                        recognition.stop();
+                    } catch (e) {}
+                    
+                    // Start new recognition
+                    currentField = fieldId;
+                    
+                    setTimeout(() => {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.error('Failed to start recognition:', e);
+                        }
+                    }, 100);
+                });
+            });
+        } else {
+            // Show not supported message
+            document.getElementById('voiceNotSupported').classList.add('show');
+            // Hide all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+        }
+        
         // Form validation - Same as user registration
         const form = document.getElementById('brokerForm');
         const submitBtn = form.querySelector('button[type="submit"]');

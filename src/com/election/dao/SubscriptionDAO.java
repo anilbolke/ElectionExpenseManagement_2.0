@@ -203,6 +203,28 @@ public class SubscriptionDAO {
         }
     }
     
+    // Update user subscription by plan name
+    public boolean updateUserSubscription(int userId, String planName, String status) {
+        String query = "UPDATE users SET subscription_status = ?, " +
+                      "subscription_start_date = CURRENT_TIMESTAMP, " +
+                      "subscription_end_date = DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 30 DAY), " +
+                      "updated_at = CURRENT_TIMESTAMP WHERE user_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, status);
+            pstmt.setInt(2, userId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     // Extract subscription plan from ResultSet
     private SubscriptionPlan extractPlanFromResultSet(ResultSet rs) throws SQLException {
         SubscriptionPlan plan = new SubscriptionPlan();

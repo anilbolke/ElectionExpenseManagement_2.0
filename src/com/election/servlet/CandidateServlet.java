@@ -355,6 +355,7 @@ public class CandidateServlet extends HttpServlet {
     }
     
     // Process payment for candidate registration
+    // NOTE: This is a DEMO/FALLBACK method - Real payments go through PaymentServlet
     private void processPayment(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
@@ -367,51 +368,11 @@ public class CandidateServlet extends HttpServlet {
         }
         
         String candidateIdStr = request.getParameter("candidateId");
-        String amountStr = request.getParameter("amount");
-        String paymentMethod = request.getParameter("paymentMethod");
         
-        if (candidateIdStr == null || amountStr == null || paymentMethod == null) {
-            response.sendRedirect("user/manage-candidates.jsp?error=Invalid payment details");
-            return;
-        }
-        
-        int candidateId = Integer.parseInt(candidateIdStr);
-        double amount = Double.parseDouble(amountStr);
-        
-        Candidate candidate = candidateDAO.getCandidateById(candidateId);
-        
-        // Verify candidate belongs to this user
-        if (candidate == null || candidate.getUserId() != user.getUserId()) {
-            response.sendRedirect("user/manage-candidates.jsp?error=Candidate not found");
-            return;
-        }
-        
-        // Generate transaction ID
-        String transactionId = "TXN" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        
-        // Update candidate with payment details
-        candidate.setPaymentStatus("completed");
-        candidate.setPaymentAmount(BigDecimal.valueOf(amount));
-        candidate.setPaymentDate(new Timestamp(System.currentTimeMillis()));
-        candidate.setTransactionId(transactionId);
-        candidate.setPaymentMethod(paymentMethod);
-        candidate.setPaymentVerified(true);
-        candidate.setAccountStatus("active");
-        
-        // Update in database
-        boolean paymentUpdated = candidateDAO.updatePaymentStatus(candidateId, "completed", transactionId);
-        boolean verifyUpdated = candidateDAO.verifyPayment(candidateId, true);
-        
-        if (paymentUpdated && verifyUpdated) {
-            // Store transaction details in session for confirmation page
-            session.setAttribute("transactionId", transactionId);
-            session.setAttribute("paymentAmount", amount);
-            session.setAttribute("candidateName", candidate.getCandidateName());
-            
-            response.sendRedirect("user/payment-success-candidate.jsp");
-        } else {
-            response.sendRedirect("user/candidate-payment.jsp?candidateId=" + candidateId + "&error=Payment failed. Please try again.");
-        }
+        // Redirect to payment page - payments should go through PaymentServlet with Razorpay
+        response.sendRedirect("user/candidate-payment.jsp?candidateId=" + candidateIdStr + 
+            "&error=" + java.net.URLEncoder.encode("Please configure Razorpay credentials to process payments. " +
+            "This is a demo mode fallback. Set RAZORPAY_KEY_ID and RAZORPAY_KEY_SECRET environment variables.", "UTF-8"));
     }
     
     // Update candidate details from edit form
@@ -572,7 +533,17 @@ public class CandidateServlet extends HttpServlet {
         System.out.println("Calling DAO updateCandidate...");
         
         if (candidateDAO.updateCandidate(candidate)) {
-            System.out.println("DAO returned success, redirecting...");
+            System.out.println("DAO returned success, refreshing session and redirecting...");
+            
+            // Refresh the candidate object in session if this is the selected candidate
+            Candidate sessionCandidate = (Candidate) session.getAttribute("candidate");
+            if (sessionCandidate != null && sessionCandidate.getCandidateId() == candidateId) {
+                // Fetch fresh data from database
+                Candidate updatedCandidate = candidateDAO.getCandidateById(candidateId);
+                session.setAttribute("candidate", updatedCandidate);
+                System.out.println("Session candidate refreshed with updated data");
+            }
+            
             response.sendRedirect("user/edit-candidate.jsp?candidateId=" + candidateId + "&message=Candidate details updated successfully");
         } else {
             System.out.println("DAO returned failure!");

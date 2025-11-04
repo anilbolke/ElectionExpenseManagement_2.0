@@ -635,6 +635,37 @@
                 });
             }
         });
+        
+        // Auto-focus on expense limit field if coming from "Set Limit" button
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const focusLimit = urlParams.get('focusLimit');
+            
+            if (focusLimit === 'true') {
+                const expenseLimitField = document.getElementById('expenseLimit');
+                if (expenseLimitField) {
+                    // Scroll to the field smoothly
+                    expenseLimitField.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                    
+                    // Focus after a short delay to ensure scroll completes
+                    setTimeout(function() {
+                        expenseLimitField.focus();
+                        // Highlight the field briefly
+                        expenseLimitField.style.borderColor = '#667eea';
+                        expenseLimitField.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.3)';
+                        
+                        // Remove highlight after 2 seconds
+                        setTimeout(function() {
+                            expenseLimitField.style.borderColor = '';
+                            expenseLimitField.style.boxShadow = '';
+                        }, 2000);
+                    }, 500);
+                }
+            }
+        });
     </script>
 </body>
 </html>

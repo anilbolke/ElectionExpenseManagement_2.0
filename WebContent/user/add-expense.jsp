@@ -287,6 +287,96 @@
             font-weight: 700;
         }
         
+        /* Voice Input Styles */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .form-control-voice {
+            padding-right: 45px !important;
+        }
+        .voice-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+        .voice-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #718096;
+            transition: fill 0.3s ease;
+        }
+        .voice-btn:hover svg {
+            fill: #667eea;
+        }
+        .voice-btn.listening svg {
+            fill: #e53e3e;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .voice-status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .voice-status.active {
+            display: flex;
+        }
+        .voice-status .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulseDot 1s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        .voice-not-supported {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .voice-not-supported.show {
+            display: block;
+        }
+        
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -308,6 +398,11 @@
     
     <div class="main-content">
         <div class="container">
+            <!-- Voice Input Not Supported Warning -->
+            <div class="voice-not-supported" id="voiceNotSupported">
+                ⚠️ Voice input is not supported in your browser. Please use Chrome, Edge, or Safari for voice typing feature.
+            </div>
+            
             <div class="page-header">
                 <h1><%= MessageBundle.getMessage(request, "heading.add.expense") %></h1>
                 <div class="candidate-badge">
@@ -399,23 +494,55 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="vendorName"><%= MessageBundle.getMessage(request, "expense.vendor.name") %></label>
-                            <input type="text" id="vendorName" name="vendorName" class="form-control">
+                            <div class="input-wrapper">
+                                <input type="text" id="vendorName" name="vendorName" class="form-control form-control-voice">
+                                <button type="button" class="voice-btn" data-field="vendorName" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="receiptNumber"><%= MessageBundle.getMessage(request, "expense.receipt") %> <%= MessageBundle.getMessage(request, "table.id") %></label>
-                            <input type="text" id="receiptNumber" name="receiptNumber" class="form-control">
+                            <div class="input-wrapper">
+                                <input type="text" id="receiptNumber" name="receiptNumber" class="form-control form-control-voice">
+                                <button type="button" class="voice-btn" data-field="receiptNumber" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="description"><%= MessageBundle.getMessage(request, "expense.description") %> *</label>
-                        <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                        <div class="input-wrapper">
+                            <textarea id="description" name="description" class="form-control form-control-voice" rows="3" required></textarea>
+                            <button type="button" class="voice-btn" data-field="description" title="Voice Input" style="top: 12px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="remarks"><%= MessageBundle.getMessage(request, "expense.remarks") %></label>
-                        <textarea id="remarks" name="remarks" class="form-control" rows="2"></textarea>
+                        <div class="input-wrapper">
+                            <textarea id="remarks" name="remarks" class="form-control form-control-voice" rows="2"></textarea>
+                            <button type="button" class="voice-btn" data-field="remarks" title="Voice Input" style="top: 12px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
                 
@@ -432,7 +559,136 @@
         <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
     </footer>
     
+    <!-- Voice Status Indicator -->
+    <div class="voice-status" id="voiceStatus">
+        <div class="pulse-dot"></div>
+        <span>Listening...</span>
+    </div>
+    
     <script>
+        // Voice Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let currentField = null;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+            recognition.maxAlternatives = 1;
+            
+            recognition.onstart = function() {
+                console.log('Voice recognition started for field:', currentField);
+                document.getElementById('voiceStatus').classList.add('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.add('listening');
+                }
+            };
+            
+            recognition.onresult = function(event) {
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript;
+                const isFinal = event.results[resultIndex].isFinal;
+                
+                console.log('Transcript:', transcript, 'Final:', isFinal);
+                
+                const field = document.getElementById(currentField);
+                
+                if (field && isFinal) {
+                    // For text fields, just set the value
+                    if (field.tagName === 'TEXTAREA') {
+                        field.value += (field.value ? ' ' : '') + transcript;
+                    } else {
+                        field.value = transcript;
+                    }
+                    
+                    // Trigger input event for validation
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                    
+                    // Stop recognition after successful transcription
+                    setTimeout(() => {
+                        recognition.stop();
+                    }, 500);
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+                
+                if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                    alert('🎤 Microphone access denied. Please allow microphone access in your browser settings.');
+                } else if (event.error === 'no-speech') {
+                    alert('🎤 No speech detected. Please try speaking again.');
+                } else if (event.error === 'network') {
+                    alert('🎤 Network error. Please check your internet connection.');
+                } else if (event.error !== 'aborted') {
+                    alert('🎤 Error: ' + event.error + '. Please try again.');
+                }
+            };
+            
+            recognition.onend = function() {
+                console.log('Voice recognition ended');
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+            };
+            
+            recognition.onspeechstart = function() {
+                console.log('Speech detected!');
+            };
+            
+            recognition.onspeechend = function() {
+                console.log('Speech ended');
+            };
+            
+            // Add click event to all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const fieldId = this.getAttribute('data-field');
+                    
+                    // If already listening to this field, stop
+                    if (currentField === fieldId && this.classList.contains('listening')) {
+                        recognition.stop();
+                        return;
+                    }
+                    
+                    // Stop any ongoing recognition
+                    try {
+                        recognition.stop();
+                    } catch (e) {}
+                    
+                    // Start new recognition
+                    currentField = fieldId;
+                    
+                    setTimeout(() => {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.error('Failed to start recognition:', e);
+                        }
+                    }, 100);
+                });
+            });
+        } else {
+            // Show not supported message
+            document.getElementById('voiceNotSupported').classList.add('show');
+            // Hide all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+        }
+    
         // Set today's date as default
         document.getElementById('date').valueAsDate = new Date();
         

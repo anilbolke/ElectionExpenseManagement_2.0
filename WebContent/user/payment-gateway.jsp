@@ -396,7 +396,7 @@
                     prefill: {
                         name: '<%= user.getFullName() %>',
                         email: '<%= user.getEmail() %>',
-                        contact: '<%= user.getPhoneNumber() != null ? user.getPhoneNumber() : "" %>'
+                        contact: '<%= user.getMobile()  != null ? user.getMobile()  : "" %>'
                     },
                     theme: {
                         color: '#667eea'
