@@ -254,25 +254,136 @@
             opacity: 0.4;
             pointer-events: none;
         }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .container {
+                padding: 15px;
+            }
+            .navbar {
+                flex-direction: column;
+                padding: 12px;
+            }
+            .navbar div:last-child {
+                width: 100%;
+                justify-content: space-between;
+                margin-top: 10px;
+            }
+            .navbar ul {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                font-size: 12px;
+            }
+            .navbar h1 {
+                font-size: 1.1rem;
+            }
+            .navbar ul {
+                flex-direction: column;
+                gap: 5px;
+                width: 100%;
+            }
+            .navbar ul li {
+                width: 100%;
+            }
+            .navbar ul li a {
+                display: block;
+                text-align: center;
+                padding: 8px;
+            }
+            .navbar div:last-child {
+                flex-direction: column;
+                gap: 10px !important;
+            }
+            .page-header h2 {
+                font-size: 1.2rem;
+            }
+            .card {
+                margin-bottom: 15px;
+            }
+            table {
+                font-size: 11px;
+            }
+            th, td {
+                padding: 8px 6px;
+            }
+            th {
+                font-size: 10px;
+            }
+            /* Make table scrollable on mobile */
+            .card {
+                overflow-x: auto;
+            }
+            table {
+                min-width: 600px;
+            }
+            .btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .pagination {
+                flex-wrap: wrap;
+                padding: 15px 10px;
+            }
+            .pagination a, .pagination span {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            .navbar {
+                padding: 10px;
+            }
+            .navbar h1 {
+                font-size: 1rem;
+            }
+            .page-header {
+                padding: 12px;
+            }
+            .page-header h2 {
+                font-size: 1rem;
+            }
+            .page-header p {
+                font-size: 11px;
+            }
+            table {
+                min-width: 500px;
+                font-size: 10px;
+            }
+            th, td {
+                padding: 6px 4px;
+            }
+            .badge {
+                padding: 3px 8px;
+                font-size: 10px;
+            }
+            .btn {
+                padding: 5px 8px;
+                font-size: 10px;
+            }
+            .stats-card {
+                padding: 12px;
+            }
+            .stats-card h3 {
+                font-size: 12px;
+            }
+            .stats-card .stat-value {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div>
-            <h1>Election Expense Management</h1>
-        </div>
-        <div style="display: flex; align-items: center; gap: 30px;">
-            <ul>
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-                <li><a href="my-users.jsp" class="active">My Users</a></li>
-                <li><a href="my-candidates.jsp">My Candidates</a></li>
-            </ul>
-            <div>
-                <span style="margin-right: 15px; color: #64748b;">👤 <%= user.getFullName() %></span>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Multi-Language Navigation -->
+    <jsp:include page="/includes/broker-navbar.jsp" />
 
     <div class="container">
         <div class="page-header">

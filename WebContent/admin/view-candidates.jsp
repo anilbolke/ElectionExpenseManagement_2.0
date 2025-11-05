@@ -303,23 +303,8 @@
     </style>
 </head>
 <body>
-    <!-- Compact Navigation -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">👑 Admin Portal</div>
-            <ul class="navbar-menu">
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-                <li><a href="view-users.jsp">Users</a></li>
-                <li><a href="view-candidates.jsp" class="active">Candidates</a></li>
-                <li><a href="view-brokers.jsp">Brokers</a></li>
-            </ul>
-            <div class="user-info">
-                <div class="user-avatar"><%= user.getFullName() != null ? user.getFullName().substring(0, 1).toUpperCase() : "A" %></div>
-                <span><%= user.getFullName() %></span>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Multi-Language Navigation -->
+    <jsp:include page="/includes/admin-navbar.jsp" />
 
     <!-- Main Container -->
     <div class="container">

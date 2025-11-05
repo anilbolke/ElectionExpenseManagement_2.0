@@ -330,22 +330,8 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">👑 Admin Portal</div>
-            <ul class="navbar-menu">
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-                <li><a href="view-users.jsp">Users</a></li>
-                <li><a href="view-candidates.jsp">Candidates</a></li>
-                <li><a href="view-brokers.jsp">Brokers</a></li>
-                <li><a href="manage-payments.jsp" class="active">Payment Activity</a></li>
-            </ul>
-            <div>
-                <a href="<%=request.getContextPath()%>/logout" class="btn btn-danger btn-sm">Logout</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Multi-Language Navigation -->
+    <jsp:include page="/includes/admin-navbar.jsp" />
 
     <!-- Main Container -->
     <div class="container">

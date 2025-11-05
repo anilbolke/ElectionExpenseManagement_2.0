@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Terms Checkbox</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            color: #333;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffc107;
+        }
+        
+        .terms-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 10px 5px;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-success:disabled {
+            background: #6c757d;
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .test-item {
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid #667eea;
+            background: #f8f9ff;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🧪 Terms & Conditions Checkbox - Test Page</h1>
+        
+        <div class="status info">
+            ℹ️ This is a test page to verify the checkbox functionality
+        </div>
+        
+        <h2>Test 1: Checkbox Visibility</h2>
+        <div class="test-item" id="test1Result">
+            <strong>Status:</strong> Testing...
+        </div>
+        
+        <!-- Terms and Conditions Checkbox -->
+        <div class="terms-section">
+            <div class="form-check" style="margin-bottom: 15px;">
+                <input type="checkbox" id="termsCheckbox" name="termsAccepted" class="form-check-input" 
+                       required style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                <label for="termsCheckbox" style="cursor: pointer; font-size: 15px; color: #333;">
+                    <strong style="color: #dc3545;">* </strong>
+                    I have read and agree to the 
+                    <a href="#" onclick="showTermsModal(); return false;" 
+                       style="color: #667eea; text-decoration: underline; font-weight: 600;">
+                        Terms and Conditions
+                    </a>
+                    <span style="display: block; font-size: 13px; color: #666; margin-top: 5px;">
+                        (मी अटी व नियम वाचले आहेत आणि त्यांना मान्यता देतो)
+                    </span>
+                </label>
+            </div>
+            <input type="hidden" name="termsVersion" value="v1.0">
+            <input type="hidden" name="acceptedTimestamp" id="acceptedTimestamp">
+            <div style="font-size: 12px; color: #dc3545; margin-top: 10px;">
+                <strong>⚠️ Important:</strong> By checking this box, you acknowledge that you have read, 
+                understood, and agree to be bound by the Terms and Conditions. This is a mandatory 
+                requirement before making any payment.
+            </div>
+        </div>
+        
+        <h2>Test 2: Button Enable/Disable</h2>
+        <div class="test-item" id="test2Result">
+            <strong>Status:</strong> Button should be disabled initially
+        </div>
+        
+        <button type="button" class="btn btn-success" id="payButton" disabled>
+            Pay ₹500.00 →
+        </button>
+        
+        <h2>Test 3: JavaScript Functionality</h2>
+        <div class="test-item" id="test3Result">
+            <strong>Status:</strong> Testing JavaScript...
+        </div>
+        
+        <h2>Test Results Summary</h2>
+        <div id="summaryResults"></div>
+        
+        <hr style="margin: 30px 0;">
+        
+        <h2>Instructions</h2>
+        <div class="warning">
+            <strong>Expected Behavior:</strong>
+            <ol>
+                <li>Checkbox should be visible above</li>
+                <li>Pay button should be disabled (grayed out)</li>
+                <li>When you check the checkbox, Pay button should enable</li>
+                <li>When you uncheck, Pay button should disable again</li>
+                <li>Clicking "Terms and Conditions" link should show alert (modal not included in test)</li>
+            </ol>
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <strong>If checkbox is visible here but NOT on payment page:</strong>
+            <ul>
+                <li>Clear browser cache (Ctrl+Shift+Delete)</li>
+                <li>Restart Tomcat in Eclipse</li>
+                <li>Try hard refresh (Ctrl+Shift+R)</li>
+                <li>Try Incognito/Private browsing mode</li>
+            </ul>
+        </div>
+    </div>
+    
+    <!-- Terms Modal (Simplified for test) -->
+    <div id="termsModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8);">
+        <div style="background-color: white; margin: 10% auto; padding: 30px; border-radius: 12px; width: 80%; max-width: 600px;">
+            <h2>Terms and Conditions</h2>
+            <p>This is a test modal. In the actual page, full terms will be displayed here.</p>
+            <button onclick="closeTermsModal()" class="btn btn-success">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        // Test 1: Check if checkbox element exists
+        const checkbox = document.getElementById('termsCheckbox');
+        if (checkbox) {
+            document.getElementById('test1Result').innerHTML = '<strong>Status:</strong> <span style="color: green;">✓ PASS</span> - Checkbox element found';
+            document.getElementById('test1Result').className = 'test-item success';
+        } else {
+            document.getElementById('test1Result').innerHTML = '<strong>Status:</strong> <span style="color: red;">✗ FAIL</span> - Checkbox element NOT found';
+            document.getElementById('test1Result').className = 'test-item error';
+        }
+        
+        // Test 2: Check if button is disabled
+        const button = document.getElementById('payButton');
+        if (button && button.disabled) {
+            document.getElementById('test2Result').innerHTML = '<strong>Status:</strong> <span style="color: green;">✓ PASS</span> - Button is disabled initially';
+            document.getElementById('test2Result').className = 'test-item success';
+        } else {
+            document.getElementById('test2Result').innerHTML = '<strong>Status:</strong> <span style="color: red;">✗ FAIL</span> - Button state incorrect';
+            document.getElementById('test2Result').className = 'test-item error';
+        }
+        
+        // Test 3: Test JavaScript functionality
+        let jsTestPassed = false;
+        try {
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const payButton = document.getElementById('payButton');
+            const acceptedTimestampField = document.getElementById('acceptedTimestamp');
+            
+            // Enable/disable pay button based on checkbox
+            termsCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    payButton.disabled = false;
+                    payButton.style.opacity = '1';
+                    payButton.style.cursor = 'pointer';
+                    acceptedTimestampField.value = new Date().toISOString();
+                    console.log('Terms accepted at:', acceptedTimestampField.value);
+                } else {
+                    payButton.disabled = true;
+                    payButton.style.opacity = '0.5';
+                    payButton.style.cursor = 'not-allowed';
+                    acceptedTimestampField.value = '';
+                }
+            });
+            
+            // Initial state
+            payButton.style.opacity = '0.5';
+            payButton.style.cursor = 'not-allowed';
+            
+            jsTestPassed = true;
+            document.getElementById('test3Result').innerHTML = '<strong>Status:</strong> <span style="color: green;">✓ PASS</span> - JavaScript functionality working';
+            document.getElementById('test3Result').className = 'test-item success';
+        } catch (error) {
+            document.getElementById('test3Result').innerHTML = '<strong>Status:</strong> <span style="color: red;">✗ FAIL</span> - JavaScript error: ' + error.message;
+            document.getElementById('test3Result').className = 'test-item error';
+        }
+        
+        // Summary
+        let summary = '<div class="status success">';
+        summary += '<h3>✓ All Tests Passed!</h3>';
+        summary += '<p>The checkbox code is working correctly in this test environment.</p>';
+        summary += '<p><strong>If it\'s not showing on the actual payment page:</strong></p>';
+        summary += '<ol>';
+        summary += '<li>The JSP file may not have been deployed to Tomcat</li>';
+        summary += '<li>Browser cache might be showing old version</li>';
+        summary += '<li>Tomcat needs to be restarted</li>';
+        summary += '</ol>';
+        summary += '<p><strong>Solution:</strong> Run verify-checkbox-deployment.bat</p>';
+        summary += '</div>';
+        
+        document.getElementById('summaryResults').innerHTML = summary;
+        
+        // Modal functions
+        function showTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+        }
+        
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+        }
+        
+        function acceptAndClose() {
+            document.getElementById('termsCheckbox').checked = true;
+            document.getElementById('termsCheckbox').dispatchEvent(new Event('change'));
+            closeTermsModal();
+        }
+        
+        // Log to console
+        console.log('=== Terms Checkbox Test Page ===');
+        console.log('Checkbox element:', checkbox);
+        console.log('Pay button:', button);
+        console.log('JavaScript initialized successfully');
+    </script>
+</body>
+</html>

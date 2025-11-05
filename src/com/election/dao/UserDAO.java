@@ -548,6 +548,32 @@ public class UserDAO {
         }
     }
     
+    // Get broker bank details
+    public User getBankDetails(int userId) {
+        String query = "SELECT user_id, bank_name, account_number, ifsc_code, branch_name, pan_number FROM users WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setBankName(rs.getString("bank_name"));
+                user.setAccountNumber(rs.getString("account_number"));
+                user.setIfscCode(rs.getString("ifsc_code"));
+                user.setBranchName(rs.getString("branch_name"));
+                user.setPanNumber(rs.getString("pan_number"));
+                return user;
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
     // Update user's broker (map referral code)
     public boolean updateUserBroker(int userId, int brokerId) {
         String query = "UPDATE users SET broker_id = ? WHERE user_id = ?";

@@ -10,6 +10,20 @@
     
     String error = request.getParameter("error");
     String success = request.getParameter("success");
+    
+    // Preserve form data if there's an error
+    String prevFirmName = request.getParameter("firmName") != null ? request.getParameter("firmName") : "";
+    String prevOwnerName = request.getParameter("ownerName") != null ? request.getParameter("ownerName") : "";
+    String prevMobileNumber = request.getParameter("mobileNumber") != null ? request.getParameter("mobileNumber") : "";
+    String prevWhatsappNumber = request.getParameter("whatsappNumber") != null ? request.getParameter("whatsappNumber") : "";
+    String prevFullAddress = request.getParameter("fullAddress") != null ? request.getParameter("fullAddress") : "";
+    String prevTaluka = request.getParameter("taluka") != null ? request.getParameter("taluka") : "";
+    String prevDistrict = request.getParameter("district") != null ? request.getParameter("district") : "";
+    String prevState = request.getParameter("state") != null ? request.getParameter("state") : "";
+    String prevPincode = request.getParameter("pincode") != null ? request.getParameter("pincode") : "";
+    String prevGstNumber = request.getParameter("gstNumber") != null ? request.getParameter("gstNumber") : "";
+    String prevUsername = request.getParameter("username") != null ? request.getParameter("username") : "";
+    String prevReferralCode = request.getParameter("referralCode") != null ? request.getParameter("referralCode") : "";
 %>
 <!DOCTYPE html>
 <html>
@@ -139,6 +153,25 @@
             border-color: #667eea;
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
+        .form-control[type="file"] {
+            padding: 10px;
+            cursor: pointer;
+        }
+        .form-control[type="file"]::file-selector-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: all 0.2s;
+        }
+        .form-control[type="file"]::file-selector-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+        }
         .form-control.error {
             border-color: #e53e3e;
         }
@@ -225,6 +258,31 @@
         @keyframes pulseDot {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
+        }
+        
+        /* Language Toggle Buttons */
+        .lang-btn {
+            padding: 8px 20px;
+            margin: 0 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            background: white;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
         .voice-not-supported {
             background: #fed7d7;
@@ -362,21 +420,8 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="navbar-content">
-            <div class="navbar-brand">👑 Admin Portal</div>
-            <ul class="navbar-menu">
-                <li><a href="dashboard.jsp">Dashboard</a></li>
-                <li><a href="view-users.jsp">Users</a></li>
-                <li><a href="view-candidates.jsp">Candidates</a></li>
-                <li><a href="view-brokers.jsp">Brokers</a></li>
-            </ul>
-            <div>
-                <a href="dashboard.jsp" class="btn btn-secondary" style="padding: 6px 12px; font-size: 13px;">← Back</a>
-            </div>
-        </div>
-    </nav>
+    <!-- Multi-Language Navigation -->
+    <jsp:include page="/includes/admin-navbar.jsp" />
 
     <!-- Main Content -->
     <div class="container">
@@ -389,6 +434,19 @@
             <div class="card-header">
                 <h1>🤝 Register New Broker</h1>
                 <p>Create a broker account with unique referral code</p>
+                
+                <!-- Language Toggle -->
+                <div style="margin-top: 20px; text-align: center;">
+                    <label style="font-size: 14px; color: #718096; margin-right: 10px;">🎤 Voice Input Language:</label>
+                    <button type="button" id="langMarathi" class="lang-btn active" onclick="setLanguage('mr-IN')">🇮🇳 मराठी</button>
+                    <button type="button" id="langEnglish" class="lang-btn" onclick="setLanguage('en-US')">🇬🇧 English</button>
+                </div>
+                
+                <!-- Voice Input Info -->
+                <div style="margin-top: 15px; padding: 12px 20px; background: #ebf8ff; border: 1px solid #bee3f8; border-radius: 8px; font-size: 13px; color: #2c5282; text-align: center;">
+                    <strong>💡 टीप:</strong> मायक्रोफोन आयकॉन 🎤 वर क्लिक करून आवाजात माहिती भरा | 
+                    <strong>Tip:</strong> Click the microphone icon 🎤 to fill information by voice
+                </div>
             </div>
             
             <% if (success != null) { %>
@@ -403,80 +461,65 @@
                 </div>
             <% } %>
             
-            <form action="<%=request.getContextPath()%>/register-broker" method="post" id="brokerForm">
-                <!-- Personal Information -->
-                <h3 style="margin-bottom: 20px; color: #1a202c; font-size: 1.1rem;">Personal Information</h3>
+            <form action="<%=request.getContextPath()%>/register-broker" method="post" id="brokerForm" enctype="multipart/form-data">
+                <!-- Business Information -->
+                <h3 style="margin-bottom: 20px; color: #1a202c; font-size: 1.1rem;">📋 Business Information</h3>
                 
                 <div class="form-row">
                     <div class="form-group">
-                        <label>First Name <span class="required">*</span></label>
+                        <label>Firm Name <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <input type="text" id="firstName" name="firstName" class="form-control" required maxlength="50">
-                            <button type="button" class="voice-btn" data-field="firstName" title="Voice Input">
+                            <input type="text" id="firmName" name="firmName" class="form-control" required maxlength="100" value="<%= prevFirmName %>">
+                            <button type="button" class="voice-btn" data-field="firmName" title="Voice Input">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="helper-text">2-50 characters, letters only</div>
-                        <div class="error-message" id="firstName-error">First name is required</div>
+                        <div class="helper-text">Business/Firm name</div>
+                        <div class="error-message" id="firmName-error">Firm name is required</div>
                     </div>
                     <div class="form-group">
-                        <label>Last Name <span class="required">*</span></label>
+                        <label>Owner Name <span class="required">*</span></label>
                         <div class="input-wrapper">
-                            <input type="text" id="lastName" name="lastName" class="form-control" required maxlength="50">
-                            <button type="button" class="voice-btn" data-field="lastName" title="Voice Input">
+                            <input type="text" id="ownerName" name="ownerName" class="form-control" required maxlength="100" value="<%= prevOwnerName %>">
+                            <button type="button" class="voice-btn" data-field="ownerName" title="Voice Input">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                                 </svg>
                             </button>
                         </div>
-                        <div class="helper-text">2-50 characters, letters only</div>
-                        <div class="error-message" id="lastName-error">Last name is required</div>
+                        <div class="helper-text">Owner's full name</div>
+                        <div class="error-message" id="ownerName-error">Owner name is required</div>
                     </div>
                 </div>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Mobile Number <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="text" id="mobileNumber" name="mobileNumber" class="form-control" required 
-                                   pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 digits">
-                            <button type="button" class="voice-btn" data-field="mobileNumber" title="Voice Input">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                                </svg>
-                            </button>
-                        </div>
+                        <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" required 
+                               pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 digits" value="<%= prevMobileNumber %>">
                         <div class="helper-text">Starting with 6-9, 10 digits</div>
                         <div class="error-message" id="mobileNumber-error">Invalid mobile number</div>
                     </div>
                     <div class="form-group">
-                        <label>Email Address <span class="required">*</span></label>
-                        <div class="input-wrapper">
-                            <input type="email" id="emailId" name="emailId" class="form-control" required maxlength="100">
-                            <button type="button" class="voice-btn" data-field="emailId" title="Voice Input">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="helper-text">Valid email format</div>
-                        <div class="error-message" id="emailId-error">Invalid email address</div>
+                        <label>WhatsApp Number <span class="required">*</span></label>
+                        <input type="tel" id="whatsappNumber" name="whatsappNumber" class="form-control" required 
+                               pattern="[6-9][0-9]{9}" maxlength="10" placeholder="10 digits" value="<%= prevWhatsappNumber %>">
+                        <div class="helper-text">Starting with 6-9, 10 digits</div>
+                        <div class="error-message" id="whatsappNumber-error">Invalid WhatsApp number</div>
                     </div>
                 </div>
                 
                 <div class="form-group">
-                    <label>Address <span class="required">*</span></label>
+                    <label>Full Address <span class="required">*</span></label>
                     <div class="input-wrapper">
-                        <textarea id="address" name="address" class="form-control" required 
+                        <textarea id="fullAddress" name="fullAddress" class="form-control" required 
                                   minlength="10" maxlength="500" rows="3" 
-                                  placeholder="Enter complete address"></textarea>
-                        <button type="button" class="voice-btn" data-field="address" title="Voice Input" style="top: 12px;">
+                                  placeholder="Complete business address"><%= prevFullAddress %></textarea>
+                        <button type="button" class="voice-btn" data-field="fullAddress" title="Voice Input" style="top: 12px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                 <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                                 <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
@@ -484,18 +527,98 @@
                         </button>
                     </div>
                     <div class="helper-text">Complete address (10-500 characters)</div>
-                    <div class="error-message" id="address-error">Address is required (minimum 10 characters)</div>
+                    <div class="error-message" id="fullAddress-error">Address is required (minimum 10 characters)</div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Taluka <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="taluka" name="taluka" class="form-control" required maxlength="50" value="<%= prevTaluka %>">
+                            <button type="button" class="voice-btn" data-field="taluka" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="helper-text">Taluka name</div>
+                        <div class="error-message" id="taluka-error">Taluka is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label>District <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="district" name="district" class="form-control" required maxlength="50" value="<%= prevDistrict %>">
+                            <button type="button" class="voice-btn" data-field="district" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="helper-text">District name</div>
+                        <div class="error-message" id="district-error">District is required</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>State <span class="required">*</span></label>
+                        <div class="input-wrapper">
+                            <input type="text" id="state" name="state" class="form-control" required maxlength="50" value="<%= prevState %>">
+                            <button type="button" class="voice-btn" data-field="state" title="Voice Input">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="helper-text">State name</div>
+                        <div class="error-message" id="state-error">State is required</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Pincode / Postal Code <span class="required">*</span></label>
+                        <input type="text" id="pincode" name="pincode" class="form-control" required 
+                               pattern="[0-9]{6}" maxlength="6" placeholder="6 digits" value="<%= prevPincode %>">
+                        <div class="helper-text">6-digit pincode</div>
+                        <div class="error-message" id="pincode-error">Invalid pincode</div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>GST Number <span style="color: #718096;">(Optional)</span></label>
+                        <input type="text" id="gstNumber" name="gstNumber" class="form-control" 
+                               pattern="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}" 
+                               maxlength="15" placeholder="e.g., 22AAAAA0000A1Z5" style="text-transform: uppercase;" value="<%= prevGstNumber %>">
+                        <div class="helper-text">15-character GST Number</div>
+                        <div class="error-message" id="gstNumber-error">Invalid GST format</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Visiting Card Photo <span class="required">*</span></label>
+                        <input type="file" id="visitingCard" name="visitingCard" class="form-control" required 
+                               accept="image/*">
+                        <div class="helper-text">Upload visiting card (JPG, PNG, max 5MB)</div>
+                        <div class="error-message" id="visitingCard-error">Visiting card is required</div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Shop / Office Board Photo <span style="color: #718096;">(Optional)</span></label>
+                    <input type="file" id="shopPhoto" name="shopPhoto" class="form-control" accept="image/*">
+                    <div class="helper-text">Upload shop/office board photo (JPG, PNG, max 5MB)</div>
+                    <div class="error-message" id="shopPhoto-error">Invalid file</div>
                 </div>
                 
                 <!-- Account Credentials -->
-                <h3 style="margin: 30px 0 20px 0; color: #1a202c; font-size: 1.1rem;">Account Credentials</h3>
+                <h3 style="margin: 30px 0 20px 0; color: #1a202c; font-size: 1.1rem;">🔐 Account Credentials</h3>
                 
                 <div class="form-row">
                     <div class="form-group">
                         <label>Username <span class="required">*</span></label>
                         <div class="input-wrapper">
                             <input type="text" id="username" name="username" class="form-control" required 
-                                   minlength="4" maxlength="30" pattern="[a-zA-Z0-9_]+">
+                                   minlength="4" maxlength="30" pattern="[a-zA-Z0-9_]+" value="<%= prevUsername %>">
                             <button type="button" class="voice-btn" data-field="username" title="Voice Input">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -511,7 +634,7 @@
                         <div class="input-wrapper">
                             <input type="text" id="referralCode" name="referralCode" class="form-control" required 
                                    minlength="6" maxlength="20" pattern="[A-Z0-9]+" 
-                                   style="text-transform: uppercase;" placeholder="e.g., BROKER123">
+                                   style="text-transform: uppercase;" placeholder="e.g., BROKER123" value="<%= prevReferralCode %>">
                             <button type="button" class="voice-btn" data-field="referralCode" title="Voice Input">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -560,11 +683,46 @@
     <!-- Voice Status Indicator -->
     <div class="voice-status" id="voiceStatus">
         <div class="pulse-dot"></div>
-        <span>Listening...</span>
+        <span id="voiceStatusText">🎤 मराठीत बोला...</span>
     </div>
 
     <script>
-        // Voice Recognition Setup
+        // Language Settings
+        let currentLanguage = 'mr-IN'; // Default to Marathi
+        const languageNames = {
+            'mr-IN': '🇮🇳 मराठी',
+            'en-US': '🇬🇧 English'
+        };
+        const listeningTexts = {
+            'mr-IN': '🎤 मराठीत बोला...',
+            'en-US': '🎤 Speak now...'
+        };
+        
+        // Set Language Function
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            if (recognition) {
+                recognition.lang = lang;
+            }
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'mr-IN') {
+                document.getElementById('langMarathi').classList.add('active');
+            } else {
+                document.getElementById('langEnglish').classList.add('active');
+            }
+            
+            // Update voice status text
+            document.getElementById('voiceStatusText').textContent = listeningTexts[lang];
+            
+            console.log('Language changed to:', languageNames[lang]);
+        }
+        
+        // Voice Recognition Setup with Marathi Support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
         let currentField = null;
@@ -573,12 +731,13 @@
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'en-US';
+            recognition.lang = currentLanguage; // Marathi language by default
             recognition.maxAlternatives = 1;
             
             recognition.onstart = function() {
-                console.log('Voice recognition started for field:', currentField);
+                console.log('Voice recognition started for field:', currentField, 'in', languageNames[currentLanguage]);
                 document.getElementById('voiceStatus').classList.add('active');
+                document.getElementById('voiceStatusText').textContent = listeningTexts[currentLanguage];
                 if (currentField) {
                     const btn = document.querySelector(`button[data-field="${currentField}"]`);
                     if (btn) btn.classList.add('listening');
@@ -596,29 +755,18 @@
                 
                 if (field && isFinal) {
                     // Special handling for different field types
-                    if (currentField === 'mobileNumber') {
-                        // Extract only numbers from speech
-                        const numbers = transcript.replace(/\D/g, '');
-                        field.value = numbers.substring(0, 10);
-                    } else if (currentField === 'referralCode') {
+                    if (currentField === 'referralCode') {
                         // Convert to uppercase and remove spaces
                         field.value = transcript.toUpperCase().replace(/\s+/g, '');
-                    } else if (currentField === 'emailId') {
-                        // Handle common speech-to-text email corrections
-                        let email = transcript.toLowerCase().replace(/\s+/g, '');
-                        email = email.replace(/\bat\b/g, '@');
-                        email = email.replace(/\bdot\b/g, '.');
-                        field.value = email;
                     } else if (currentField === 'username') {
                         // Remove spaces and special characters
                         field.value = transcript.toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
+                    } else if (field.tagName === 'TEXTAREA') {
+                        // For textarea, append text
+                        field.value += (field.value ? ' ' : '') + transcript;
                     } else {
                         // For text fields, just set the value
-                        if (field.tagName === 'TEXTAREA') {
-                            field.value += (field.value ? ' ' : '') + transcript;
-                        } else {
-                            field.value = transcript;
-                        }
+                        field.value = transcript;
                     }
                     
                     // Trigger input event for validation
@@ -640,14 +788,32 @@
                     if (btn) btn.classList.remove('listening');
                 }
                 
+                // Language-specific error messages
+                const errorMessages = {
+                    'mr-IN': {
+                        'not-allowed': '🎤 मायक्रोफोन प्रवेश नाकारला. कृपया ब्राउझर सेटिंग्जमध्ये मायक्रोफोन प्रवेशास परवानगी द्या.',
+                        'no-speech': '🎤 आवाज शोधला नाही. कृपया पुन्हा बोलण्याचा प्रयत्न करा.',
+                        'network': '🎤 नेटवर्क त्रुटी. कृपया आपले इंटरनेट कनेक्शन तपासा.',
+                        'default': '🎤 त्रुटी: {error}. कृपया पुन्हा प्रयत्न करा.'
+                    },
+                    'en-US': {
+                        'not-allowed': '🎤 Microphone access denied. Please allow microphone access in your browser settings.',
+                        'no-speech': '🎤 No speech detected. Please try speaking again.',
+                        'network': '🎤 Network error. Please check your internet connection.',
+                        'default': '🎤 Error: {error}. Please try again.'
+                    }
+                };
+                
+                const msgs = errorMessages[currentLanguage] || errorMessages['en-US'];
+                
                 if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-                    alert('🎤 Microphone access denied. Please allow microphone access in your browser settings.');
+                    alert(msgs['not-allowed']);
                 } else if (event.error === 'no-speech') {
-                    alert('🎤 No speech detected. Please try speaking again.');
+                    alert(msgs['no-speech']);
                 } else if (event.error === 'network') {
-                    alert('🎤 Network error. Please check your internet connection.');
-                } else {
-                    alert('🎤 Error: ' + event.error + '. Please try again.');
+                    alert(msgs['network']);
+                } else if (event.error !== 'aborted') {
+                    alert(msgs['default'].replace('{error}', event.error));
                 }
             };
             
@@ -711,26 +877,46 @@
         
         // Validation rules
         const validationRules = {
-            firstName: {
-                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
-                message: 'First name must be 2-50 characters (letters only)'
+            firmName: {
+                pattern: /^[a-zA-Z0-9\u0900-\u097F\s.&,'-]{2,100}$/,
+                message: 'Firm name must be 2-100 characters'
             },
-            lastName: {
-                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
-                message: 'Last name must be 2-50 characters (letters only)'
+            ownerName: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s.]{2,100}$/,
+                message: 'Owner name must be 2-100 characters (letters only)'
             },
             mobileNumber: {
                 pattern: /^[6-9][0-9]{9}$/,
                 message: 'Mobile number must start with 6-9 and be 10 digits'
             },
-            emailId: {
-                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: 'Please enter a valid email address'
+            whatsappNumber: {
+                pattern: /^[6-9][0-9]{9}$/,
+                message: 'WhatsApp number must start with 6-9 and be 10 digits'
             },
-            address: {
+            fullAddress: {
                 minLength: 10,
                 maxLength: 500,
                 message: 'Address must be between 10-500 characters'
+            },
+            taluka: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
+                message: 'Taluka must be 2-50 characters'
+            },
+            district: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
+                message: 'District must be 2-50 characters'
+            },
+            state: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s]{2,50}$/,
+                message: 'State must be 2-50 characters'
+            },
+            pincode: {
+                pattern: /^[0-9]{6}$/,
+                message: 'Pincode must be 6 digits'
+            },
+            gstNumber: {
+                pattern: /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/,
+                message: 'Invalid GST Number format'
             },
             username: {
                 pattern: /^[a-zA-Z0-9_]{4,30}$/,
@@ -874,6 +1060,57 @@
             validateField(this);
         });
         
+        // Auto-uppercase GST number
+        const gstField = document.getElementById('gstNumber');
+        if (gstField) {
+            gstField.addEventListener('input', function(e) {
+                e.target.value = e.target.value.toUpperCase();
+            });
+        }
+        
+        // File validation
+        const visitingCardInput = document.getElementById('visitingCard');
+        const shopPhotoInput = document.getElementById('shopPhoto');
+        
+        function validateFile(input) {
+            if (!input.files || input.files.length === 0) {
+                if (input.hasAttribute('required')) {
+                    return false;
+                }
+                return true;
+            }
+            
+            const file = input.files[0];
+            const maxSize = 5 * 1024 * 1024; // 5MB
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+            
+            if (file.size > maxSize) {
+                alert('File size exceeds 5MB limit for ' + input.id);
+                input.value = '';
+                return false;
+            }
+            
+            if (!allowedTypes.includes(file.type)) {
+                alert('Only JPG, JPEG, and PNG files are allowed for ' + input.id);
+                input.value = '';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        if (visitingCardInput) {
+            visitingCardInput.addEventListener('change', function() {
+                validateFile(this);
+            });
+        }
+        
+        if (shopPhotoInput) {
+            shopPhotoInput.addEventListener('change', function() {
+                validateFile(this);
+            });
+        }
+        
         // Auto-uppercase referral code and check for duplicates
         let referralCheckTimeout = null;
         const referralCodeField = document.getElementById('referralCode');
@@ -956,6 +1193,17 @@
                 }
             });
             
+            // Validate file inputs
+            if (!validateFile(visitingCardInput)) {
+                isValid = false;
+            }
+            
+            if (shopPhotoInput.files && shopPhotoInput.files.length > 0) {
+                if (!validateFile(shopPhotoInput)) {
+                    isValid = false;
+                }
+            }
+            
             // Password match validation
             if (password !== confirmPassword) {
                 isValid = false;
@@ -984,8 +1232,26 @@
                 // Submit the form
                 this.submit();
             } else {
-                // Show error alert
-                alert('❌ Please fix all errors before submitting!');
+                // Collect all error messages
+                var errorMessages = [];
+                var errorFields = form.querySelectorAll('.error');
+                
+                errorFields.forEach(function(field) {
+                    var label = form.querySelector('label[for="' + field.id + '"]');
+                    if (label) {
+                        var fieldName = label.textContent.replace('*', '').trim();
+                        var errorElement = document.getElementById(field.id + '-error');
+                        var errorMsg = errorElement ? errorElement.textContent : 'is required';
+                        errorMessages.push('\u2022 ' + fieldName + ': ' + errorMsg);
+                    }
+                });
+                
+                // Show detailed error alert
+                if (errorMessages.length > 0) {
+                    alert('\u274C Please fix the following errors:\n\n' + errorMessages.join('\n'));
+                } else {
+                    alert('\u274C Please fix all errors before submitting!');
+                }
                 
                 // Scroll to first error
                 const firstError = form.querySelector('.error');

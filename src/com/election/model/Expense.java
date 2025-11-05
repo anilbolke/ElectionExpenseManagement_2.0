@@ -15,6 +15,10 @@ public class Expense {
     private String receiptNumber;
     private String vendorName;
     private String remarks;
+    private String expenseSource;
+    private String partyMobile;
+    private BigDecimal rate;
+    private String areaSizeQuantity;
     private int createdBy;
     private Timestamp createdDate;
 
@@ -100,6 +104,38 @@ public class Expense {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public String getExpenseSource() {
+        return expenseSource;
+    }
+
+    public void setExpenseSource(String expenseSource) {
+        this.expenseSource = expenseSource;
+    }
+
+    public String getPartyMobile() {
+        return partyMobile;
+    }
+
+    public void setPartyMobile(String partyMobile) {
+        this.partyMobile = partyMobile;
+    }
+
+    public BigDecimal getRate() {
+        return rate;
+    }
+
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
+    }
+
+    public String getAreaSizeQuantity() {
+        return areaSizeQuantity;
+    }
+
+    public void setAreaSizeQuantity(String areaSizeQuantity) {
+        this.areaSizeQuantity = areaSizeQuantity;
     }
 
     public int getCreatedBy() {

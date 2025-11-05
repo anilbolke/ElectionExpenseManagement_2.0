@@ -15,8 +15,9 @@ public class ExpenseDAO {
     // Add new expense
     public boolean addExpense(Expense expense) {
         String query = "INSERT INTO expenses (candidate_id, expense_category, expense_description, expense_amount, " +
-                      "expense_date, payment_mode, receipt_number, vendor_name, remarks, created_by) " +
-                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                      "expense_date, payment_mode, receipt_number, vendor_name, remarks, area_size_quantity, rate, " +
+                      "party_mobile, expense_source, created_by) " +
+                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -30,7 +31,11 @@ public class ExpenseDAO {
             pstmt.setString(7, expense.getReceiptNumber());
             pstmt.setString(8, expense.getVendorName());
             pstmt.setString(9, expense.getRemarks());
-            pstmt.setInt(10, expense.getCreatedBy());
+            pstmt.setString(10, expense.getAreaSizeQuantity());
+            pstmt.setBigDecimal(11, expense.getRate());
+            pstmt.setString(12, expense.getPartyMobile());
+            pstmt.setString(13, expense.getExpenseSource());
+            pstmt.setInt(14, expense.getCreatedBy());
             
             int result = pstmt.executeUpdate();
             return result > 0;
@@ -50,6 +55,28 @@ public class ExpenseDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             pstmt.setInt(1, candidateId);
+            ResultSet rs = pstmt.executeQuery();
+            
+            while (rs.next()) {
+                expenses.add(extractExpenseFromResultSet(rs));
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return expenses;
+    }
+    
+    // Get expenses by candidate and specific date (for Proforma-1)
+    public List<Expense> getExpensesByDate(int candidateId, Date expenseDate) {
+        List<Expense> expenses = new ArrayList<>();
+        String query = "SELECT * FROM expenses WHERE candidate_id = ? AND expense_date = ? ORDER BY expense_id ASC";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setInt(1, candidateId);
+            pstmt.setDate(2, expenseDate);
             ResultSet rs = pstmt.executeQuery();
             
             while (rs.next()) {
@@ -148,7 +175,8 @@ public class ExpenseDAO {
     // Update expense
     public boolean updateExpense(Expense expense) {
         String query = "UPDATE expenses SET expense_category = ?, expense_description = ?, expense_amount = ?, " +
-                      "expense_date = ?, payment_mode = ?, receipt_number = ?, vendor_name = ?, remarks = ? " +
+                      "expense_date = ?, payment_mode = ?, receipt_number = ?, vendor_name = ?, remarks = ?, " +
+                      "area_size_quantity = ?, rate = ?, party_mobile = ?, expense_source = ? " +
                       "WHERE expense_id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
@@ -162,7 +190,11 @@ public class ExpenseDAO {
             pstmt.setString(6, expense.getReceiptNumber());
             pstmt.setString(7, expense.getVendorName());
             pstmt.setString(8, expense.getRemarks());
-            pstmt.setInt(9, expense.getExpenseId());
+            pstmt.setString(9, expense.getAreaSizeQuantity());
+            pstmt.setBigDecimal(10, expense.getRate());
+            pstmt.setString(11, expense.getPartyMobile());
+            pstmt.setString(12, expense.getExpenseSource());
+            pstmt.setInt(13, expense.getExpenseId());
             
             int result = pstmt.executeUpdate();
             return result > 0;
@@ -244,6 +276,10 @@ public class ExpenseDAO {
         expense.setReceiptNumber(rs.getString("receipt_number"));
         expense.setVendorName(rs.getString("vendor_name"));
         expense.setRemarks(rs.getString("remarks"));
+        expense.setAreaSizeQuantity(rs.getString("area_size_quantity"));
+        expense.setRate(rs.getBigDecimal("rate"));
+        expense.setPartyMobile(rs.getString("party_mobile"));
+        expense.setExpenseSource(rs.getString("expense_source"));
         expense.setCreatedBy(rs.getInt("created_by"));
         expense.setCreatedDate(rs.getTimestamp("created_date"));
         return expense;

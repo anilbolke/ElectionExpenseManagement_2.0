@@ -9,8 +9,8 @@
     <display-name>ElectionExpenseManagement</display-name>
     
     <welcome-file-list>
-        <welcome-file>login.jsp</welcome-file>
         <welcome-file>index.jsp</welcome-file>
+        <welcome-file>login.jsp</welcome-file>
     </welcome-file-list>
 
     <!-- Character Encoding Filter - MUST BE FIRST for UTF-8 support -->
@@ -207,6 +207,16 @@
     <servlet-mapping>
         <servlet-name>GenerateProforma2Servlet</servlet-name>
         <url-pattern>/generateProforma2</url-pattern>
+    </servlet-mapping>
+    
+    <!-- Generate Proforma-1 Date-wise Report Servlet -->
+    <servlet>
+        <servlet-name>GenerateProforma1Servlet</servlet-name>
+        <servlet-class>com.election.servlet.GenerateProforma1Servlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GenerateProforma1Servlet</servlet-name>
+        <url-pattern>/generateProforma1</url-pattern>
     </servlet-mapping>
     
     <!-- Admin Update Plan Servlet -->

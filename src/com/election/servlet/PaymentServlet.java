@@ -3,8 +3,10 @@ package com.election.servlet;
 import com.election.dao.CandidateDAO;
 import com.election.dao.PaymentDAO;
 import com.election.dao.SubscriptionDAO;
+import com.election.dao.TermsAcceptanceDAO;
 import com.election.model.Candidate;
 import com.election.model.Payment;
+import com.election.model.TermsAcceptance;
 import com.election.model.User;
 import com.election.util.RazorpayConfig;
 
@@ -38,6 +40,7 @@ public class PaymentServlet extends HttpServlet {
     private PaymentDAO paymentDAO;
     private SubscriptionDAO subscriptionDAO;
     private CandidateDAO candidateDAO;
+    private TermsAcceptanceDAO termsAcceptanceDAO;
     
     @Override
     public void init() throws ServletException {
@@ -45,6 +48,7 @@ public class PaymentServlet extends HttpServlet {
         paymentDAO = new PaymentDAO();
         subscriptionDAO = new SubscriptionDAO();
         candidateDAO = new CandidateDAO();
+        termsAcceptanceDAO = new TermsAcceptanceDAO();
     }
     
     /**
@@ -311,6 +315,12 @@ public class PaymentServlet extends HttpServlet {
                     return;
                 }
                 
+                // Record Terms and Conditions Acceptance before processing payment
+                boolean termsRecorded = recordTermsAcceptance(request, user);
+                if (!termsRecorded) {
+                    System.err.println("Warning: Failed to record terms acceptance for user: " + user.getUserId());
+                }
+                
                 // Process payment based on type
                 boolean success = false;
                 if ("subscription".equals(paymentType)) {
@@ -392,6 +402,69 @@ public class PaymentServlet extends HttpServlet {
             return generatedSignature.equals(signature);
             
         } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    /**
+     * Record terms and conditions acceptance
+     * @param request HttpServletRequest
+     * @param user User object
+     * @return true if successful, false otherwise
+     */
+    private boolean recordTermsAcceptance(HttpServletRequest request, User user) {
+        try {
+            // Check if terms were accepted
+            String termsAccepted = request.getParameter("termsAccepted");
+            String termsVersion = request.getParameter("termsVersion");
+            
+            if (!"on".equals(termsAccepted) && !"true".equals(termsAccepted)) {
+                System.err.println("Terms not accepted by user: " + user.getUserId());
+                return false;
+            }
+            
+            // Create terms acceptance record
+            TermsAcceptance acceptance = new TermsAcceptance(user.getUserId());
+            acceptance.setTermsVersion(termsVersion != null ? termsVersion : "v1.0");
+            acceptance.setAcceptedOn(new Timestamp(System.currentTimeMillis()));
+            
+            // Get IP address
+            String ipAddress = request.getHeader("X-Forwarded-For");
+            if (ipAddress == null || ipAddress.isEmpty()) {
+                ipAddress = request.getRemoteAddr();
+            }
+            acceptance.setIpAddress(ipAddress);
+            
+            // Get User Agent
+            String userAgent = request.getHeader("User-Agent");
+            if (userAgent != null && userAgent.length() > 500) {
+                userAgent = userAgent.substring(0, 500); // Limit length
+            }
+            acceptance.setUserAgent(userAgent);
+            
+            // Get candidate ID if present
+            String candidateIdStr = request.getParameter("candidateId");
+            if (candidateIdStr != null && !candidateIdStr.isEmpty()) {
+                try {
+                    acceptance.setCandidateId(Integer.parseInt(candidateIdStr));
+                } catch (NumberFormatException e) {
+                    // Ignore
+                }
+            }
+            
+            // Save to database
+            boolean recorded = termsAcceptanceDAO.recordAcceptance(acceptance);
+            
+            if (recorded) {
+                System.out.println("Terms acceptance recorded successfully for user: " + user.getUserId() + 
+                                 " from IP: " + ipAddress);
+            }
+            
+            return recorded;
+            
+        } catch (Exception e) {
+            System.err.println("Error recording terms acceptance: " + e.getMessage());
             e.printStackTrace();
             return false;
         }

@@ -288,12 +288,38 @@
                 <span>Your payment information is encrypted and secure</span>
             </div>
             
+            <!-- Terms and Conditions Checkbox -->
+            <div class="terms-section" style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #e0e0e0;">
+                <div class="form-check" style="margin-bottom: 15px;">
+                    <input type="checkbox" id="termsCheckbox" name="termsAccepted" class="form-check-input" 
+                           required style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                    <label for="termsCheckbox" style="cursor: pointer; font-size: 15px; color: #333;">
+                        <strong style="color: #dc3545;">* </strong>
+                        I have read and agree to the 
+                        <a href="#" onclick="showTermsModal(); return false;" 
+                           style="color: #667eea; text-decoration: underline; font-weight: 600;">
+                            Terms and Conditions
+                        </a>
+                        <span style="display: block; font-size: 13px; color: #666; margin-top: 5px;">
+                            (मी अटी व नियम वाचले आहेत आणि त्यांना मान्यता देतो)
+                        </span>
+                    </label>
+                </div>
+                <input type="hidden" name="termsVersion" value="v1.0">
+                <input type="hidden" name="acceptedTimestamp" id="acceptedTimestamp">
+                <div style="font-size: 12px; color: #dc3545; margin-top: 10px;">
+                    <strong>⚠️ Important:</strong> By checking this box, you acknowledge that you have read, 
+                    understood, and agree to be bound by the Terms and Conditions. This is a mandatory 
+                    requirement before making any payment.
+                </div>
+            </div>
+            
             <div class="btn-group">
                 <button type="button" class="btn btn-secondary" 
                         onclick="window.history.back()">
                     ← Cancel
                 </button>
-                <button type="submit" class="btn btn-success">
+                <button type="submit" class="btn btn-success" id="payButton" disabled>
                     Pay ₹<%= String.format("%.2f", amount) %> →
                 </button>
             </div>
@@ -462,6 +488,146 @@
                 }
                 e.target.value = value;
             });
+        });
+        
+        // Terms and Conditions Checkbox Logic
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const payButton = document.getElementById('payButton');
+        const acceptedTimestampField = document.getElementById('acceptedTimestamp');
+        
+        // Enable/disable pay button based on checkbox
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                payButton.disabled = false;
+                payButton.style.opacity = '1';
+                payButton.style.cursor = 'pointer';
+                // Record acceptance timestamp
+                acceptedTimestampField.value = new Date().toISOString();
+                console.log('Terms accepted at:', acceptedTimestampField.value);
+            } else {
+                payButton.disabled = true;
+                payButton.style.opacity = '0.5';
+                payButton.style.cursor = 'not-allowed';
+                acceptedTimestampField.value = '';
+            }
+        });
+        
+        // Initial state
+        payButton.style.opacity = '0.5';
+        payButton.style.cursor = 'not-allowed';
+    </script>
+    
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.8);">
+        <div style="background-color: #fefefe; margin: 3% auto; padding: 0; border-radius: 12px; width: 90%; max-width: 800px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); max-height: 85vh; display: flex; flex-direction: column;">
+            <!-- Modal Header -->
+            <div style="padding: 25px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 12px 12px 0 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 style="margin: 0; font-size: 24px;">
+                        📜 Terms and Conditions
+                        <span style="display: block; font-size: 16px; opacity: 0.9; margin-top: 5px;">
+                            अटी व नियम
+                        </span>
+                    </h2>
+                    <span onclick="closeTermsModal()" style="color: white; font-size: 35px; font-weight: bold; cursor: pointer; opacity: 0.8; transition: opacity 0.3s;">
+                        &times;
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Modal Body -->
+            <div style="padding: 30px; overflow-y: auto; flex: 1; line-height: 1.8; color: #333;">
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+                    <strong>⚠️ Important Notice / महत्त्वाची सूचना:</strong><br>
+                    Please read these terms carefully before making any payment. By checking the acceptance box, you agree to be bound by these terms.
+                    <br><em>कृपया पेमेंट करण्यापूर्वी या अटी काळजीपूर्वक वाचा. स्वीकृती बॉक्स चेक करून, तुम्ही या अटींना बांधील राहण्यास सहमती देता.</em>
+                </div>
+                
+                <h3 style="color: #667eea; margin-top: 20px;">1. 'निवडणूक खर्च व्यवस्थापन सॉफ्टवेअर' वापराच्या अटी व नियम</h3>
+                <p style="font-weight: 600;">(Terms and Conditions for Use of 'Election Expense Management Software')</p>
+                
+                <p>हे सॉफ्टवेअर वापरण्यापूर्वी (पुढे 'सॉफ्टवेअर' असे नमूद), ग्राहक (उमेदवार किंवा त्यांचे प्रतिनिधी, पुढे 'वापरकर्ता' असे नमूद) खालील अटी व शर्तींना (Terms and Conditions) सहमती देत आहेत:</p>
+                
+                <h4 style="color: #764ba2; margin-top: 20px;">१. सॉफ्टवेअरची स्थिती आणि उद्देश (Software Status and Purpose)</h4>
+                
+                <p><strong>१.१. खासगी आणि स्वतंत्र उत्पादन:</strong><br>
+                हे सॉफ्टवेअर पूर्णतः खासगी मालकीचे असून ते भारतीय निवडणूक आयोग (ECI), राज्य निवडणूक आयोग (SEC) किंवा कोणत्याही सरकारी निवडणूक प्राधिकरणाशी कोणत्याही प्रकारे संलग्न नाही, त्यांच्याद्वारे प्रमाणित (Certified) नाही किंवा त्यांच्याशी संबंधित नाही.</p>
+                
+                <p><strong>१.२. उद्देश:</strong><br>
+                हे सॉफ्टवेअर केवळ मार्गदर्शन आणि वेळ वाचवण्यासाठी (Time-Saving) एक व्यवस्थापन साधन (Management Tool) म्हणून तयार केले आहे. याचा मुख्य उद्देश उमेदवारांना त्यांच्या निवडणुकीच्या खर्चाचा दैनंदिन हिशोब सोप्या पद्धतीने ठेवण्यात मदत करणे आहे.</p>
+                
+                <p><strong>१.३. कायदेशीर सल्ला पर्याय नाही:</strong><br>
+                सॉफ्टवेअरने दिलेली कोणतीही माहिती, अहवाल रचना किंवा मर्यादा संबंधित सूचना कायदेशीर सल्ला (Legal Advice) किंवा कायदेशीर अनुपालनाची हमी (Guarantee of Legal Compliance) मानली जाऊ नये. निवडणुकीच्या कायद्यांचे अंतिम अनुपालन (Final Compliance) आणि अहवाल सादर करण्याची जबाबदारी केवळ वापरकर्त्याची असेल.</p>
+                
+                <h4 style="color: #764ba2; margin-top: 20px;">२. आर्थिक नियम आणि परतावा धोरण (Financial Rules and Refund Policy)</h4>
+                
+                <p><strong>२.१. शुल्क परत न मिळणे (No Refund Policy):</strong><br>
+                या सॉफ्टवेअरच्या वापरासाठी भरलेले शुल्क (Fees) किंवा पेमेंट हे अंतिम (Final) असेल. एकदा पेमेंट पूर्ण झाल्यावर, कोणत्याही परिस्थितीत ते परत (Refund) केले जाणार नाही. निवडणुकीच्या निकालावर, उमेदवारी रद्द झाल्यास किंवा सॉफ्टवेअरचा वापर न केल्यासदेखील शुल्क परत मिळणार नाही.</p>
+                
+                <p><strong>२.२. शुल्क अहस्तांतरणीय (Non-Transferable Fees):</strong><br>
+                सॉफ्टवेअर वापरण्यासाठी दिलेले शुल्क दुसऱ्या व्यक्तीकडे, दुसऱ्या निवडणुकीसाठी किंवा दुसऱ्या मतदारसंघासाठी हस्तांतरित (Transfer) केले जाणार नाही. हा परवाना (License) केवळ एका नोंदणीकृत उमेदवारासाठी आणि एकाच निवडणुकीसाठी वैध असेल.</p>
+                
+                <h4 style="color: #764ba2; margin-top: 20px;">३. जबाबदारी आणि मर्यादा (Responsibility and Limitation)</h4>
+                
+                <p><strong>३.१. अंतिम जबाबदारी:</strong><br>
+                सॉफ्टवेअर हे केवळ एक साधन आहे. खर्च नोंदीची सत्यता (Authenticity), खर्चाची मर्यादा पाळणे, निवडणूक आयोगाला अचूक अहवाल देणे आणि कायदेशीर आवश्यकतांचे पालन करण्याची अंतिम आणि संपूर्ण जबाबदारी केवळ वापरकर्त्याची (उमेदवाराची) राहील.</p>
+                
+                <p><strong>३.२. डेटा सुरक्षा:</strong><br>
+                आम्ही वापरकर्त्याच्या डेटाच्या सुरक्षिततेसाठी आवश्यक ती काळजी घेतो, परंतु डेटा गळती (Data Breach), त्रुटी (Errors) किंवा तांत्रिक बिघाडामुळे (Technical Failure) होणाऱ्या कोणत्याही नुकसानीसाठी, आयोगाकडून येणाऱ्या नोटिसांसाठी किंवा अपात्रतेसाठी सॉफ्टवेअरची कंपनी कोणतीही जबाबदारी घेणार नाही.</p>
+                
+                <div style="background: #d4edda; border-left: 4px solid #28a745; padding: 15px; margin-top: 30px; border-radius: 4px;">
+                    <strong style="color: #155724;">✓ Acceptance / स्वीकृती:</strong><br>
+                    या अटी व नियमांनुसार, मी (वापरकर्ता) या सॉफ्टवेअरचा वापर करण्यास सहमती देत आहे आणि सॉफ्टवेअरच्या वापरासंबंधीचे सर्व धोके आणि जबाबदाऱ्या स्वीकारण्यास तयार आहे.
+                </div>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px 30px; background: #f8f9fa; border-top: 1px solid #dee2e6; border-radius: 0 0 12px 12px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="color: #666; font-size: 13px;">
+                    Version: v1.0 | Last Updated: November 2025
+                </div>
+                <button onclick="acceptAndClose()" style="background: #28a745; color: white; padding: 12px 30px; border: none; border-radius: 6px; cursor: pointer; font-size: 16px; font-weight: 600;">
+                    ✓ I Accept / मी स्वीकारतो
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Show Terms Modal
+        function showTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close Terms Modal
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Accept and Close
+        function acceptAndClose() {
+            document.getElementById('termsCheckbox').checked = true;
+            document.getElementById('termsCheckbox').dispatchEvent(new Event('change'));
+            closeTermsModal();
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('termsModal');
+            if (event.target == modal) {
+                closeTermsModal();
+            }
+        }
+        
+        // Prevent form submission if terms not accepted
+        document.querySelector('.payment-form').addEventListener('submit', function(e) {
+            if (!document.getElementById('termsCheckbox').checked) {
+                e.preventDefault();
+                alert('Please accept the Terms and Conditions before proceeding with payment.\n\nकृपया पेमेंट करण्यापूर्वी अटी व नियम स्वीकारा.');
+                return false;
+            }
         });
     </script>
 </body>

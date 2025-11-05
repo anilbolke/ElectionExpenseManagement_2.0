@@ -356,6 +356,15 @@
         ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
         
         /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 220px 1fr;
+            }
+            .navbar-content {
+                padding: 8px 10px;
+            }
+        }
+        
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -367,12 +376,90 @@
             .stats-compact {
                 grid-template-columns: repeat(4, 1fr);
             }
+            .main-container {
+                padding: 10px;
+            }
         }
         
         @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .stats-compact { grid-template-columns: repeat(2, 1fr); }
-            .sidebar { grid-template-columns: 1fr; }
+            .navbar-menu { 
+                display: none; 
+            }
+            .navbar-brand {
+                font-size: 0.9rem;
+            }
+            .user-info span {
+                display: none;
+            }
+            .stats-compact { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .sidebar { 
+                grid-template-columns: 1fr; 
+                gap: 8px;
+            }
+            .main-container {
+                padding: 8px;
+                height: calc(100vh - 40px);
+            }
+            .navbar-content {
+                padding: 6px 8px;
+            }
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .content-header h2 {
+                font-size: 1rem;
+            }
+            table {
+                font-size: 11px;
+            }
+            table th, table td {
+                padding: 8px 6px;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .quick-actions-compact {
+                padding: 10px;
+            }
+            .info-box {
+                padding: 12px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 0.8rem;
+            }
+            .stats-compact {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .stat-mini {
+                padding: 10px;
+            }
+            .stat-mini .value {
+                font-size: 1.2rem;
+            }
+            .main-content {
+                padding: 12px;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
+            .info-box p {
+                font-size: 11px;
+            }
         }
     </style>
 </head>

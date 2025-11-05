@@ -639,7 +639,8 @@
                                 <button type="submit" class="btn btn-success">📊 View Dashboard</button>
                             </form>
                             <a href="<%=request.getContextPath()%>/generateForm2PDF?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-primary" target="_blank">📋 Form-2 (नमुना-२)</a>
-                            <a href="<%=request.getContextPath()%>/generateProforma2?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-primary" style="background: #f57c00;" target="_blank">📑 Proforma-2 (Template)</a>
+                            <a href="javascript:void(0);" onclick="openProforma1Popup(<%= candidate.getCandidateId() %>)" class="btn btn-primary" style="background: #3182ce;">📅 Proforma-1</a>
+                        <a href="javascript:void(0);" onclick="openProforma2Popup(<%= candidate.getCandidateId() %>)" class="btn btn-primary" style="background: #f57c00;">📑 Proforma-2</a>
                         <% } else if("pending_payment".equals(candidate.getAccountStatus())) { %>
                             <a href="candidate-payment.jsp?candidateId=<%= candidate.getCandidateId() %>" class="btn btn-warning">💳 Complete Payment</a>
                         <% } %>
@@ -663,5 +664,118 @@
     <footer>
         <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
     </footer>
+    
+    <script>
+        // Open Proforma-1 in modal popup
+        function openProforma1Popup(candidateId) {
+            const url = 'select-date-proforma1.jsp?candidateId=' + candidateId;
+            openModalPopup(url, 'Proforma-1 Date Selection');
+        }
+        
+        // Open Proforma-2 in modal popup
+        function openProforma2Popup(candidateId) {
+            const url = '<%=request.getContextPath()%>/generateProforma2?candidateId=' + candidateId;
+            openModalPopup(url, 'Proforma-2 Report');
+        }
+        
+        // Generic modal popup function
+        function openModalPopup(url, title) {
+            // Create modal overlay
+            const modal = document.createElement('div');
+            modal.id = 'proformaModal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s;';
+            
+            // Create modal content container
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = 'background:white;width:95%;max-width:1400px;height:90%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;animation:slideDown 0.3s;';
+            
+            // Create modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:20px 30px;border-bottom:2px solid #e2e8f0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px 12px 0 0;';
+            
+            const modalTitle = document.createElement('h2');
+            modalTitle.textContent = title;
+            modalTitle.style.cssText = 'margin:0;color:white;font-size:22px;font-weight:600;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '✕';
+            closeBtn.style.cssText = 'background:rgba(255,255,255,0.2);border:none;color:white;font-size:28px;font-weight:bold;cursor:pointer;width:40px;height:40px;border-radius:50%;transition:all 0.3s;display:flex;align-items:center;justify-content:center;';
+            closeBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
+            closeBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
+            closeBtn.onclick = function() { closeModalPopup(); };
+            
+            modalHeader.appendChild(modalTitle);
+            modalHeader.appendChild(closeBtn);
+            
+            // Create iframe for content
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.cssText = 'width:100%;flex:1;border:none;border-radius:0 0 12px 12px;';
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(iframe);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Close on overlay click
+            modal.onclick = function(e) {
+                if (e.target === modal) closeModalPopup();
+            };
+            
+            // Close on ESC key
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    closeModalPopup();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            });
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal popup
+        function closeModalPopup() {
+            const modal = document.getElementById('proformaModal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => {
+                    modal.remove();
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes slideDown {
+                from { transform: translateY(-50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Listen for messages from iframe to open nested modals
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.action === 'openProforma') {
+                // Close existing modal first
+                closeModalPopup();
+                // Open new modal with report
+                setTimeout(() => {
+                    openModalPopup(event.data.url, event.data.title);
+                }, 350);
+            }
+        });
+    </script>
 </body>
 </html>

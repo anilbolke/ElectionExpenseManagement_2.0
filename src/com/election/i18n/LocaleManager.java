@@ -10,7 +10,7 @@ import java.util.Locale;
 public class LocaleManager {
     
     private static final String LOCALE_SESSION_ATTR = "user.locale";
-    private static final Locale DEFAULT_LOCALE = new Locale("en", "IN");
+    private static final Locale DEFAULT_LOCALE = new Locale("mr", "IN");
     
     /**
      * Get current user's locale from session

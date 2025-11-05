@@ -257,7 +257,7 @@
                         <div class="form-group">
                             <label class="form-label"><%= MessageBundle.getMessage(request, "fund.type") %> <span class="required">*</span></label>
                             <select name="fundType" id="fundType" class="form-select" required>
-                                <option value=""><%= MessageBundle.getMessage(request, "form.placeholder.select") %></option>
+                                <option value=""><%= MessageBundle.getMessage(request, "form.select") %></option>
                                 <option value="Cash in Hand">💵 <%= MessageBundle.getMessage(request, "fund.type.cash") %></option>
                                 <option value="Bank Balance">🏦 <%= MessageBundle.getMessage(request, "fund.type.bank") %></option>
                                 <option value="Hand Loan">🤝 <%= MessageBundle.getMessage(request, "fund.type.loan") %></option>

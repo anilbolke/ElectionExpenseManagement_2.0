@@ -18,6 +18,20 @@
     
     String success = request.getParameter("success");
     String error = request.getParameter("error");
+    
+    // Preserve form data if there's an error
+    String prevCategory = request.getParameter("category") != null ? request.getParameter("category") : "";
+    String prevDate = request.getParameter("date") != null ? request.getParameter("date") : "";
+    String prevVendorName = request.getParameter("vendorName") != null ? request.getParameter("vendorName") : "";
+    String prevReceiptNumber = request.getParameter("receiptNumber") != null ? request.getParameter("receiptNumber") : "";
+    String prevAreaSizeQuantity = request.getParameter("areaSizeQuantity") != null ? request.getParameter("areaSizeQuantity") : "";
+    String prevRate = request.getParameter("rate") != null ? request.getParameter("rate") : "";
+    String prevAmount = request.getParameter("amount") != null ? request.getParameter("amount") : "";
+    String prevPaymentMode = request.getParameter("paymentMode") != null ? request.getParameter("paymentMode") : "";
+    String prevPartyMobile = request.getParameter("partyMobile") != null ? request.getParameter("partyMobile") : "";
+    String prevExpenseSource = request.getParameter("expenseSource") != null ? request.getParameter("expenseSource") : "";
+    String prevDescription = request.getParameter("description") != null ? request.getParameter("description") : "";
+    String prevRemarks = request.getParameter("remarks") != null ? request.getParameter("remarks") : "";
 %>
 <!DOCTYPE html>
 <html>
@@ -377,6 +391,48 @@
             display: block;
         }
         
+        /* Language Toggle Buttons */
+        .lang-toggle-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .lang-btn {
+            padding: 8px 20px;
+            margin: 0 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            background: white;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .voice-info-banner {
+            margin-top: 10px;
+            padding: 12px 20px;
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #2c5282;
+        }
+        
         @media (max-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr;
@@ -401,6 +457,17 @@
             <!-- Voice Input Not Supported Warning -->
             <div class="voice-not-supported" id="voiceNotSupported">
                 ⚠️ Voice input is not supported in your browser. Please use Chrome, Edge, or Safari for voice typing feature.
+            </div>
+            
+            <!-- Language Toggle -->
+            <div class="lang-toggle-container" id="langToggleContainer">
+                <label style="font-size: 14px; color: #718096; margin-right: 10px;">🎤 Voice Input Language:</label>
+                <button type="button" id="langMarathi" class="lang-btn active" onclick="setLanguage('mr-IN')">🇮🇳 मराठी</button>
+                <button type="button" id="langEnglish" class="lang-btn" onclick="setLanguage('en-US')">🇬🇧 English</button>
+                <div class="voice-info-banner">
+                    <strong>💡 टीप:</strong> मायक्रोफोन आयकॉन 🎤 वर क्लिक करून आवाजात माहिती भरा | 
+                    <strong>Tip:</strong> Click the microphone icon 🎤 to fill information by voice
+                </div>
             </div>
             
             <div class="page-header">
@@ -447,7 +514,7 @@
         <div id="fundAlertBox" class="fund-alert-box" style="display: none;"></div>
         
         <div class="form-section" <%= needsExpenseLimit ? "style='opacity: 0.5; pointer-events: none;'" : "" %>>
-            <form action="<%=request.getContextPath()%>/expense" method="post" onsubmit="return <%= !needsExpenseLimit %>">
+            <form action="<%=request.getContextPath()%>/expense" method="post" onsubmit="return validateExpenseForm(event)" id="expenseForm">
                 <input type="hidden" name="action" value="add">
                 
                 <div style="display: grid; gap: 20px;">
@@ -455,39 +522,21 @@
                         <div class="form-group">
                             <label for="category"><%= MessageBundle.getMessage(request, "expense.category") %> *</label>
                             <select id="category" name="category" class="form-control" required>
-                                <option value=""><%= MessageBundle.getMessage(request, "form.placeholder.select") %></option>
-                                <option value="Advertisement"><%= MessageBundle.getMessage(request, "expense.category.advertisement") %></option>
-                                <option value="Travel"><%= MessageBundle.getMessage(request, "expense.category.travel") %></option>
-                                <option value="Meeting"><%= MessageBundle.getMessage(request, "expense.category.meeting") %></option>
-                                <option value="Printing"><%= MessageBundle.getMessage(request, "expense.category.printing") %></option>
-                                <option value="Food"><%= MessageBundle.getMessage(request, "expense.category.food") %></option>
-                                <option value="Venue"><%= MessageBundle.getMessage(request, "expense.category.venue") %></option>
-                                <option value="Staff"><%= MessageBundle.getMessage(request, "expense.category.staff") %></option>
-                                <option value="Miscellaneous"><%= MessageBundle.getMessage(request, "expense.category.miscellaneous") %></option>
+                                <option value=""><%= MessageBundle.getMessage(request, "form.select") %></option>
+                                <option value="Advertisement" <%= prevCategory.equals("Advertisement") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.advertisement") %></option>
+                                <option value="Travel" <%= prevCategory.equals("Travel") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.travel") %></option>
+                                <option value="Meeting" <%= prevCategory.equals("Meeting") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.meeting") %></option>
+                                <option value="Printing" <%= prevCategory.equals("Printing") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.printing") %></option>
+                                <option value="Food" <%= prevCategory.equals("Food") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.food") %></option>
+                                <option value="Venue" <%= prevCategory.equals("Venue") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.venue") %></option>
+                                <option value="Staff" <%= prevCategory.equals("Staff") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.staff") %></option>
+                                <option value="Miscellaneous" <%= prevCategory.equals("Miscellaneous") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.category.miscellaneous") %></option>
                             </select>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="amount"><%= MessageBundle.getMessage(request, "expense.amount") %> (₹) *</label>
-                            <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0" required>
-                        </div>
-                    </div>
-                    
-                    <div class="form-row">
                         <div class="form-group">
                             <label for="date"><%= MessageBundle.getMessage(request, "expense.date") %> *</label>
-                            <input type="date" id="date" name="date" class="form-control" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="paymentMode"><%= MessageBundle.getMessage(request, "expense.payment.mode") %> *</label>
-                            <select id="paymentMode" name="paymentMode" class="form-control" required>
-                                <option value=""><%= MessageBundle.getMessage(request, "form.placeholder.select") %></option>
-                                <option value="Cash"><%= MessageBundle.getMessage(request, "expense.payment.mode.cash") %></option>
-                                <option value="Online Transfer"><%= MessageBundle.getMessage(request, "expense.payment.mode.online") %></option>
-                                <option value="Cheque"><%= MessageBundle.getMessage(request, "expense.payment.mode.cheque") %></option>
-                                <option value="UPI"><%= MessageBundle.getMessage(request, "expense.payment.mode.upi") %></option>
-                            </select>
+                            <input type="date" id="date" name="date" class="form-control" value="<%= prevDate %>" required>
                         </div>
                     </div>
                     
@@ -495,7 +544,7 @@
                         <div class="form-group">
                             <label for="vendorName"><%= MessageBundle.getMessage(request, "expense.vendor.name") %></label>
                             <div class="input-wrapper">
-                                <input type="text" id="vendorName" name="vendorName" class="form-control form-control-voice">
+                                <input type="text" id="vendorName" name="vendorName" class="form-control form-control-voice" value="<%= prevVendorName %>">
                                 <button type="button" class="voice-btn" data-field="vendorName" title="Voice Input">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -506,9 +555,9 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="receiptNumber"><%= MessageBundle.getMessage(request, "expense.receipt") %> <%= MessageBundle.getMessage(request, "table.id") %></label>
+                            <label for="receiptNumber"><%= MessageBundle.getMessage(request, "expense.receipt.number") %></label>
                             <div class="input-wrapper">
-                                <input type="text" id="receiptNumber" name="receiptNumber" class="form-control form-control-voice">
+                                <input type="text" id="receiptNumber" name="receiptNumber" class="form-control form-control-voice" value="<%= prevReceiptNumber %>">
                                 <button type="button" class="voice-btn" data-field="receiptNumber" title="Voice Input">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                         <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -519,10 +568,65 @@
                         </div>
                     </div>
                     
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="areaSizeQuantity"><%= MessageBundle.getMessage(request, "expense.area.size.quantity") %></label>
+                            <div class="input-wrapper">
+                                <input type="text" id="areaSizeQuantity" name="areaSizeQuantity" class="form-control form-control-voice" value="<%= prevAreaSizeQuantity %>">
+                                <button type="button" class="voice-btn" data-field="areaSizeQuantity" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="rate"><%= MessageBundle.getMessage(request, "expense.rate") %> (₹)</label>
+                            <input type="number" id="rate" name="rate" class="form-control" step="0.01" min="0" value="<%= prevRate %>">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="amount"><%= MessageBundle.getMessage(request, "expense.total.amount") %> (₹) *</label>
+                            <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0" required readonly style="background-color: #f0f0f0;" value="<%= prevAmount %>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="paymentMode"><%= MessageBundle.getMessage(request, "expense.payment.mode") %> *</label>
+                            <select id="paymentMode" name="paymentMode" class="form-control" required>
+                                <option value=""><%= MessageBundle.getMessage(request, "form.select") %></option>
+                                <option value="Cash" <%= prevPaymentMode.equals("Cash") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.payment.mode.cash") %></option>
+                                <option value="Online Transfer" <%= prevPaymentMode.equals("Online Transfer") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.payment.mode.online") %></option>
+                                <option value="Cheque" <%= prevPaymentMode.equals("Cheque") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.payment.mode.cheque") %></option>
+                                <option value="UPI" <%= prevPaymentMode.equals("UPI") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.payment.mode.upi") %></option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="partyMobile"><%= MessageBundle.getMessage(request, "expense.party.mobile") %></label>
+                            <input type="tel" id="partyMobile" name="partyMobile" class="form-control" pattern="[0-9]{10}" maxlength="10" value="<%= prevPartyMobile %>">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="expenseSource"><%= MessageBundle.getMessage(request, "expense.source") %></label>
+                            <select id="expenseSource" name="expenseSource" class="form-control">
+                                <option value=""><%= MessageBundle.getMessage(request, "form.select") %></option>
+                                <option value="Self" <%= prevExpenseSource.equals("Self") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.source.self") %></option>
+                                <option value="By Party" <%= prevExpenseSource.equals("By Party") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.source.party") %></option>
+                                <option value="By Other" <%= prevExpenseSource.equals("By Other") ? "selected" : "" %>><%= MessageBundle.getMessage(request, "expense.source.other") %></option>
+                            </select>
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         <label for="description"><%= MessageBundle.getMessage(request, "expense.description") %> *</label>
                         <div class="input-wrapper">
-                            <textarea id="description" name="description" class="form-control form-control-voice" rows="3" required></textarea>
+                            <textarea id="description" name="description" class="form-control form-control-voice" rows="3" required><%= prevDescription %></textarea>
                             <button type="button" class="voice-btn" data-field="description" title="Voice Input" style="top: 12px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -535,7 +639,7 @@
                     <div class="form-group">
                         <label for="remarks"><%= MessageBundle.getMessage(request, "expense.remarks") %></label>
                         <div class="input-wrapper">
-                            <textarea id="remarks" name="remarks" class="form-control form-control-voice" rows="2"></textarea>
+                            <textarea id="remarks" name="remarks" class="form-control form-control-voice" rows="2"><%= prevRemarks %></textarea>
                             <button type="button" class="voice-btn" data-field="remarks" title="Voice Input" style="top: 12px;">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -562,11 +666,49 @@
     <!-- Voice Status Indicator -->
     <div class="voice-status" id="voiceStatus">
         <div class="pulse-dot"></div>
-        <span>Listening...</span>
+        <span>🎤 मराठीत बोला...</span>
     </div>
     
     <script>
-        // Voice Recognition Setup
+        // Language Settings
+        let currentLanguage = 'mr-IN'; // Default to Marathi
+        const languageNames = {
+            'mr-IN': '🇮🇳 मराठी',
+            'en-US': '🇬🇧 English'
+        };
+        const listeningTexts = {
+            'mr-IN': '🎤 मराठीत बोला...',
+            'en-US': '🎤 Speak now...'
+        };
+        
+        // Set Language Function
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            if (recognition) {
+                recognition.lang = lang;
+            }
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'mr-IN') {
+                document.getElementById('langMarathi').classList.add('active');
+            } else {
+                document.getElementById('langEnglish').classList.add('active');
+            }
+            
+            // Update voice status text
+            const statusSpan = document.querySelector('#voiceStatus span');
+            if (statusSpan) {
+                statusSpan.textContent = listeningTexts[lang];
+            }
+            
+            console.log('Language changed to:', languageNames[lang]);
+        }
+        
+        // Voice Recognition Setup with Marathi Support
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         let recognition = null;
         let currentField = null;
@@ -575,12 +717,16 @@
             recognition = new SpeechRecognition();
             recognition.continuous = true;
             recognition.interimResults = true;
-            recognition.lang = 'en-US';
+            recognition.lang = currentLanguage; // Marathi by default
             recognition.maxAlternatives = 1;
             
             recognition.onstart = function() {
-                console.log('Voice recognition started for field:', currentField);
+                console.log('Voice recognition started for field:', currentField, 'in', languageNames[currentLanguage]);
                 document.getElementById('voiceStatus').classList.add('active');
+                const statusSpan = document.querySelector('#voiceStatus span');
+                if (statusSpan) {
+                    statusSpan.textContent = listeningTexts[currentLanguage];
+                }
                 if (currentField) {
                     const btn = document.querySelector(`button[data-field="${currentField}"]`);
                     if (btn) btn.classList.add('listening');
@@ -623,14 +769,32 @@
                     if (btn) btn.classList.remove('listening');
                 }
                 
+                // Language-specific error messages
+                const errorMessages = {
+                    'mr-IN': {
+                        'not-allowed': '🎤 मायक्रोफोन प्रवेश नाकारला. कृपया ब्राउझर सेटिंग्जमध्ये मायक्रोफोन प्रवेशास परवानगी द्या.',
+                        'no-speech': '🎤 आवाज शोधला नाही. कृपया पुन्हा बोलण्याचा प्रयत्न करा.',
+                        'network': '🎤 नेटवर्क त्रुटी. कृपया आपले इंटरनेट कनेक्शन तपासा.',
+                        'default': '🎤 त्रुटी: {error}. कृपया पुन्हा प्रयत्न करा.'
+                    },
+                    'en-US': {
+                        'not-allowed': '🎤 Microphone access denied. Please allow microphone access in your browser settings.',
+                        'no-speech': '🎤 No speech detected. Please try speaking again.',
+                        'network': '🎤 Network error. Please check your internet connection.',
+                        'default': '🎤 Error: {error}. Please try again.'
+                    }
+                };
+                
+                const msgs = errorMessages[currentLanguage] || errorMessages['en-US'];
+                
                 if (event.error === 'not-allowed' || event.error === 'permission-denied') {
-                    alert('🎤 Microphone access denied. Please allow microphone access in your browser settings.');
+                    alert(msgs['not-allowed']);
                 } else if (event.error === 'no-speech') {
-                    alert('🎤 No speech detected. Please try speaking again.');
+                    alert(msgs['no-speech']);
                 } else if (event.error === 'network') {
-                    alert('🎤 Network error. Please check your internet connection.');
+                    alert(msgs['network']);
                 } else if (event.error !== 'aborted') {
-                    alert('🎤 Error: ' + event.error + '. Please try again.');
+                    alert(msgs['default'].replace('{error}', event.error));
                 }
             };
             
@@ -687,6 +851,9 @@
             document.querySelectorAll('.voice-btn').forEach(btn => {
                 btn.style.display = 'none';
             });
+            // Hide language toggle
+            const langToggle = document.getElementById('langToggleContainer');
+            if (langToggle) langToggle.style.display = 'none';
         }
     
         // Set today's date as default
@@ -697,6 +864,10 @@
             vendorName: {
                 pattern: /^[a-zA-Z\u0900-\u097F\s.&,-]{0,100}$/,
                 message: 'Vendor name can contain letters, spaces, and basic punctuation only'
+            },
+            areaSizeQuantity: {
+                pattern: /^[a-zA-Z\u0900-\u097F\s0-9.×xXम²\/\-]+$/,
+                message: 'Area/Size/Quantity can contain letters, numbers, spaces, and measurement units'
             },
             description: {
                 pattern: /^[a-zA-Z\u0900-\u097F\s0-9.,;:()\-&'"!?]+$/,
@@ -727,7 +898,7 @@
         }
         
         // Add validation listeners
-        ['vendorName', 'description', 'remarks'].forEach(fieldId => {
+        ['vendorName', 'areaSizeQuantity', 'description', 'remarks'].forEach(fieldId => {
             const field = document.getElementById(fieldId);
             if (field) {
                 field.addEventListener('blur', function() {
@@ -738,6 +909,164 @@
                 });
             }
         });
+        
+        // Auto-calculate Total Amount based on Area/Size/Quantity and Rate
+        function calculateTotalAmount() {
+            const areaField = document.getElementById('areaSizeQuantity');
+            const rateField = document.getElementById('rate');
+            const amountField = document.getElementById('amount');
+            
+            if (areaField && rateField && amountField) {
+                const areaValue = areaField.value.trim();
+                const rateValue = parseFloat(rateField.value);
+                
+                // Extract numeric value from area/size/quantity field
+                const areaMatch = areaValue.match(/[\d.]+/);
+                const areaNumeric = areaMatch ? parseFloat(areaMatch[0]) : 0;
+                
+                if (areaNumeric > 0 && rateValue > 0) {
+                    const totalAmount = (areaNumeric * rateValue).toFixed(2);
+                    amountField.value = totalAmount;
+                    amountField.style.backgroundColor = '#e8f5e9';
+                    
+                    // Check expense limit immediately after calculation
+                    checkExpenseLimitOnAmount();
+                } else {
+                    // If either field is empty, make amount field editable
+                    if (!areaValue && !rateValue) {
+                        amountField.readOnly = false;
+                        amountField.style.backgroundColor = '#ffffff';
+                    }
+                }
+            }
+        }
+        
+        // Check expense limit when amount is entered/calculated
+        function checkExpenseLimitOnAmount() {
+            const amountField = document.getElementById('amount');
+            const amountValue = parseFloat(amountField.value);
+            
+            if (!amountValue || amountValue <= 0) {
+                return;
+            }
+            
+            // Fetch current expense statistics
+            fetch('<%=request.getContextPath()%>/getFundStatistics')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        return;
+                    }
+                    
+                    const remainingFunds = parseFloat(data.remainingFunds);
+                    const totalFunds = parseFloat(data.totalFunds);
+                    const usagePercentage = parseFloat(data.usagePercentage);
+                    
+                    // Check if this expense will exceed the limit
+                    if (amountValue > remainingFunds) {
+                        const exceededBy = (amountValue - remainingFunds).toFixed(2);
+                        amountField.style.backgroundColor = '#fee2e2';
+                        amountField.style.borderColor = '#dc2626';
+                        
+                        // Show inline error message
+                        var errorMsg = '\u26A0\uFE0F Amount exceeds remaining limit by \u20B9' + exceededBy + '. Remaining: \u20B9' + remainingFunds.toFixed(2);
+                        showAmountError(errorMsg);
+                    } else if ((usagePercentage + ((amountValue/totalFunds) * 100)) >= 90) {
+                        amountField.style.backgroundColor = '#fef3c7';
+                        amountField.style.borderColor = '#f59e0b';
+                        
+                        const newPercentage = (usagePercentage + ((amountValue/totalFunds) * 100)).toFixed(2);
+                        var warningMsg = '\u26A0\uFE0F Warning: This expense will bring usage to ' + newPercentage + '%';
+                        showAmountError(warningMsg, 'warning');
+                    } else {
+                        amountField.style.backgroundColor = '#e8f5e9';
+                        amountField.style.borderColor = '';
+                        hideAmountError();
+                    }
+                })
+                .catch(error => console.error('Error checking expense limit:', error));
+        }
+        
+        // Show inline error message below amount field
+        function showAmountError(message, type) {
+            if (typeof type == 'undefined') type = 'error';
+            hideAmountError(); // Remove any existing error
+            
+            const amountField = document.getElementById('amount');
+            const errorDiv = document.createElement('div');
+            errorDiv.id = 'amountLimitError';
+            
+            var styleText = 'margin-top: 8px; padding: 10px 15px; border-radius: 6px; font-size: 13px; font-weight: 600;';
+            if (type == 'error') {
+                styleText += ' background: #fee2e2; color: #991b1b; border: 1px solid #dc2626;';
+            } else {
+                styleText += ' background: #fef3c7; color: #78350f; border: 1px solid #f59e0b;';
+            }
+            
+            errorDiv.style.cssText = styleText;
+            errorDiv.textContent = message;
+            
+            amountField.parentElement.appendChild(errorDiv);
+        }
+        
+        // Hide inline error message
+        function hideAmountError() {
+            const errorDiv = document.getElementById('amountLimitError');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
+        
+        // Add event listeners for auto-calculation
+        const areaField = document.getElementById('areaSizeQuantity');
+        const rateField = document.getElementById('rate');
+        const amountField = document.getElementById('amount');
+        
+        if (areaField && rateField && amountField) {
+            // Make amount readonly initially only if no previous value
+            if (!amountField.value) {
+                amountField.readOnly = true;
+                amountField.style.backgroundColor = '#f0f0f0';
+            }
+            
+            // Add input listeners
+            areaField.addEventListener('input', calculateTotalAmount);
+            rateField.addEventListener('input', calculateTotalAmount);
+            
+            // Add blur listener to amount field for manual entry validation
+            amountField.addEventListener('blur', function() {
+                if (this.value) {
+                    checkExpenseLimitOnAmount();
+                }
+            });
+            
+            // Add input listener to amount field to clear error on change
+            amountField.addEventListener('input', function() {
+                if (this.value) {
+                    hideAmountError();
+                }
+            });
+            
+            // Allow manual entry if both fields are empty
+            areaField.addEventListener('blur', function() {
+                if (!this.value.trim() && !rateField.value) {
+                    amountField.readOnly = false;
+                    amountField.style.backgroundColor = '#ffffff';
+                }
+            });
+            
+            rateField.addEventListener('blur', function() {
+                if (!this.value && !areaField.value.trim()) {
+                    amountField.readOnly = false;
+                    amountField.style.backgroundColor = '#ffffff';
+                }
+            });
+            
+            // Check on page load if amount already has value
+            if (amountField.value) {
+                checkExpenseLimitOnAmount();
+            }
+        }
         
         // Auto-hide success/error messages after 5 seconds
         setTimeout(function() {
@@ -825,6 +1154,35 @@
         
         // Load on page load
         loadFundStatistics();
+        
+        // Form validation before submission
+        function validateExpenseForm(event) {
+            <% if (needsExpenseLimit) { %>
+                event.preventDefault();
+                return false;
+            <% } %>
+            
+            const amountField = document.getElementById('amount');
+            const amountValue = parseFloat(amountField.value);
+            
+            if (!amountValue || amountValue <= 0) {
+                alert('Please enter a valid amount');
+                event.preventDefault();
+                return false;
+            }
+            
+            // Check if there's an error message displayed
+            const errorDiv = document.getElementById('amountLimitError');
+            if (errorDiv && errorDiv.textContent.includes('exceeds remaining limit')) {
+                const confirmSubmit = confirm('⚠️ This expense exceeds the remaining limit. Do you still want to submit?');
+                if (!confirmSubmit) {
+                    event.preventDefault();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
     </script>
 </body>
 </html>

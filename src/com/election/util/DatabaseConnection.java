@@ -13,8 +13,12 @@ public class DatabaseConnection {
             "&serverTimezone=UTC" +
             "&useUnicode=true" +
             "&characterEncoding=UTF-8";
-    private static final String USERNAME = "root";
+   private static final String USERNAME = "root";
     private static final String PASSWORD = "root"; // Change this to your MySQL password
+    
+    //private static final String USERNAME = "root";
+   // private static final String PASSWORD = "5uG9}3%v6pDykvnn"; // Change this to your MySQL password
+    
     private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
 
     // Get database connection with UTF-8 encoding

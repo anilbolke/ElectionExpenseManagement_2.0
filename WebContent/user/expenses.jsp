@@ -2,6 +2,7 @@
 <%@ page import="com.election.model.User, com.election.model.Candidate, com.election.model.Expense, com.election.dao.ExpenseDAO, java.util.List" %>
 <%@ page import="com.election.i18n.MessageBundle" %>
 <%@ page import="com.election.i18n.LocaleManager" %>
+<%@ page import="java.math.BigDecimal" %>
 <%
     User user = (User) session.getAttribute("user");
     Candidate candidate = (Candidate) session.getAttribute("candidate");
@@ -17,7 +18,92 @@
     }
     
     ExpenseDAO expenseDAO = new ExpenseDAO();
-    List<Expense> expenses = expenseDAO.getExpensesByCandidate(candidate.getCandidateId());
+    List<Expense> allExpenses = expenseDAO.getExpensesByCandidate(candidate.getCandidateId());
+    
+    // Get filter parameters
+    String filterCategory = request.getParameter("category");
+    String filterPaymentMode = request.getParameter("paymentMode");
+    String filterDateFrom = request.getParameter("dateFrom");
+    String filterDateTo = request.getParameter("dateTo");
+    String filterMinAmount = request.getParameter("minAmount");
+    String filterMaxAmount = request.getParameter("maxAmount");
+    String searchQuery = request.getParameter("search");
+    
+    // Apply filters
+    List<Expense> expenses = new java.util.ArrayList<>();
+    if (allExpenses != null) {
+        for (Expense exp : allExpenses) {
+            boolean includeExpense = true;
+            
+            // Category filter
+            if (filterCategory != null && !filterCategory.isEmpty() && !filterCategory.equals("all")) {
+                if (exp.getExpenseCategory() == null || !exp.getExpenseCategory().equals(filterCategory)) {
+                    includeExpense = false;
+                }
+            }
+            
+            // Payment mode filter
+            if (filterPaymentMode != null && !filterPaymentMode.isEmpty() && !filterPaymentMode.equals("all")) {
+                if (exp.getPaymentMode() == null || !exp.getPaymentMode().equals(filterPaymentMode)) {
+                    includeExpense = false;
+                }
+            }
+            
+            // Date range filter
+            if (filterDateFrom != null && !filterDateFrom.isEmpty()) {
+                if (exp.getExpenseDate() == null || exp.getExpenseDate().toString().compareTo(filterDateFrom) < 0) {
+                    includeExpense = false;
+                }
+            }
+            if (filterDateTo != null && !filterDateTo.isEmpty()) {
+                if (exp.getExpenseDate() == null || exp.getExpenseDate().toString().compareTo(filterDateTo) > 0) {
+                    includeExpense = false;
+                }
+            }
+            
+            // Amount range filter
+            if (filterMinAmount != null && !filterMinAmount.isEmpty()) {
+                try {
+                    BigDecimal minAmt = new BigDecimal(filterMinAmount);
+                    if (exp.getExpenseAmount() != null && exp.getExpenseAmount().compareTo(minAmt) < 0) {
+                        includeExpense = false;
+                    }
+                } catch (NumberFormatException e) {}
+            }
+            if (filterMaxAmount != null && !filterMaxAmount.isEmpty()) {
+                try {
+                    BigDecimal maxAmt = new BigDecimal(filterMaxAmount);
+                    if (exp.getExpenseAmount() != null && exp.getExpenseAmount().compareTo(maxAmt) > 0) {
+                        includeExpense = false;
+                    }
+                } catch (NumberFormatException e) {}
+            }
+            
+            // Search query filter (vendor name, description, receipt)
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String query = searchQuery.toLowerCase();
+                boolean matchFound = false;
+                
+                if (exp.getVendorName() != null && exp.getVendorName().toLowerCase().contains(query)) {
+                    matchFound = true;
+                }
+                if (exp.getExpenseDescription() != null && exp.getExpenseDescription().toLowerCase().contains(query)) {
+                    matchFound = true;
+                }
+                if (exp.getReceiptNumber() != null && exp.getReceiptNumber().toLowerCase().contains(query)) {
+                    matchFound = true;
+                }
+                
+                if (!matchFound) {
+                    includeExpense = false;
+                }
+            }
+            
+            if (includeExpense) {
+                expenses.add(exp);
+            }
+        }
+    }
     
     String success = request.getParameter("success");
     String error = request.getParameter("error");
@@ -92,6 +178,30 @@
         .btn-primary:hover {
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        
+        .form-control {
+            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .badge-info {
+            background: #bee3f8;
+            color: #2c5282;
         }
         
         .btn-secondary {
@@ -351,9 +461,229 @@
             </div>
         </div>
         
+        <!-- Filter Section -->
+        <div class="card" style="margin-bottom: 20px;">
+            <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <h3 style="color: white; margin: 0;">🔍 <%= MessageBundle.getMessage(request, "filter.expenses") %></h3>
+                <button type="button" class="btn" onclick="toggleFilters()" 
+                        style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">
+                    <span id="filterToggleIcon">▼</span> <%= MessageBundle.getMessage(request, "filter.toggle") %>
+                </button>
+            </div>
+            <div class="card-body" id="filterSection" style="display: block;">
+                <form method="get" action="expenses.jsp" id="filterForm">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <!-- Search Box -->
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                🔎 <%= MessageBundle.getMessage(request, "search") %>
+                            </label>
+                            <input type="text" name="search" class="form-control" 
+                                   placeholder="<%= MessageBundle.getMessage(request, "search.placeholder") %>"
+                                   value="<%= searchQuery != null ? searchQuery : "" %>"
+                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                        </div>
+                        
+                        <!-- Category Filter -->
+                        <div>
+                            <%-- <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                📁 <%= MessageBundle.getMessage(request, "expense.category") %>
+                            </label>
+                            <select name="category" class="form-control" style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                                <option value="all" <%= (filterCategory == null || filterCategory.equals("all")) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "filter.all") %>
+                                </option>
+                                <option value="Advertising" <%= "Advertising".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.advertising") %>
+                                </option>
+                                <option value="Travel" <%= "Travel".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.travel") %>
+                                </option>
+                                <option value="Accommodation" <%= "Accommodation".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.accommodation") %>
+                                </option>
+                                <option value="Food" <%= "Food".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.food") %>
+                                </option>
+                                <option value="Printing" <%= "Printing".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.printing") %>
+                                </option>
+                                <option value="Events" <%= "Events".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.events") %>
+                                </option>
+                                <option value="Salaries" <%= "Salaries".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.salaries") %>
+                                </option>
+                                <option value="Office Supplies" <%= "Office Supplies".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.office.supplies") %>
+                                </option>
+                                <option value="Communication" <%= "Communication".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.communication") %>
+                                </option>
+                                <option value="Other" <%= "Other".equals(filterCategory) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "category.other") %>
+                                </option>
+                            </select> --%>
+                        </div>
+                        
+                        <!-- Payment Mode Filter -->
+                        <div>
+                            <%-- <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                💳 <%= MessageBundle.getMessage(request, "expense.payment.mode") %>
+                            </label>
+                            <select name="paymentMode" class="form-control" style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                                <option value="all" <%= (filterPaymentMode == null || filterPaymentMode.equals("all")) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "filter.all") %>
+                                </option>
+                                <option value="Cash" <%= "Cash".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.cash") %>
+                                </option>
+                                <option value="UPI" <%= "UPI".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.upi") %>
+                                </option>
+                                <option value="Bank Transfer" <%= "Bank Transfer".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.bank.transfer") %>
+                                </option>
+                                <option value="Cheque" <%= "Cheque".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.cheque") %>
+                                </option>
+                                <option value="Credit Card" <%= "Credit Card".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.credit.card") %>
+                                </option>
+                                <option value="Debit Card" <%= "Debit Card".equals(filterPaymentMode) ? "selected" : "" %>>
+                                    <%= MessageBundle.getMessage(request, "payment.debit.card") %>
+                                </option>
+                            </select> --%>
+                        </div>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                        <!-- Date From -->
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                📅 <%= MessageBundle.getMessage(request, "date.from") %>
+                            </label>
+                            <input type="date" name="dateFrom" class="form-control" 
+                                   value="<%= filterDateFrom != null ? filterDateFrom : "" %>"
+                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                        </div>
+                        
+                        <!-- Date To -->
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                📅 <%= MessageBundle.getMessage(request, "date.to") %>
+                            </label>
+                            <input type="date" name="dateTo" class="form-control" 
+                                   value="<%= filterDateTo != null ? filterDateTo : "" %>"
+                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                        </div>
+                        
+                        <!-- Min Amount -->
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                💰 <%= MessageBundle.getMessage(request, "amount.min") %>
+                            </label>
+                            <input type="number" name="minAmount" class="form-control" 
+                                   placeholder="₹ 0" step="0.01" min="0"
+                                   value="<%= filterMinAmount != null ? filterMinAmount : "" %>"
+                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                        </div>
+                        
+                        <!-- Max Amount -->
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; color: #4a5568;">
+                                💰 <%= MessageBundle.getMessage(request, "amount.max") %>
+                            </label>
+                            <input type="number" name="maxAmount" class="form-control" 
+                                   placeholder="₹ 999999" step="0.01" min="0"
+                                   value="<%= filterMaxAmount != null ? filterMaxAmount : "" %>"
+                                   style="width: 100%; padding: 8px 12px; border: 2px solid #e2e8f0; border-radius: 6px;">
+                        </div>
+                    </div>
+                    
+                    <!-- Filter Buttons -->
+                    <div style="display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap;">
+                        <button type="submit" class="btn btn-primary">
+                            🔍 <%= MessageBundle.getMessage(request, "button.apply.filters") %>
+                        </button>
+                        <button type="button" class="btn" onclick="clearFilters()" 
+                                style="background: #e2e8f0; color: #4a5568;">
+                            🔄 <%= MessageBundle.getMessage(request, "button.clear.filters") %>
+                        </button>
+                        <a href="expenses.jsp" class="btn" style="background: #f56565; color: white;">
+                            ❌ <%= MessageBundle.getMessage(request, "button.reset") %>
+                        </a>
+                    </div>
+                </form>
+                
+                <!-- Active Filters Display -->
+                <% 
+                boolean hasActiveFilters = (filterCategory != null && !filterCategory.equals("all")) ||
+                                          (filterPaymentMode != null && !filterPaymentMode.equals("all")) ||
+                                          (filterDateFrom != null && !filterDateFrom.isEmpty()) ||
+                                          (filterDateTo != null && !filterDateTo.isEmpty()) ||
+                                          (filterMinAmount != null && !filterMinAmount.isEmpty()) ||
+                                          (filterMaxAmount != null && !filterMaxAmount.isEmpty()) ||
+                                          (searchQuery != null && !searchQuery.isEmpty());
+                
+                if (hasActiveFilters) { 
+                %>
+                    <div style="margin-top: 15px; padding: 10px; background: #ebf8ff; border-left: 4px solid #4299e1; border-radius: 4px;">
+                        <strong style="color: #2c5282;">🔖 <%= MessageBundle.getMessage(request, "active.filters") %>:</strong>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                            <% if (searchQuery != null && !searchQuery.isEmpty()) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    🔎 <%= MessageBundle.getMessage(request, "search") %>: <%= searchQuery %>
+                                </span>
+                            <% } %>
+                            <% if (filterCategory != null && !filterCategory.equals("all")) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    📁 <%= filterCategory %>
+                                </span>
+                            <% } %>
+                            <% if (filterPaymentMode != null && !filterPaymentMode.equals("all")) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    💳 <%= filterPaymentMode %>
+                                </span>
+                            <% } %>
+                            <% if (filterDateFrom != null && !filterDateFrom.isEmpty()) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    📅 From: <%= filterDateFrom %>
+                                </span>
+                            <% } %>
+                            <% if (filterDateTo != null && !filterDateTo.isEmpty()) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    📅 To: <%= filterDateTo %>
+                                </span>
+                            <% } %>
+                            <% if (filterMinAmount != null && !filterMinAmount.isEmpty()) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    💰 Min: ₹<%= filterMinAmount %>
+                                </span>
+                            <% } %>
+                            <% if (filterMaxAmount != null && !filterMaxAmount.isEmpty()) { %>
+                                <span class="badge badge-info" style="padding: 6px 12px; font-size: 13px;">
+                                    💰 Max: ₹<%= filterMaxAmount %>
+                                </span>
+                            <% } %>
+                        </div>
+                        <p style="margin: 8px 0 0 0; color: #2c5282; font-size: 13px;">
+                            <%= MessageBundle.getMessage(request, "showing") %> <strong><%= expenses.size() %></strong> 
+                            <%= MessageBundle.getMessage(request, "of") %> <strong><%= allExpenses != null ? allExpenses.size() : 0 %></strong> 
+                            <%= MessageBundle.getMessage(request, "expenses") %>
+                        </p>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+        
         <div class="card">
             <div class="card-header">
-                <h3><%= MessageBundle.getMessage(request, "expense.list") %></h3>
+                <h3><%= MessageBundle.getMessage(request, "expense.list") %> 
+                    <span style="color: #718096; font-size: 14px; font-weight: normal;">
+                        (<%= expenses != null ? expenses.size() : 0 %> <%= MessageBundle.getMessage(request, "items") %>)
+                    </span>
+                </h3>
                 <a href="add-expense.jsp" class="btn btn-success btn-sm">➕ <%= MessageBundle.getMessage(request, "expense.add") %></a>
             </div>
             <div class="card-body">
@@ -435,6 +765,61 @@
                 setTimeout(function() { alert.remove(); }, 500);
             });
         }, 5000);
+        
+        // Toggle filter section
+        function toggleFilters() {
+            var filterSection = document.getElementById('filterSection');
+            var toggleIcon = document.getElementById('filterToggleIcon');
+            
+            if (filterSection.style.display === 'none') {
+                filterSection.style.display = 'block';
+                toggleIcon.textContent = '▼';
+            } else {
+                filterSection.style.display = 'none';
+                toggleIcon.textContent = '▶';
+            }
+        }
+        
+        // Clear all filters
+        function clearFilters() {
+            document.querySelector('input[name="search"]').value = '';
+            document.querySelector('select[name="category"]').value = 'all';
+            document.querySelector('select[name="paymentMode"]').value = 'all';
+            document.querySelector('input[name="dateFrom"]').value = '';
+            document.querySelector('input[name="dateTo"]').value = '';
+            document.querySelector('input[name="minAmount"]').value = '';
+            document.querySelector('input[name="maxAmount"]').value = '';
+        }
+        
+        // Quick date filters
+        function setDateFilter(days) {
+            var today = new Date();
+            var fromDate = new Date();
+            fromDate.setDate(today.getDate() - days);
+            
+            document.querySelector('input[name="dateFrom"]').value = formatDate(fromDate);
+            document.querySelector('input[name="dateTo"]').value = formatDate(today);
+        }
+        
+        function formatDate(date) {
+            var year = date.getFullYear();
+            var month = String(date.getMonth() + 1).padStart(2, '0');
+            var day = String(date.getDate()).padStart(2, '0');
+            return year + '-' + month + '-' + day;
+        }
+        
+        // Auto-submit on filter change (optional)
+        function enableAutoFilter() {
+            var filterInputs = document.querySelectorAll('#filterForm select, #filterForm input[type="date"]');
+            filterInputs.forEach(function(input) {
+                input.addEventListener('change', function() {
+                    document.getElementById('filterForm').submit();
+                });
+            });
+        }
+        
+        // Uncomment to enable auto-filter
+        // enableAutoFilter();
     </script>
 </body>
 </html>

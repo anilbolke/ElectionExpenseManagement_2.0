@@ -214,6 +214,29 @@
             font-weight: 700;
             margin-bottom: 10px;
             color: #1a202c;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        .toggle-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+        .toggle-icon.collapsed {
+            transform: rotate(-90deg);
+        }
+        .collapsible-content {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        .collapsible-content.hidden {
+            max-height: 0;
+            opacity: 0;
         }
         .action-btn {
             display: block;
@@ -379,6 +402,15 @@
         ::-webkit-scrollbar-thumb:hover { background: #a0aec0; }
         
         /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 220px 1fr;
+            }
+            .navbar-content {
+                padding: 8px 10px;
+            }
+        }
+        
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
@@ -390,13 +422,90 @@
             .stats-compact {
                 grid-template-columns: repeat(4, 1fr);
             }
+            .main-container {
+                padding: 10px;
+            }
         }
         
         @media (max-width: 768px) {
-            .navbar-menu { display: none; }
-            .stats-compact { grid-template-columns: repeat(2, 1fr); }
-            .sidebar { grid-template-columns: 1fr; }
-            .distribution-grid { grid-template-columns: 1fr; }
+            .navbar-menu { 
+                display: none; 
+            }
+            .navbar-brand {
+                font-size: 0.9rem;
+            }
+            .user-info span {
+                display: none;
+            }
+            .stats-compact { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+            .sidebar { 
+                grid-template-columns: 1fr; 
+                gap: 8px;
+            }
+            .distribution-grid { 
+                grid-template-columns: 1fr; 
+            }
+            .main-container {
+                padding: 8px;
+                height: calc(100vh - 40px);
+            }
+            .navbar-content {
+                padding: 6px 8px;
+            }
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .content-header h2 {
+                font-size: 1rem;
+            }
+            table {
+                font-size: 11px;
+            }
+            table th, table td {
+                padding: 8px 6px;
+            }
+            .action-btn {
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+            .quick-actions-compact {
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .navbar-brand {
+                font-size: 0.8rem;
+            }
+            .stats-compact {
+                grid-template-columns: 1fr;
+                gap: 6px;
+            }
+            .stat-mini {
+                padding: 10px;
+            }
+            .stat-mini .value {
+                font-size: 1.2rem;
+            }
+            .distribution-item .value {
+                font-size: 1.1rem;
+            }
+            .main-content {
+                padding: 12px;
+            }
+            table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+            .btn {
+                padding: 5px 10px;
+                font-size: 11px;
+            }
         }
     </style>
 </head>
@@ -431,12 +540,17 @@
                 
                 <!-- Quick Actions -->
                 <div class="quick-actions-compact">
-                    <h3>⚡ <%= MessageBundle.getMessage(request, "action.quickactions") %></h3>
-                    <a href="view-users.jsp" class="action-btn">👥 <%= MessageBundle.getMessage(request, "admin.view.users") %></a>
-                    <a href="view-candidates.jsp" class="action-btn secondary">🗳️ <%= MessageBundle.getMessage(request, "admin.view.candidates") %></a>
-                    <a href="view-brokers.jsp" class="action-btn tertiary">🤝 <%= MessageBundle.getMessage(request, "admin.view.brokers") %></a>
-                    <a href="register-broker.jsp" class="action-btn" style="background: #ed8936;">➕ <%= MessageBundle.getMessage(request, "admin.register.broker") %></a>
-                    <a href="manage-payments.jsp" class="action-btn" style="background: #4299e1;">💳 <%= MessageBundle.getMessage(request, "admin.payment.activity") %></a>
+                    <h3 onclick="toggleSection('quickActions')">
+                        <span>⚡ <%= MessageBundle.getMessage(request, "action.quickactions") %></span>
+                        <span class="toggle-icon" id="quickActionsIcon">▼</span>
+                    </h3>
+                    <div class="collapsible-content" id="quickActionsContent">
+                        <a href="view-users.jsp" class="action-btn">👥 <%= MessageBundle.getMessage(request, "admin.view.users") %></a>
+                        <a href="view-candidates.jsp" class="action-btn secondary">🗳️ <%= MessageBundle.getMessage(request, "admin.view.candidates") %></a>
+                        <a href="view-brokers.jsp" class="action-btn tertiary">🤝 <%= MessageBundle.getMessage(request, "admin.view.brokers") %></a>
+                        <a href="register-broker.jsp" class="action-btn" style="background: #ed8936;">➕ <%= MessageBundle.getMessage(request, "admin.register.broker") %></a>
+                        <a href="manage-payments.jsp" class="action-btn" style="background: #4299e1;">💳 <%= MessageBundle.getMessage(request, "admin.payment.activity") %></a>
+                    </div>
                 </div>
                 
                 <!-- Social Media Links -->
@@ -444,19 +558,24 @@
                 
                 <!-- User Distribution -->
                 <div class="quick-actions-compact">
-                    <h3>📊 <%= MessageBundle.getMessage(request, "admin.user.distribution") %></h3>
-                    <div class="distribution-grid">
-                        <div class="distribution-item" style="background: #f0fdf4; border-left-color: #48bb78;">
-                            <h5><%= MessageBundle.getMessage(request, "admin.role.user") %></h5>
-                            <div class="value"><%= userCount %></div>
-                        </div>
-                        <div class="distribution-item" style="background: #fff7ed; border-left-color: #f59e0b;">
-                            <h5><%= MessageBundle.getMessage(request, "admin.brokers") %></h5>
-                            <div class="value"><%= brokerCount %></div>
-                        </div>
-                        <div class="distribution-item" style="background: #fef3c7; border-left-color: #fbbf24;">
-                            <h5><%= MessageBundle.getMessage(request, "admin.role.admin") %></h5>
-                            <div class="value"><%= adminCount %></div>
+                    <h3 onclick="toggleSection('userDistribution')">
+                        <span>📊 <%= MessageBundle.getMessage(request, "admin.user.distribution") %></span>
+                        <span class="toggle-icon" id="userDistributionIcon">▼</span>
+                    </h3>
+                    <div class="collapsible-content" id="userDistributionContent">
+                        <div class="distribution-grid">
+                            <div class="distribution-item" style="background: #f0fdf4; border-left-color: #48bb78;">
+                                <h5><%= MessageBundle.getMessage(request, "admin.role.user") %></h5>
+                                <div class="value"><%= userCount %></div>
+                            </div>
+                            <div class="distribution-item" style="background: #fff7ed; border-left-color: #f59e0b;">
+                                <h5><%= MessageBundle.getMessage(request, "admin.brokers") %></h5>
+                                <div class="value"><%= brokerCount %></div>
+                            </div>
+                            <div class="distribution-item" style="background: #fef3c7; border-left-color: #fbbf24;">
+                                <h5><%= MessageBundle.getMessage(request, "admin.role.admin") %></h5>
+                                <div class="value"><%= adminCount %></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -866,5 +985,38 @@
         <!-- Social Media Footer -->
         <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
+    
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId + 'Content');
+            const icon = document.getElementById(sectionId + 'Icon');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.classList.remove('collapsed');
+                localStorage.setItem(sectionId + 'Visible', 'true');
+            } else {
+                content.classList.add('hidden');
+                icon.classList.add('collapsed');
+                localStorage.setItem(sectionId + 'Visible', 'false');
+            }
+        }
+        
+        // Restore state on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const sections = ['quickActions', 'userDistribution'];
+            
+            sections.forEach(function(sectionId) {
+                const isVisible = localStorage.getItem(sectionId + 'Visible');
+                const content = document.getElementById(sectionId + 'Content');
+                const icon = document.getElementById(sectionId + 'Icon');
+                
+                if (isVisible === 'false') {
+                    content.classList.add('hidden');
+                    icon.classList.add('collapsed');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

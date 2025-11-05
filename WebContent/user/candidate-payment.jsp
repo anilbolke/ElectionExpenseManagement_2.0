@@ -336,6 +336,32 @@
                     </div>
                 </div>
                 
+                <!-- Terms and Conditions Checkbox -->
+                <div class="terms-section" style="margin: 25px 0; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #e0e0e0;">
+                    <div class="form-check" style="margin-bottom: 15px;">
+                        <input type="checkbox" id="termsCheckbox" name="termsAccepted" class="form-check-input" 
+                               required style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                        <label for="termsCheckbox" style="cursor: pointer; font-size: 15px; color: #333;">
+                            <strong style="color: #dc3545;">* </strong>
+                            I have read and agree to the 
+                            <a href="#" onclick="showTermsModal(); return false;" 
+                               style="color: #667eea; text-decoration: underline; font-weight: 600;">
+                                Terms and Conditions
+                            </a>
+                            <span style="display: block; font-size: 13px; color: #666; margin-top: 5px;">
+                                (मी अटी व नियम वाचले आहेत आणि त्यांना मान्यता देतो)
+                            </span>
+                        </label>
+                    </div>
+                    <input type="hidden" name="termsVersion" value="v1.0">
+                    <input type="hidden" name="acceptedTimestamp" id="acceptedTimestamp">
+                    <div style="font-size: 12px; color: #dc3545; margin-top: 10px;">
+                        <strong>⚠️ Important:</strong> By checking this box, you acknowledge that you have read, 
+                        understood, and agree to be bound by the Terms and Conditions. This is a mandatory 
+                        requirement before making any payment.
+                    </div>
+                </div>
+                
                 <div class="alert alert-info" style="margin-bottom: 20px;">
                     <strong>📌 Important:</strong> Your candidate account will be activated immediately after successful payment. 
                     You will receive a confirmation email with the transaction details.
@@ -343,7 +369,7 @@
                 
                 <div style="display: flex; gap: 15px; justify-content: space-between;">
                     <a href="manage-candidates.jsp" class="btn btn-secondary" style="flex: 1;">Cancel</a>
-                    <button type="submit" class="btn btn-primary" style="flex: 2;">Proceed to Pay ₹<%= String.format("%.2f", registrationFee) %></button>
+                    <button type="submit" class="btn btn-primary" id="payButton" style="flex: 2;" disabled>Proceed to Pay ₹<%= String.format("%.2f", registrationFee) %></button>
                 </div>
             </form>
         </div>
@@ -353,8 +379,105 @@
         <p>&copy; 2024 <%= MessageBundle.getMessage(request, "app.title") %>. <%= MessageBundle.getMessage(request, "footer.rights") %></p>
     </footer>
     
+    <!-- Terms and Conditions Modal -->
+    <div id="termsModal" style="display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); overflow: auto;">
+        <div style="background-color: white; margin: 5% auto; padding: 0; border-radius: 12px; width: 90%; max-width: 800px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-height: 85vh; display: flex; flex-direction: column;">
+            <!-- Modal Header -->
+            <div style="padding: 25px 30px; border-bottom: 2px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px 12px 0 0;">
+                <h2 style="margin: 0; color: white; font-size: 24px; font-weight: 600;">
+                    📜 Terms and Conditions
+                </h2>
+                <button onclick="closeTermsModal()" style="background: rgba(255,255,255,0.2); border: none; color: white; font-size: 28px; font-weight: bold; cursor: pointer; width: 40px; height: 40px; border-radius: 50%; transition: all 0.3s; display: flex; align-items: center; justify-content: center;" onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">&times;</button>
+            </div>
+            
+            <!-- Modal Body (Scrollable) -->
+            <div style="padding: 30px; overflow-y: auto; flex: 1; line-height: 1.8; color: #333; font-size: 15px;">
+                <%
+                    try {
+                        java.io.File termsFile = new java.io.File(application.getRealPath("/") + "Document/Terms and Conditions");
+                        if (termsFile.exists()) {
+                            java.io.BufferedReader reader = new java.io.BufferedReader(new java.io.FileReader(termsFile));
+                            String line;
+                            out.println("<div style='white-space: pre-wrap; font-family: Arial, sans-serif;'>");
+                            while ((line = reader.readLine()) != null) {
+                                out.println(line);
+                                out.println("<br>");
+                            }
+                            out.println("</div>");
+                            reader.close();
+                        } else {
+                            out.println("<p style='color: #dc3545;'>Terms and Conditions file not found.</p>");
+                        }
+                    } catch(Exception e) {
+                        out.println("<p style='color: #dc3545;'>Error loading Terms and Conditions: " + e.getMessage() + "</p>");
+                    }
+                %>
+            </div>
+            
+            <!-- Modal Footer -->
+            <div style="padding: 20px 30px; border-top: 2px solid #e0e0e0; background: #f8f9fa; border-radius: 0 0 12px 12px; display: flex; gap: 15px; justify-content: flex-end;">
+                <button onclick="closeTermsModal()" class="btn btn-secondary" style="padding: 12px 24px;">
+                    Close
+                </button>
+                <button onclick="acceptAndClose()" class="btn btn-primary" style="padding: 12px 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.4)'" onmouseout="this.style.transform=''; this.style.boxShadow=''">
+                    I Accept / मी स्वीकारतो ✓
+                </button>
+            </div>
+        </div>
+    </div>
+    
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script>
+        // Terms and Conditions Modal Functions
+        function showTermsModal() {
+            document.getElementById('termsModal').style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+        
+        function closeTermsModal() {
+            document.getElementById('termsModal').style.display = 'none';
+            document.body.style.overflow = 'auto'; // Restore scrolling
+        }
+        
+        function acceptAndClose() {
+            document.getElementById('termsCheckbox').checked = true;
+            document.getElementById('termsCheckbox').dispatchEvent(new Event('change'));
+            closeTermsModal();
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('termsModal');
+            if (event.target == modal) {
+                closeTermsModal();
+            }
+        }
+        
+        // Terms and Conditions Checkbox Logic
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const payButton = document.getElementById('payButton');
+        const acceptedTimestampField = document.getElementById('acceptedTimestamp');
+        
+        // Enable/disable pay button based on checkbox
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                payButton.disabled = false;
+                payButton.style.opacity = '1';
+                payButton.style.cursor = 'pointer';
+                acceptedTimestampField.value = new Date().toISOString();
+                console.log('Terms accepted at:', acceptedTimestampField.value);
+            } else {
+                payButton.disabled = true;
+                payButton.style.opacity = '0.5';
+                payButton.style.cursor = 'not-allowed';
+                acceptedTimestampField.value = '';
+            }
+        });
+        
+        // Initial state - button disabled
+        payButton.style.opacity = '0.5';
+        payButton.style.cursor = 'not-allowed';
+        
         let razorpayConfig = null;
         let isRazorpayConfigured = false;
         let configLoaded = false;
@@ -385,6 +508,17 @@
         // Handle payment form submission
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            
+            // Validate terms and conditions first
+            if (!termsCheckbox.checked) {
+                alert('⚠️ Please accept the Terms and Conditions before proceeding with payment.\n\nकृपया पेमेंट करण्यापूर्वी अटी व नियम स्वीकारा.');
+                termsCheckbox.focus();
+                document.querySelector('.terms-section').style.border = '2px solid #dc3545';
+                setTimeout(() => {
+                    document.querySelector('.terms-section').style.border = '2px solid #e0e0e0';
+                }, 2000);
+                return;
+            }
             
             const paymentMethod = document.querySelector('input[name="paymentMethod"]:checked');
             if (!paymentMethod) {

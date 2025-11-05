@@ -84,6 +84,10 @@ public class ExpenseServlet extends HttpServlet {
         String receiptNumber = request.getParameter("receiptNumber");
         String vendorName = request.getParameter("vendorName");
         String remarks = request.getParameter("remarks");
+        String areaSizeQuantity = request.getParameter("areaSizeQuantity");
+        String rateStr = request.getParameter("rate");
+        String partyMobile = request.getParameter("partyMobile");
+        String expenseSource = request.getParameter("expenseSource");
         
         try {
             BigDecimal amount = new BigDecimal(amountStr);
@@ -119,6 +123,12 @@ public class ExpenseServlet extends HttpServlet {
             expense.setReceiptNumber(receiptNumber);
             expense.setVendorName(vendorName);
             expense.setRemarks(remarks);
+            expense.setAreaSizeQuantity(areaSizeQuantity);
+            if (rateStr != null && !rateStr.trim().isEmpty()) {
+                expense.setRate(new BigDecimal(rateStr));
+            }
+            expense.setPartyMobile(partyMobile);
+            expense.setExpenseSource(expenseSource);
             expense.setCreatedBy(userId);
             
             if (expenseDAO.addExpense(expense)) {
@@ -161,6 +171,13 @@ public class ExpenseServlet extends HttpServlet {
                 expense.setReceiptNumber(request.getParameter("receiptNumber"));
                 expense.setVendorName(request.getParameter("vendorName"));
                 expense.setRemarks(request.getParameter("remarks"));
+                expense.setAreaSizeQuantity(request.getParameter("areaSizeQuantity"));
+                String rateStr = request.getParameter("rate");
+                if (rateStr != null && !rateStr.trim().isEmpty()) {
+                    expense.setRate(new BigDecimal(rateStr));
+                }
+                expense.setPartyMobile(request.getParameter("partyMobile"));
+                expense.setExpenseSource(request.getParameter("expenseSource"));
                 
                 if (expenseDAO.updateExpense(expense)) {
                     response.sendRedirect(request.getContextPath() + "/user/expenses.jsp?success=Expense updated successfully");

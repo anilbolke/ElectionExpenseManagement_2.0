@@ -242,6 +242,138 @@
             margin-bottom: 30px;
         }
         
+        /* Voice Input Styles */
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .form-control-voice {
+            padding-right: 45px !important;
+        }
+        .voice-btn {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .voice-btn:hover {
+            transform: scale(1.1);
+        }
+        .voice-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #718096;
+            transition: fill 0.3s ease;
+        }
+        .voice-btn:hover svg {
+            fill: #667eea;
+        }
+        .voice-btn.listening svg {
+            fill: #e53e3e;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .voice-status {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
+        @keyframes slideIn {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .voice-status.active {
+            display: flex;
+        }
+        .voice-status .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #fff;
+            border-radius: 50%;
+            animation: pulseDot 1s infinite;
+        }
+        @keyframes pulseDot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* Language Toggle Buttons */
+        .lang-toggle-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .lang-btn {
+            padding: 8px 20px;
+            margin: 0 5px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            background: white;
+            color: #4a5568;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+        .lang-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+        .voice-info-banner {
+            margin-top: 10px;
+            padding: 12px 20px;
+            background: #ebf8ff;
+            border: 1px solid #bee3f8;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #2c5282;
+        }
+        .voice-not-supported {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .voice-not-supported.show {
+            display: block;
+        }
+        
         @media (max-width: 992px) {
             .form-row,
             .form-row.three-col {
@@ -269,6 +401,22 @@
     <%@ include file="../includes/user-navbar.jsp" %>
     
     <div class="main-content">
+            <!-- Voice Input Not Supported Warning -->
+            <div class="voice-not-supported" id="voiceNotSupported">
+                ⚠️ Voice input is not supported in your browser. Please use Chrome, Edge, or Safari for voice typing feature.
+            </div>
+            
+            <!-- Language Toggle -->
+            <div class="lang-toggle-container" id="langToggleContainer">
+                <label style="font-size: 14px; color: #718096; margin-right: 10px;">🎤 Voice Input Language:</label>
+                <button type="button" id="langMarathi" class="lang-btn active" onclick="setLanguage('mr-IN')">🇮🇳 मराठी</button>
+                <button type="button" id="langEnglish" class="lang-btn" onclick="setLanguage('en-US')">🇬🇧 English</button>
+                <div class="voice-info-banner">
+                    <strong>💡 टीप:</strong> मायक्रोफोन आयकॉन 🎤 वर क्लिक करून आवाजात माहिती भरा | 
+                    <strong>Tip:</strong> Click the microphone icon 🎤 to fill information by voice
+                </div>
+            </div>
+        
             <h1 style="margin-bottom: 30px;"><%= MessageBundle.getMessage(request, "heading.add.new.candidate") %></h1>
         
         <% if(error != null) { %>
@@ -285,13 +433,29 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="candidateName"><%= MessageBundle.getMessage(request, "candidate.name") %> *</label>
-                            <input type="text" class="form-control" id="candidateName" name="candidateName" required maxlength="100">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="candidateName" name="candidateName" required maxlength="100">
+                                <button type="button" class="voice-btn" data-field="candidateName" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="candidateName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
                         <div class="form-group">
                             <label for="fatherName"><%= MessageBundle.getMessage(request, "candidate.father.name") %> *</label>
-                            <input type="text" class="form-control" id="fatherName" name="fatherName" required maxlength="100">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="fatherName" name="fatherName" required maxlength="100">
+                                <button type="button" class="voice-btn" data-field="fatherName" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="fatherName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
@@ -339,7 +503,15 @@
                 <div style="display: grid; gap: 20px;">
                     <div class="form-group">
                         <label for="address"><%= MessageBundle.getMessage(request, "candidate.address") %> *</label>
-                        <textarea class="form-control" id="address" name="address" rows="2" required maxlength="200"></textarea>
+                        <div class="input-wrapper">
+                            <textarea class="form-control form-control-voice" id="address" name="address" rows="2" required maxlength="200"></textarea>
+                            <button type="button" class="voice-btn" data-field="address" title="Voice Input" style="top: 12px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                </svg>
+                            </button>
+                        </div>
                         <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         <div class="error-message" id="address-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                     </div>
@@ -347,13 +519,29 @@
                     <div class="form-row three-col">
                         <div class="form-group">
                             <label for="city"><%= MessageBundle.getMessage(request, "candidate.city") %> *</label>
-                            <input type="text" class="form-control" id="city" name="city" required maxlength="50">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="city" name="city" required maxlength="50">
+                                <button type="button" class="voice-btn" data-field="city" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="city-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
                         <div class="form-group">
                             <label for="state"><%= MessageBundle.getMessage(request, "candidate.state") %> *</label>
-                            <input type="text" class="form-control" id="state" name="state" required maxlength="50">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="state" name="state" required maxlength="50">
+                                <button type="button" class="voice-btn" data-field="state" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="state-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
@@ -393,13 +581,29 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="constituency"><%= MessageBundle.getMessage(request, "candidate.constituency") %> *</label>
-                            <input type="text" class="form-control" id="constituency" name="constituency" required maxlength="100">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="constituency" name="constituency" required maxlength="100">
+                                <button type="button" class="voice-btn" data-field="constituency" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="constituency-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
                         <div class="form-group">
                             <label for="nominationId"><%= MessageBundle.getMessage(request, "candidate.nomination.id") %> *</label>
-                            <input type="text" class="form-control" id="nominationId" name="nominationId" required maxlength="50">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="nominationId" name="nominationId" required maxlength="50">
+                                <button type="button" class="voice-btn" data-field="nominationId" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                             <div class="error-message" id="nominationId-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
@@ -425,7 +629,15 @@
                         </div>
                         <div class="form-group">
                             <label for="partyName"><%= MessageBundle.getMessage(request, "candidate.party") %> *</label>
-                            <input type="text" class="form-control" id="partyName" name="partyName" required maxlength="100">
+                            <div class="input-wrapper">
+                                <input type="text" class="form-control form-control-voice" id="partyName" name="partyName" required maxlength="100">
+                                <button type="button" class="voice-btn" data-field="partyName" title="Voice Input">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                                        <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                                    </svg>
+                                </button>
+                            </div>
                             <div class="helper-text"><%= MessageBundle.getMessage(request, "candidate.party.independent") %></div>
                             <div class="error-message" id="partyName-error"><%= MessageBundle.getMessage(request, "validation.required") %></div>
                         </div>
@@ -479,6 +691,12 @@
             </div>
         </form>
         </div>
+    </div>
+    
+    <!-- Voice Status Indicator -->
+    <div class="voice-status" id="voiceStatus">
+        <div class="pulse-dot"></div>
+        <span>🎤 मराठीत बोला...</span>
     </div>
     
     <footer>
@@ -832,6 +1050,196 @@
             
             return false;
         });
+        
+        // ===============================================
+        // VOICE RECOGNITION with MARATHI SUPPORT
+        // ===============================================
+        
+        // Language Settings
+        let currentLanguage = 'mr-IN'; // Default to Marathi
+        const languageNames = {
+            'mr-IN': '🇮🇳 मराठी',
+            'en-US': '🇬🇧 English'
+        };
+        const listeningTexts = {
+            'mr-IN': '🎤 मराठीत बोला...',
+            'en-US': '🎤 Speak now...'
+        };
+        
+        // Set Language Function
+        function setLanguage(lang) {
+            currentLanguage = lang;
+            if (recognition) {
+                recognition.lang = lang;
+            }
+            
+            // Update button states
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (lang === 'mr-IN') {
+                document.getElementById('langMarathi').classList.add('active');
+            } else {
+                document.getElementById('langEnglish').classList.add('active');
+            }
+            
+            // Update voice status text
+            const statusSpan = document.querySelector('#voiceStatus span');
+            if (statusSpan) {
+                statusSpan.textContent = listeningTexts[lang];
+            }
+            
+            console.log('Language changed to:', languageNames[lang]);
+        }
+        
+        // Voice Recognition Setup with Marathi Support
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        let recognition = null;
+        let currentField = null;
+        
+        if (SpeechRecognition) {
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = currentLanguage; // Marathi by default
+            recognition.maxAlternatives = 1;
+            
+            recognition.onstart = function() {
+                console.log('Voice recognition started for field:', currentField, 'in', languageNames[currentLanguage]);
+                document.getElementById('voiceStatus').classList.add('active');
+                const statusSpan = document.querySelector('#voiceStatus span');
+                if (statusSpan) {
+                    statusSpan.textContent = listeningTexts[currentLanguage];
+                }
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.add('listening');
+                }
+            };
+            
+            recognition.onresult = function(event) {
+                const resultIndex = event.resultIndex;
+                const transcript = event.results[resultIndex][0].transcript;
+                const isFinal = event.results[resultIndex].isFinal;
+                
+                console.log('Transcript:', transcript, 'Final:', isFinal);
+                
+                const field = document.getElementById(currentField);
+                
+                if (field && isFinal) {
+                    if (field.tagName === 'TEXTAREA') {
+                        // For textarea, append text
+                        field.value += (field.value ? ' ' : '') + transcript;
+                    } else {
+                        // For text fields, just set the value
+                        field.value = transcript;
+                    }
+                    
+                    // Trigger input event for validation
+                    field.dispatchEvent(new Event('input', { bubbles: true }));
+                    field.dispatchEvent(new Event('change', { bubbles: true }));
+                    
+                    // Stop recognition after successful transcription
+                    setTimeout(() => {
+                        recognition.stop();
+                    }, 500);
+                }
+            };
+            
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+                
+                // Language-specific error messages
+                const errorMessages = {
+                    'mr-IN': {
+                        'not-allowed': '🎤 मायक्रोफोन प्रवेश नाकारला. कृपया ब्राउझर सेटिंग्जमध्ये मायक्रोफोन प्रवेशास परवानगी द्या.',
+                        'no-speech': '🎤 आवाज शोधला नाही. कृपया पुन्हा बोलण्याचा प्रयत्न करा.',
+                        'network': '🎤 नेटवर्क त्रुटी. कृपया आपले इंटरनेट कनेक्शन तपासा.',
+                        'default': '🎤 त्रुटी: {error}. कृपया पुन्हा प्रयत्न करा.'
+                    },
+                    'en-US': {
+                        'not-allowed': '🎤 Microphone access denied. Please allow microphone access in your browser settings.',
+                        'no-speech': '🎤 No speech detected. Please try speaking again.',
+                        'network': '🎤 Network error. Please check your internet connection.',
+                        'default': '🎤 Error: {error}. Please try again.'
+                    }
+                };
+                
+                const msgs = errorMessages[currentLanguage] || errorMessages['en-US'];
+                
+                if (event.error === 'not-allowed' || event.error === 'permission-denied') {
+                    alert(msgs['not-allowed']);
+                } else if (event.error === 'no-speech') {
+                    alert(msgs['no-speech']);
+                } else if (event.error === 'network') {
+                    alert(msgs['network']);
+                } else if (event.error !== 'aborted') {
+                    alert(msgs['default'].replace('{error}', event.error));
+                }
+            };
+            
+            recognition.onend = function() {
+                console.log('Voice recognition ended');
+                document.getElementById('voiceStatus').classList.remove('active');
+                if (currentField) {
+                    const btn = document.querySelector(`button[data-field="${currentField}"]`);
+                    if (btn) btn.classList.remove('listening');
+                }
+            };
+            
+            recognition.onspeechstart = function() {
+                console.log('Speech detected!');
+            };
+            
+            recognition.onspeechend = function() {
+                console.log('Speech ended');
+            };
+            
+            // Add click event to all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const fieldId = this.getAttribute('data-field');
+                    
+                    // If already listening to this field, stop
+                    if (currentField === fieldId && this.classList.contains('listening')) {
+                        recognition.stop();
+                        return;
+                    }
+                    
+                    // Stop any ongoing recognition
+                    try {
+                        recognition.stop();
+                    } catch (e) {}
+                    
+                    // Start new recognition
+                    currentField = fieldId;
+                    
+                    setTimeout(() => {
+                        try {
+                            recognition.start();
+                        } catch (e) {
+                            console.error('Failed to start recognition:', e);
+                        }
+                    }, 100);
+                });
+            });
+        } else {
+            // Show not supported message
+            document.getElementById('voiceNotSupported').classList.add('show');
+            // Hide all voice buttons
+            document.querySelectorAll('.voice-btn').forEach(btn => {
+                btn.style.display = 'none';
+            });
+            // Hide language toggle
+            const langToggle = document.getElementById('langToggleContainer');
+            if (langToggle) langToggle.style.display = 'none';
+        }
     </script>
 </body>
 </html>

@@ -43,27 +43,51 @@
     // Get currently selected candidate (if any)
     Candidate selectedCandidate = (Candidate) session.getAttribute("candidate");
     
-    // Calculate statistics (using all candidates)
-    List<Candidate> candidatesForStats = allCandidates;
+    // Calculate statistics based on selected candidate or all candidates
     int activeCandidates = 0;
     int pendingPayments = 0;
     BigDecimal totalExpenses = BigDecimal.ZERO;
+    boolean isFilteredByCandidate = (selectedCandidate != null);
     
-    if (candidatesForStats != null) {
+    if (isFilteredByCandidate) {
+        // Show stats for selected candidate only
         ExpenseDAO expenseDAO = new ExpenseDAO();
-        for (Candidate c : candidatesForStats) {
-            if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) {
-                activeCandidates++;
-                try {
-                    BigDecimal candidateExpenses = expenseDAO.getTotalExpensesByCandidate(c.getCandidateId());
-                    if (candidateExpenses != null) {
-                        totalExpenses = totalExpenses.add(candidateExpenses);
+        totalCandidates = 1; // Only one candidate selected
+        
+        if (selectedCandidate.isPaymentVerified() && "active".equals(selectedCandidate.getAccountStatus())) {
+            activeCandidates = 1;
+        } else {
+            pendingPayments = 1;
+        }
+        
+        try {
+            BigDecimal candidateExpenses = expenseDAO.getTotalExpensesByCandidate(selectedCandidate.getCandidateId());
+            if (candidateExpenses != null) {
+                totalExpenses = candidateExpenses;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    } else {
+        // Show stats for all candidates
+        List<Candidate> candidatesForStats = allCandidates;
+        
+        if (candidatesForStats != null) {
+            ExpenseDAO expenseDAO = new ExpenseDAO();
+            for (Candidate c : candidatesForStats) {
+                if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) {
+                    activeCandidates++;
+                    try {
+                        BigDecimal candidateExpenses = expenseDAO.getTotalExpensesByCandidate(c.getCandidateId());
+                        if (candidateExpenses != null) {
+                            totalExpenses = totalExpenses.add(candidateExpenses);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                } else {
+                    pendingPayments++;
                 }
-            } else {
-                pendingPayments++;
             }
         }
     }
@@ -234,6 +258,45 @@
             background: #48bb78;
         }
         
+        /* Toggle Button */
+        .toggle-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+        
+        .toggle-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        }
+        
+        .toggle-btn:active {
+            transform: scale(0.95);
+        }
+        
+        #quickActionsContent {
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        
+        #quickActionsContent.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+        
         /* Main Content Area */
         .main-content {
             background: white;
@@ -388,60 +451,273 @@
         
         /* Compact Candidate Cards */
         .candidates-list {
-            display: grid;
-            gap: 10px;
+            margin-top: 15px;
         }
-        .candidate-compact {
-            background: #f8fafc;
+        
+        /* Table Styles */
+        .candidates-table-wrapper {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+            overflow: hidden;
             border: 1px solid #e2e8f0;
-            padding: 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
         }
-        .candidate-compact:hover {
-            border-color: #667eea;
-            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.1);
+        
+        .candidates-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
         }
-        .candidate-compact.selected {
-            border-color: #48bb78;
-            background: #f0fdf4;
+        
+        .candidates-table thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
-        .candidate-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .candidate-name {
-            font-size: 1rem;
+        
+        .candidates-table th {
+            padding: 16px 20px;
+            text-align: left;
             font-weight: 700;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        
+        .candidates-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: all 0.3s ease;
+        }
+        
+        /* Alternating row colors */
+        .candidates-table tbody tr:nth-child(odd) {
+            background: linear-gradient(90deg, #ffffff 0%, #f9fafb 100%);
+        }
+        
+        .candidates-table tbody tr:nth-child(even) {
+            background: linear-gradient(90deg, #f0f9ff 0%, #e0f2fe 100%);
+        }
+        
+        .candidates-table tbody tr:nth-child(3n) {
+            background: linear-gradient(90deg, #fef3c7 0%, #fef9e7 100%);
+        }
+        
+        .candidates-table tbody tr:nth-child(4n) {
+            background: linear-gradient(90deg, #fce7f3 0%, #fdf2f8 100%);
+        }
+        
+        .candidates-table tbody tr:nth-child(5n) {
+            background: linear-gradient(90deg, #f3e8ff 0%, #faf5ff 100%);
+        }
+        
+        .candidates-table tbody tr:hover {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .candidates-table tbody tr:hover .candidate-name-main,
+        .candidates-table tbody tr:hover .candidate-details,
+        .candidates-table tbody tr:hover .detail-item {
+            color: white !important;
+        }
+        
+        .candidates-table tbody tr:hover .nomination-id {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .candidates-table tbody tr:hover .badge {
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-color: white !important;
+        }
+        
+        .candidates-table tbody tr.selected-row {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+            border-left: 4px solid #047857;
+            box-shadow: 0 0 0 1px #34d399 inset;
+            color: white;
+        }
+        
+        .candidates-table tbody tr.selected-row .candidate-name-main,
+        .candidates-table tbody tr.selected-row .candidate-details,
+        .candidates-table tbody tr.selected-row .detail-item {
+            color: white !important;
+        }
+        
+        .candidates-table tbody tr.selected-row .nomination-id {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .candidates-table tbody tr.selected-row .badge {
+            background: rgba(255, 255, 255, 0.9) !important;
+            color: #047857 !important;
+            border-color: white !important;
+        }
+        
+        .candidates-table tbody tr.selected-row:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%) !important;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+        
+        .candidates-table tbody tr:last-child {
+            border-bottom: none;
+        }
+        
+        .candidates-table td {
+            padding: 16px 20px;
+            vertical-align: middle;
+        }
+        
+        .candidate-name-cell {
             color: #1a202c;
-            margin-bottom: 4px;
         }
-        .candidate-info {
-            font-size: 11px;
-            color: #64748b;
-            line-height: 1.5;
-        }
-        .candidate-actions {
+        
+        .candidate-name-main {
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #1e293b;
             display: flex;
-            gap: 5px;
-            margin-top: 8px;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .candidate-name-cell .nomination-id {
+            font-size: 11px;
+            color: #6366f1;
+            font-weight: 600;
+            padding: 4px 10px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #ddd6fe 100%);
+            border-radius: 12px;
+            border: 1px solid #c7d2fe;
+            box-shadow: 0 1px 2px rgba(99, 102, 241, 0.1);
+            letter-spacing: 0.3px;
+        }
+        
+        .candidate-details {
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px;
+        }
+        
+        .detail-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 0;
+        }
+        
+        .detail-separator {
+            color: #cbd5e0;
+            font-weight: 300;
+        }
+        
+        .candidate-actions-table {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .candidate-actions-table .btn {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .candidate-actions-table .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+        }
+        
+        .candidate-actions-table .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+        
+        .candidate-actions-table .btn-primary:hover {
+            background: linear-gradient(135deg, #5568d3 0%, #6a4193 100%);
+        }
+        
+        .candidate-actions-table .btn-success {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+        }
+        
+        .candidate-actions-table .btn-success:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        }
+        
+        .candidate-actions-table .btn-warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+        }
+        
+        .candidate-actions-table .btn-warning:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+        
+        .candidate-actions-table .btn-outline {
+            background: white;
+            border: 2px solid #e2e8f0;
+            color: #64748b;
+        }
+        
+        .candidate-actions-table .btn-outline:hover {
+            border-color: #667eea;
+            color: white;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        /* Buttons on hover row */
+        .candidates-table tbody tr:hover .candidate-actions-table .btn {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
         }
         
         /* Badges */
         .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 10px;
+            border-radius: 14px;
             font-size: 10px;
             font-weight: 700;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
-        .badge-success { background: #d1fae5; color: #065f46; }
-        .badge-warning { background: #fed7aa; color: #78350f; }
-        .badge-danger { background: #fecaca; color: #991b1b; }
+        .badge-success { 
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border: 1px solid #6ee7b7;
+        }
+        .badge-warning { 
+            background: linear-gradient(135deg, #fed7aa 0%, #fcd34d 100%);
+            color: #78350f;
+            border: 1px solid #fbbf24;
+        }
+        .badge-danger { 
+            background: linear-gradient(135deg, #fecaca 0%, #fca5a5 100%);
+            color: #991b1b;
+            border: 1px solid #f87171;
+        }
         
         /* Empty State */
         .empty-state {
@@ -475,9 +751,294 @@
         }
         
         @media (max-width: 768px) {
+            body {
+                font-size: 14px;
+            }
+            
+            /* Hide menu, show mobile-friendly layout */
             .navbar-menu { display: none; }
-            .stats-compact { grid-template-columns: repeat(2, 1fr); }
-            .sidebar { grid-template-columns: 1fr; }
+            
+            /* Navbar adjustments */
+            .navbar-content {
+                padding: 12px 15px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            
+            .user-info {
+                gap: 8px;
+            }
+            
+            /* Stats grid */
+            .stats-compact { 
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+            
+            .stat-card {
+                padding: 15px 12px;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 1.5rem;
+            }
+            
+            .stat-card .stat-label {
+                font-size: 11px;
+            }
+            
+            /* Sidebar */
+            .sidebar { 
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+            
+            /* Container adjustments */
+            .main-container {
+                padding: 0;
+                margin: 0;
+            }
+            
+            .dashboard-content {
+                padding: 15px 12px;
+                margin: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            
+            /* Content header */
+            .content-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+                margin-bottom: 15px;
+            }
+            
+            .content-header h2 {
+                font-size: 1.3rem;
+                margin: 0;
+            }
+            
+            .content-header .btn {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+                font-size: 14px;
+            }
+            
+            /* Hide table, show mobile cards */
+            .candidates-table-wrapper {
+                background: transparent;
+                box-shadow: none;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .candidates-table {
+                display: block;
+                width: 100%;
+            }
+            
+            /* Hide table header */
+            .candidates-table thead {
+                display: none;
+            }
+            
+            .candidates-table tbody {
+                display: block;
+            }
+            
+            /* Each row becomes a card */
+            .candidates-table tbody tr {
+                display: block;
+                background: white !important;
+                margin-bottom: 15px;
+                border-radius: 12px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border: 1px solid #e2e8f0;
+                padding: 0;
+                overflow: hidden;
+            }
+            
+            /* Selected row card styling */
+            .candidates-table tbody tr.selected-row {
+                background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+                border-color: #059669;
+                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            }
+            
+            .candidates-table tbody tr.selected-row::before {
+                content: "✓ SELECTED";
+                display: block;
+                background: rgba(0, 0, 0, 0.2);
+                color: white;
+                padding: 6px 15px;
+                font-size: 10px;
+                font-weight: 700;
+                letter-spacing: 1px;
+            }
+            
+            /* Table cells as blocks */
+            .candidates-table td {
+                display: block;
+                padding: 15px;
+                border-bottom: none;
+            }
+            
+            .candidates-table td:first-child {
+                padding-bottom: 12px;
+            }
+            
+            .candidates-table td:last-child {
+                padding-top: 12px;
+                background: #f8fafc;
+            }
+            
+            /* Candidate name styling */
+            .candidate-name-main {
+                font-size: 16px;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 6px;
+            }
+            
+            .candidate-name-cell .nomination-id {
+                margin-left: 0;
+                font-size: 10px;
+                padding: 3px 8px;
+            }
+            
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+            
+            .candidate-name-cell .nomination-id {
+                font-size: 11px;
+                margin-left: 0;
+                margin-top: 6px;
+                display: inline-block;
+            }
+            
+            /* Candidate details */
+            .candidate-details {
+                font-size: 13px;
+                gap: 8px;
+                margin-top: 10px;
+            }
+            
+            .detail-item {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+            
+            /* Action buttons */
+            .candidate-actions-table {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 0;
+            }
+            
+            .candidate-actions-table .btn {
+                padding: 12px 16px;
+                font-size: 13px;
+                font-weight: 600;
+                width: 100%;
+                text-align: center;
+                border-radius: 8px;
+            }
+            
+            .candidate-actions-table .btn:nth-child(3) {
+                grid-column: 1 / -1;
+            }
+            
+            /* Badges - larger on mobile */
+            .badge {
+                font-size: 10px;
+                padding: 5px 10px;
+            }
+            
+            /* Pagination - Enhanced for mobile */
+            .pagination-container {
+                display: block !important;
+                padding: 20px 12px;
+                background: white;
+                margin: 15px 0 0 0;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            }
+            
+            .pagination {
+                display: flex !important;
+                gap: 8px;
+                flex-wrap: wrap;
+                justify-content: center;
+                align-items: center;
+            }
+            
+            .page-link {
+                display: inline-flex !important;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 12px;
+                font-size: 13px;
+                font-weight: 600;
+                min-width: 44px;
+                min-height: 44px;
+                background: white;
+                border: 2px solid #e2e8f0;
+                border-radius: 8px;
+                color: #4a5568;
+                text-decoration: none;
+                text-align: center;
+                box-sizing: border-box;
+            }
+            
+            .page-link.active {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-color: #667eea;
+            }
+            
+            .page-ellipsis {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                padding: 10px 6px;
+                font-size: 13px;
+                min-height: 44px;
+                color: #a0aec0;
+                font-weight: 600;
+            }
+            
+            /* Pagination info text */
+            .pagination-container > div:last-child {
+                margin-top: 12px;
+                font-size: 13px !important;
+                color: #718096;
+                text-align: center;
+            }
+            
+            /* Empty state */
+            .empty-state {
+                padding: 50px 20px;
+            }
+            
+            .empty-state .icon {
+                font-size: 4rem;
+            }
+            
+            .empty-state h3 {
+                font-size: 1.1rem;
+            }
+            
+            /* Hover effects disabled on mobile */
+            .candidates-table tbody tr:hover {
+                transform: none !important;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+            }
         }
         
         /* Pagination Styles */
@@ -495,7 +1056,9 @@
         }
         
         .page-link {
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 8px 14px;
             background: white;
             border: 1px solid #e2e8f0;
@@ -507,6 +1070,7 @@
             transition: all 0.2s;
             min-width: 40px;
             text-align: center;
+            box-sizing: border-box;
         }
         
         .page-link:hover {
@@ -528,17 +1092,13 @@
         }
         
         .page-ellipsis {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             padding: 8px 4px;
             color: #a0aec0;
             font-weight: 600;
-        }
-        
-        @media (max-width: 480px) {
-            .page-link {
-                padding: 6px 10px;
-                font-size: 12px;
-                min-width: 35px;
-            }
+            min-width: 30px;
         }
     </style>
 </head>
@@ -553,36 +1113,69 @@
             <div class="sidebar">
                 <!-- Compact Stats -->
                 <div class="stats-compact">
-                    <div class="stat-mini">
-                        <h4><%= MessageBundle.getMessage(request, "candidate.total") %></h4>
-                        <div class="value"><%= totalCandidates %></div>
-                    </div>
-                    <div class="stat-mini">
-                        <h4><%= MessageBundle.getMessage(request, "status.active") %></h4>
-                        <div class="value"><%= activeCandidates %></div>
-                    </div>
-                    <div class="stat-mini">
-                        <h4><%= MessageBundle.getMessage(request, "payment.pending") %></h4>
-                        <div class="value"><%= pendingPayments %></div>
-                    </div>
-                    <div class="stat-mini">
-                        <h4><%= MessageBundle.getMessage(request, "expense.total") %></h4>
-                        <div class="value" style="font-size: 1rem;">₹<%= String.format("%.0f", totalExpenses) %></div>
-                    </div>
+                    <% if (isFilteredByCandidate) { %>
+                        <!-- Candidate-specific stats -->
+                        <div class="stat-mini" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <h4 style="color: white; font-size: 11px;">📊 Candidate Selected</h4>
+                            <div class="value" style="font-size: 0.9rem;"><%= selectedCandidate.getCandidateName() %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4>Total Candidates</h4>
+                            <div class="value">1</div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4>Active</h4>
+                            <div class="value"><%= activeCandidates %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4>Payment Pending</h4>
+                            <div class="value"><%= pendingPayments %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4>Total Expenses</h4>
+                            <div class="value" style="font-size: 1rem;">₹<%= String.format("%.0f", totalExpenses) %></div>
+                        </div>
+                    <% } else { %>
+                        <!-- All candidates stats -->
+                        <div class="stat-mini">
+                            <h4><%= MessageBundle.getMessage(request, "candidate.total") %></h4>
+                            <div class="value"><%= totalCandidates %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4><%= MessageBundle.getMessage(request, "status.active") %></h4>
+                            <div class="value"><%= activeCandidates %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4><%= MessageBundle.getMessage(request, "payment.pending") %></h4>
+                            <div class="value"><%= pendingPayments %></div>
+                        </div>
+                        <div class="stat-mini">
+                            <h4><%= MessageBundle.getMessage(request, "expense.total") %></h4>
+                            <div class="value" style="font-size: 1rem;">₹<%= String.format("%.0f", totalExpenses) %></div>
+                        </div>
+                    <% } %>
                 </div>
                 
                 <!-- Quick Actions -->
                 <div class="quick-actions-compact">
-                    <h3>⚡ <%= MessageBundle.getMessage(request, "action.quickactions") %></h3>
-                    <a href="add-candidate.jsp" class="action-btn">➕ <%= MessageBundle.getMessage(request, "candidate.add") %></a>
-                    <a href="change-password.jsp" class="action-btn" style="background: #f56565;">🔒 <%= MessageBundle.getMessage(request, "user.change.password") %></a>
-                    <a href="map-referral-code.jsp" class="action-btn" style="background: #667eea;">🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %></a>
-                    <% if (selectedCandidate != null && selectedCandidate.isPaymentVerified()) { %>
-                    <a href="<%=request.getContextPath()%>/generateProforma2?candidateId=<%= selectedCandidate.getCandidateId() %>" class="action-btn" style="background: #f57c00;" target="_blank">📑 Proforma-2 (Template)</a>
-                    <a href="manage-funds.jsp" class="action-btn" style="background: #48bb78;">💰 Manage Funds</a>
-                    <a href="add-expense.jsp" class="action-btn secondary">💸 <%= MessageBundle.getMessage(request, "expense.add") %></a>
-                    <a href="expenses.jsp" class="action-btn secondary">📊 <%= MessageBundle.getMessage(request, "expense.view") %></a>
-                    <% } %>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">⚡ <%= MessageBundle.getMessage(request, "action.quickactions") %></h3>
+                        <button id="toggleQuickActions" class="toggle-btn" onclick="toggleQuickActions()" title="Show/Hide Quick Actions">
+                            <span id="toggleIcon">−</span>
+                        </button>
+                    </div>
+                    <div id="quickActionsContent">
+                        <a href="add-candidate.jsp" class="action-btn">➕ <%= MessageBundle.getMessage(request, "candidate.add") %></a>
+                        <a href="change-password.jsp" class="action-btn" style="background: #f56565;">🔒 <%= MessageBundle.getMessage(request, "user.change.password") %></a>
+                        <a href="map-referral-code.jsp" class="action-btn" style="background: #667eea;">🎁 <%= MessageBundle.getMessage(request, "referral.map.title") %></a>
+                        <% if (selectedCandidate != null && selectedCandidate.isPaymentVerified()) { %>
+                        <a href="javascript:void(0);" onclick="openProforma1Popup(<%= selectedCandidate.getCandidateId() %>)" class="action-btn" style="background: #3182ce;">📅 Proforma-1 (Date-wise)</a>
+                        <a href="javascript:void(0);" onclick="openProforma2Popup(<%= selectedCandidate.getCandidateId() %>)" class="action-btn" style="background: #f57c00;">📑 Proforma-2 (Template)</a>
+                        <a href="manage-funds.jsp" class="action-btn" style="background: #48bb78;">💰 Manage Funds</a>
+                        <a href="add-expense.jsp" class="action-btn secondary">💸 <%= MessageBundle.getMessage(request, "expense.add") %></a>
+                        <a href="expenses.jsp" class="action-btn secondary">📊 <%= MessageBundle.getMessage(request, "expense.view") %></a>
+                        <% } %>
+                    </div>
                 </div>
                 
                 <!-- Social Media Links -->
@@ -653,37 +1246,57 @@
                 
                 <div class="candidates-list">
                     <% if (myCandidates != null && !myCandidates.isEmpty()) { %>
-                        <% for (Candidate c : myCandidates) { %>
-                            <div class="candidate-compact <%= (selectedCandidate != null && selectedCandidate.getCandidateId() == c.getCandidateId()) ? "selected" : "" %>">
-                                <div class="candidate-header">
-                                    <div style="flex: 1;">
-                                        <div class="candidate-name"><%= c.getCandidateName() %><% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %> - <strong><%= c.getNominationId() %></strong><% } %></div>
-                                        <div class="candidate-info">
-                                            <strong><%= MessageBundle.getMessage(request, "candidate.party") %>:</strong> <%= c.getPartyName() != null ? c.getPartyName() : "Independent" %> | 
-                                            <strong><%= MessageBundle.getMessage(request, "candidate.constituency") %>:</strong> <%= c.getConstituency() != null ? c.getConstituency() : "N/A" %>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <% if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) { %>
-                                            <span class="badge badge-success"><%= MessageBundle.getMessage(request, "status.active") %></span>
-                                        <% } else if ("pending_payment".equals(c.getAccountStatus())) { %>
-                                            <span class="badge badge-warning"><%= MessageBundle.getMessage(request, "payment.pending") %></span>
-                                        <% } else { %>
-                                            <span class="badge badge-danger"><%= MessageBundle.getMessage(request, "status.inactive") %></span>
-                                        <% } %>
-                                    </div>
-                                </div>
-                                <div class="candidate-actions">
-                                    <% if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) { %>
-                                        <a href="<%=request.getContextPath()%>/select-candidate?candidateId=<%= c.getCandidateId() %>" class="btn btn-primary btn-sm"><%= MessageBundle.getMessage(request, "action.select") %></a>
-                                        <a href="manage-funds.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-success btn-sm">💰 Funds</a>
-                                    <% } else { %>
-                                        <a href="candidate-payment.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-warning btn-sm"><%= MessageBundle.getMessage(request, "payment.paynow") %></a>
+                        <div class="candidates-table-wrapper">
+                            <table class="candidates-table">
+                                <thead>
+                                    <tr>
+                                        <th>👤 Candidate Details</th>
+                                        <th style="text-align: center;">⚡ Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% 
+                                    for (Candidate c : myCandidates) { 
+                                        String rowClass = (selectedCandidate != null && selectedCandidate.getCandidateId() == c.getCandidateId()) ? "selected-row" : "";
+                                    %>
+                                        <tr class="<%= rowClass %>">
+                                            <td class="candidate-name-cell">
+                                                <div class="candidate-name-main">
+                                                    <%= c.getCandidateName() %>
+                                                    <% if(c.getNominationId() != null && !c.getNominationId().trim().isEmpty()) { %>
+                                                        <span class="nomination-id">🆔 <%= c.getNominationId() %></span>
+                                                    <% } %>
+                                                </div>
+                                                <div class="candidate-details">
+                                                    <span class="detail-item">🎯 <%= c.getPartyName() != null ? c.getPartyName() : "Independent" %></span>
+                                                    <span class="detail-separator">•</span>
+                                                    <span class="detail-item">🏛️ <%= c.getConstituency() != null ? c.getConstituency() : "N/A" %></span>
+                                                    <span class="detail-separator">•</span>
+                                                    <% if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) { %>
+                                                        <span class="badge badge-success"><%= MessageBundle.getMessage(request, "status.active") %></span>
+                                                    <% } else if ("pending_payment".equals(c.getAccountStatus())) { %>
+                                                        <span class="badge badge-warning"><%= MessageBundle.getMessage(request, "payment.pending") %></span>
+                                                    <% } else { %>
+                                                        <span class="badge badge-danger"><%= MessageBundle.getMessage(request, "status.inactive") %></span>
+                                                    <% } %>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="candidate-actions-table">
+                                                    <% if (c.isPaymentVerified() && "active".equals(c.getAccountStatus())) { %>
+                                                        <a href="<%=request.getContextPath()%>/select-candidate?candidateId=<%= c.getCandidateId() %>" class="btn btn-primary btn-sm"><%= MessageBundle.getMessage(request, "action.select") %></a>
+                                                        <a href="manage-funds.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-success btn-sm">💰 Funds</a>
+                                                    <% } else { %>
+                                                        <a href="candidate-payment.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-warning btn-sm">💳 Pay</a>
+                                                    <% } %>
+                                                    <a href="edit-candidate.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-outline btn-sm">✏️ Edit</a>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     <% } %>
-                                    <a href="edit-candidate.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-outline btn-sm"><%= MessageBundle.getMessage(request, "action.edit") %></a>
-                                </div>
-                            </div>
-                        <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                         
                         <!-- Pagination -->
                         <% if (totalPages > 1) { %>
@@ -830,5 +1443,150 @@
         });
     </script>
     <% } %>
+    
+    <script>
+        // Toggle Quick Actions Show/Hide
+        function toggleQuickActions() {
+            const content = document.getElementById('quickActionsContent');
+            const icon = document.getElementById('toggleIcon');
+            const isCollapsed = content.classList.contains('collapsed');
+            
+            if (isCollapsed) {
+                // Show
+                content.classList.remove('collapsed');
+                icon.textContent = '−';
+                localStorage.setItem('quickActionsVisible', 'true');
+            } else {
+                // Hide
+                content.classList.add('collapsed');
+                icon.textContent = '+';
+                localStorage.setItem('quickActionsVisible', 'false');
+            }
+        }
+        
+        // Restore state on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isVisible = localStorage.getItem('quickActionsVisible');
+
+            // Default to visible (true), hide only if explicitly set to false
+            if (isVisible === 'false') {
+                const content = document.getElementById('quickActionsContent');
+                const icon = document.getElementById('toggleIcon');
+                content.classList.add('collapsed');
+                icon.textContent = '+';
+            }
+        });
+        
+        // Open Proforma-1 in modal popup
+        function openProforma1Popup(candidateId) {
+            const url = 'select-date-proforma1.jsp?candidateId=' + candidateId;
+            openModalPopup(url, 'Proforma-1 Date Selection');
+        }
+        
+        // Open Proforma-2 in modal popup
+        function openProforma2Popup(candidateId) {
+            const url = '<%=request.getContextPath()%>/generateProforma2?candidateId=' + candidateId;
+            openModalPopup(url, 'Proforma-2 Report');
+        }
+        
+        // Generic modal popup function
+        function openModalPopup(url, title) {
+            // Create modal overlay
+            const modal = document.createElement('div');
+            modal.id = 'proformaModal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.3s;';
+            
+            // Create modal content container
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = 'background:white;width:95%;max-width:1400px;height:90%;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:flex;flex-direction:column;animation:slideDown 0.3s;';
+            
+            // Create modal header
+            const modalHeader = document.createElement('div');
+            modalHeader.style.cssText = 'display:flex;justify-content:space-between;align-items:center;padding:20px 30px;border-bottom:2px solid #e2e8f0;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:12px 12px 0 0;';
+            
+            const modalTitle = document.createElement('h2');
+            modalTitle.textContent = title;
+            modalTitle.style.cssText = 'margin:0;color:white;font-size:22px;font-weight:600;';
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.innerHTML = '✕';
+            closeBtn.style.cssText = 'background:rgba(255,255,255,0.2);border:none;color:white;font-size:28px;font-weight:bold;cursor:pointer;width:40px;height:40px;border-radius:50%;transition:all 0.3s;display:flex;align-items:center;justify-content:center;';
+            closeBtn.onmouseover = function() { this.style.background = 'rgba(255,255,255,0.3)'; };
+            closeBtn.onmouseout = function() { this.style.background = 'rgba(255,255,255,0.2)'; };
+            closeBtn.onclick = function() { closeModalPopup(); };
+            
+            modalHeader.appendChild(modalTitle);
+            modalHeader.appendChild(closeBtn);
+            
+            // Create iframe for content
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.style.cssText = 'width:100%;flex:1;border:none;border-radius:0 0 12px 12px;';
+            
+            // Assemble modal
+            modalContent.appendChild(modalHeader);
+            modalContent.appendChild(iframe);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Close on overlay click
+            modal.onclick = function(e) {
+                if (e.target === modal) closeModalPopup();
+            };
+            
+            // Close on ESC key
+            document.addEventListener('keydown', function escHandler(e) {
+                if (e.key === 'Escape') {
+                    closeModalPopup();
+                    document.removeEventListener('keydown', escHandler);
+                }
+            });
+            
+            // Prevent body scroll
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Close modal popup
+        function closeModalPopup() {
+            const modal = document.getElementById('proformaModal');
+            if (modal) {
+                modal.style.animation = 'fadeOut 0.3s';
+                setTimeout(() => {
+                    modal.remove();
+                    document.body.style.overflow = 'auto';
+                }, 300);
+            }
+        }
+        
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; }
+                to { opacity: 0; }
+            }
+            @keyframes slideDown {
+                from { transform: translateY(-50px); opacity: 0; }
+                to { transform: translateY(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        // Listen for messages from iframe to open nested modals
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.action === 'openProforma') {
+                // Close existing modal first
+                closeModalPopup();
+                // Open new modal with report
+                setTimeout(() => {
+                    openModalPopup(event.data.url, event.data.title);
+                }, 350);
+            }
+        });
+    </script>
 </body>
 </html>
