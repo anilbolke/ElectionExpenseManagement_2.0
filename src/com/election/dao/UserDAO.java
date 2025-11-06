@@ -591,4 +591,44 @@ public class UserDAO {
             return false;
         }
     }
+    
+    // Find user by username, email, or mobile for password reset
+    public User findUserByIdentifier(String identifier) {
+        String query = "SELECT * FROM users WHERE (username = ? OR email = ? OR mobile = ?) AND is_active = TRUE";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, identifier);
+            pstmt.setString(2, identifier);
+            pstmt.setString(3, identifier);
+            
+            ResultSet rs = pstmt.executeQuery();
+            
+            if (rs.next()) {
+                return extractUserFromResultSet(rs);
+            }
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // Update password by user ID
+    public boolean updatePassword(int userId, String newPassword) {
+        String query = "UPDATE users SET password = ? WHERE user_id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, newPassword);
+            pstmt.setInt(2, userId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

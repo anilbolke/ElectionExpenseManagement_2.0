@@ -741,7 +741,7 @@
                         <input type="checkbox" name="remember">
                         <span><%= MessageBundle.getMessage(request, "login.remember") %></span>
                     </label>
-                    <a href="#" class="forgot-password"><%= MessageBundle.getMessage(request, "login.forgot.password") %></a>
+                    <a href="<%=request.getContextPath()%>/forgot-password.jsp" class="forgot-password"><%= MessageBundle.getMessage(request, "login.forgot.password") %></a>
                 </div>
                 
                 <button type="submit" class="btn-login" id="loginBtn">
