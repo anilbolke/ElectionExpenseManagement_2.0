@@ -152,13 +152,6 @@ public class RegisterBrokerServlet extends HttpServlet {
             return;
         }
         
-        // Check if mobile exists
-        if (userDAO.isMobileExists(mobileNumber)) {
-            response.sendRedirect(redirectUrl.toString() + "&error=" + 
-                                java.net.URLEncoder.encode("Mobile number already registered", "UTF-8"));
-            return;
-        }
-        
         // Check if referral code exists
         if (userDAO.isReferralCodeExists(referralCode)) {
             response.sendRedirect(redirectUrl.toString() + "&error=" + 
