@@ -231,6 +231,22 @@
             font-size: 4rem;
             margin-bottom: 1rem;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .page-header h1 { font-size: 1.4rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-bar { flex-direction: column; gap: 10px; }
+            .search-box { width: 100%; }
+            table { display: block; overflow-x: auto; font-size: 13px; }
+            .btn { padding: 12px; min-height: 48px; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>

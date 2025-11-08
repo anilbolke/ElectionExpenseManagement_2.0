@@ -14,7 +14,7 @@ public class DatabaseConnection {
             "&useUnicode=true" +
             "&characterEncoding=UTF-8";
     //private static final String USERNAME = "root";
-    //private static final String PASSWORD = "root"; // Change this to your MySQL password
+   // private static final String PASSWORD = "root"; // Change this to your MySQL password
     
     private static final String USERNAME = "root";
     private static final String PASSWORD = "5uG9}3%v6pDykvnn"; // Change this to your MySQL password

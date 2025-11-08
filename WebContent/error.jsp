@@ -70,6 +70,22 @@
         .btn-home:hover {
             transform: translateY(-2px);
         }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .error-container { padding: 15px; }
+            .error-card { padding: 25px 20px; }
+            .error-icon { font-size: 60px; }
+            .error-code { font-size: 36px; }
+            .error-message { font-size: 20px; }
+            .btn-home { padding: 14px 25px; min-height: 48px; display: block; margin: 10px 0; }
+        }
+        
+        @media (max-width: 480px) {
+            .error-card { padding: 20px 15px; }
+            .error-code { font-size: 32px; }
+            .error-message { font-size: 18px; }
+        }
     </style>
 </head>
 <body>

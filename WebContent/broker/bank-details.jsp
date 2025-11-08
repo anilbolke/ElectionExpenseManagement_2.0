@@ -234,6 +234,22 @@
         .account-match.no-match {
             color: #e53e3e;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container { padding: 15px; margin: 15px auto; }
+            .card { padding: 20px 15px; border-radius: 10px; }
+            h1 { font-size: 1.4rem; }
+            .form-control { padding: 12px; font-size: 16px; }
+            .btn-primary, .btn-secondary { padding: 14px; min-height: 48px; }
+            .info-box { padding: 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 10px; }
+            .card { padding: 15px 10px; }
+            h1 { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>

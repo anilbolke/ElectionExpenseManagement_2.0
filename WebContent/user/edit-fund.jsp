@@ -217,6 +217,47 @@
         .btn-secondary:hover {
             background: #cbd5e0;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+                margin: 15px auto;
+            }
+            
+            .form-card {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px;
+                min-height: 48px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-card {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body class="dashboard">

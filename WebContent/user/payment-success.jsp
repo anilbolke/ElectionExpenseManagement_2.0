@@ -154,6 +154,43 @@
             display: inline-block;
             margin-bottom: 20px;
         }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .success-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            .success-icon {
+                font-size: 60px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+                min-height: 48px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 25px 15px;
+                margin: 15px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>

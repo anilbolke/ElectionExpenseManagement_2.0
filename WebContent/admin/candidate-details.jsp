@@ -327,6 +327,111 @@
         @media (max-width: 768px) {
             .navbar-menu { display: none; }
             .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            
+            /* Container adjustments */
+            .container {
+                padding: 12px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .breadcrumb {
+                font-size: 11px;
+            }
+            
+            /* Back button adjustments */
+            .back-button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            /* Card adjustments */
+            .card {
+                margin-bottom: 15px;
+            }
+            
+            .card-body {
+                padding: 15px;
+            }
+            
+            /* Make info-grid single column on mobile */
+            .info-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px;
+            }
+            
+            .info-item {
+                padding: 12px;
+            }
+            
+            .info-label {
+                font-size: 11px;
+                margin-bottom: 6px;
+            }
+            
+            .info-value {
+                font-size: 14px;
+                font-weight: 600;
+            }
+            
+            /* Table responsive */
+            .card-body > div[style*="overflow-x"] {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            table {
+                display: table;
+                width: 100%;
+                min-width: 600px; /* Minimum width for horizontal scroll */
+            }
+            
+            table thead {
+                display: table-header-group;
+            }
+            
+            table tbody {
+                display: table-row-group;
+            }
+            
+            table tbody tr {
+                display: table-row;
+            }
+            
+            table td {
+                display: table-cell;
+                padding: 8px;
+                border-bottom: 1px solid #e2e8f0;
+                text-align: left;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+            
+            table th {
+                font-size: 10px;
+                padding: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-box .value {
+                font-size: 1.4rem;
+            }
+            
+            table td {
+                font-size: 12px;
+                padding-left: 40%;
+            }
+            
+            table td::before {
+                width: 35%;
+            }
         }
     </style>
 </head>

@@ -248,6 +248,89 @@
                 font-size: 24px;
             }
         }
+        
+        /* Additional mobile enhancements */
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .container {
+                padding: 10px;
+                max-width: 100%;
+            }
+            
+            .card {
+                padding: 25px 20px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 16px; /* Prevent iOS zoom */
+                border-radius: 8px;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px;
+                font-size: 1rem;
+                min-height: 48px;
+                border-radius: 8px;
+            }
+            
+            .alert {
+                padding: 12px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .form-control {
+                padding: 11px;
+                font-size: 15px;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 13px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Touch optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .form-control,
+            .btn-primary,
+            .btn-secondary {
+                min-height: 44px;
+            }
+        }
     </style>
 </head>
 <body>

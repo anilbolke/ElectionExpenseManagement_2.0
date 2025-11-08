@@ -1018,5 +1018,8 @@
             });
         });
     </script>
+    
+    <!-- Include Share Button -->
+    <jsp:include page="/includes/share-button.jsp" />
 </body>
 </html>

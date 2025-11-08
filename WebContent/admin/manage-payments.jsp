@@ -327,6 +327,22 @@
         .info-box strong {
             color: #4338ca;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .page-header h1 { font-size: 1.4rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .filter-section { flex-direction: column; gap: 10px; }
+            .search-box input { width: 100%; }
+            table { display: block; overflow-x: auto; }
+            .btn { padding: 12px; min-height: 48px; font-size: 14px; }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-header h1 { font-size: 1.3rem; }
+        }
     </style>
 </head>
 <body>

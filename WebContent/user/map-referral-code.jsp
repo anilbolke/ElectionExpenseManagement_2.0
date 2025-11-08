@@ -280,6 +280,45 @@
             margin: 0;
             font-size: 14px;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .card {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .btn {
+                padding: 14px;
+                min-height: 48px;
+            }
+            
+            .info-card {
+                padding: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 15px 10px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 <body>

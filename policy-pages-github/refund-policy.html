@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refund & Cancellation Policy - Election Expense Management System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f7fa;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 { font-size: 2rem; margin-bottom: 10px; }
+        .header p { font-size: 0.95rem; opacity: 0.9; }
+        
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        
+        .policy-card {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .section { margin-bottom: 30px; }
+        
+        .section h2 {
+            color: #667eea;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        
+        .section h3 {
+            color: #4a5568;
+            font-size: 1.2rem;
+            margin: 20px 0 10px 0;
+        }
+        
+        .section p { margin-bottom: 15px; text-align: justify; }
+        .section ul, .section ol { margin-left: 25px; margin-bottom: 15px; }
+        .section li { margin-bottom: 8px; }
+        
+        .highlight {
+            background: #f7fafc;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .alert-box {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .success-box {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        
+        .process-step {
+            background: #f7fafc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .process-step strong {
+            color: #667eea;
+            font-size: 1.1rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin: 20px 0;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .back-link:hover { transform: translateY(-2px); }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .policy-card { padding: 25px 20px; }
+            .section h2 { font-size: 1.3rem; }
+            .section h3 { font-size: 1.1rem; }
+        }
+        
+        @media (max-width: 480px) {
+            .header { padding: 20px 15px; }
+            .policy-card { padding: 20px 15px; }
+            .container { padding: 0 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Refund & Cancellation Policy</h1>
+        <p>Last Updated: November 8, 2025</p>
+    </div>
+    
+    <div class="container">
+        <a href="/login.jsp" class="back-link">← Back to Home</a>
+        
+        <div class="policy-card">
+            <div class="section">
+                <h2>1. Overview</h2>
+                <p>
+                    This Refund and Cancellation Policy outlines the terms and conditions for subscription cancellations, refund requests, and related procedures for the Election Expense Management System provided by EMS Online.
+                </p>
+                <div class="highlight">
+                    <strong>Important:</strong> Please read this policy carefully before making a purchase. By subscribing to our service, you agree to the terms outlined below.
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>2. Subscription Plans</h2>
+                <h3>2.1 Available Plans</h3>
+                <ul>
+                    <li><strong>Standard Plan:</strong> ₹5,000 (One-time or as per selected duration)</li>
+                    <li><strong>Features:</strong> Unlimited expense tracking, daily activity logs, fund management, download reports, real-time dashboard</li>
+                </ul>
+                
+                <h3>2.2 Payment Processing</h3>
+                <p>
+                    All payments are processed through Razorpay, our secure payment gateway partner. Accepted payment methods include:
+                </p>
+                <ul>
+                    <li>Credit Cards (Visa, MasterCard, American Express, etc.)</li>
+                    <li>Debit Cards</li>
+                    <li>UPI (Google Pay, PhonePe, Paytm, etc.)</li>
+                    <li>Net Banking</li>
+                    <li>Wallets</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>3. Refund Policy</h2>
+                <h3>3.1 General Refund Terms</h3>
+                <div class="alert-box">
+                    <strong>Important:</strong> Subscription fees are generally <strong>non-refundable</strong> after payment has been processed, except in the specific circumstances outlined below.
+                </div>
+                
+                <h3>3.2 Eligible for Refund</h3>
+                <p>You may be eligible for a refund in the following situations:</p>
+                
+                <div class="success-box">
+                    <strong>Full Refund (100%) - Within 7 Days:</strong>
+                    <ul>
+                        <li>Technical issues preventing system access (our fault)</li>
+                        <li>Double payment or duplicate transaction</li>
+                        <li>Payment deducted but subscription not activated</li>
+                        <li>Service not as described (with valid proof)</li>
+                        <li>System completely non-functional (our fault)</li>
+                    </ul>
+                </div>
+                
+                <div class="success-box">
+                    <strong>Partial Refund (Pro-rated) - After 7 Days:</strong>
+                    <ul>
+                        <li>Severe technical issues making the system unusable (verified by our team)</li>
+                        <li>Data loss due to system errors (our fault)</li>
+                        <li>Feature unavailability as per subscription terms</li>
+                    </ul>
+                    <p><strong>Note:</strong> Partial refunds are calculated based on unused subscription period, minus a 10% processing fee.</p>
+                </div>
+                
+                <h3>3.3 NOT Eligible for Refund</h3>
+                <div class="alert-box">
+                    <strong>Refunds will NOT be provided for:</strong>
+                    <ul>
+                        <li>Change of mind after subscription activation</li>
+                        <li>User error or incorrect data entry</li>
+                        <li>Failure to use the service</li>
+                        <li>User's internet connectivity issues</li>
+                        <li>Violations of Terms and Conditions</li>
+                        <li>Account suspension due to fraudulent activity</li>
+                        <li>After the refund eligibility period has expired (7 days for full refund)</li>
+                        <li>Election completion or candidate withdrawal (service delivered)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>4. Refund Request Process</h2>
+                <h3>4.1 How to Request a Refund</h3>
+                
+                <div class="process-step">
+                    <strong>Step 1: Submit Request</strong>
+                    <p>Email us at <strong>refunds@emsonline.in</strong> with the following details:</p>
+                    <ul>
+                        <li>Your full name and registered email</li>
+                        <li>Transaction ID / Order ID</li>
+                        <li>Date of payment</li>
+                        <li>Amount paid</li>
+                        <li>Reason for refund request (detailed explanation)</li>
+                        <li>Supporting documents (if applicable)</li>
+                    </ul>
+                </div>
+                
+                <div class="process-step">
+                    <strong>Step 2: Verification</strong>
+                    <p>Our team will verify your request within 2-3 business days:</p>
+                    <ul>
+                        <li>Validate transaction details</li>
+                        <li>Review account usage history</li>
+                        <li>Assess eligibility as per policy</li>
+                        <li>Contact you for additional information if needed</li>
+                    </ul>
+                </div>
+                
+                <div class="process-step">
+                    <strong>Step 3: Decision</strong>
+                    <p>You will receive a decision via email within 5-7 business days:</p>
+                    <ul>
+                        <li>Approved: Refund process initiated</li>
+                        <li>Rejected: Detailed explanation provided</li>
+                        <li>Partial Approval: Alternative resolution offered</li>
+                    </ul>
+                </div>
+                
+                <div class="process-step">
+                    <strong>Step 4: Refund Processing</strong>
+                    <p>If approved, refund will be processed within:</p>
+                    <ul>
+                        <li><strong>Card Payments:</strong> 5-7 business days</li>
+                        <li><strong>UPI/Net Banking:</strong> 3-5 business days</li>
+                        <li><strong>Wallets:</strong> 2-3 business days</li>
+                    </ul>
+                    <p><strong>Note:</strong> Refund time may vary depending on your bank's processing time.</p>
+                </div>
+                
+                <h3>4.2 Refund Method</h3>
+                <p>
+                    Refunds will be processed to the original payment method used for the transaction. We do not provide refunds via alternative payment methods or to different accounts.
+                </p>
+            </div>
+            
+            <div class="section">
+                <h2>5. Cancellation Policy</h2>
+                <h3>5.1 User-Initiated Cancellation</h3>
+                <p>
+                    You can cancel your subscription at any time by:
+                </p>
+                <ul>
+                    <li>Logging into your account and navigating to Settings > Cancel Subscription</li>
+                    <li>Emailing us at support@emsonline.in with cancellation request</li>
+                    <li>Contacting our support team directly</li>
+                </ul>
+                
+                <div class="highlight">
+                    <strong>Effect of Cancellation:</strong>
+                    <ul>
+                        <li>Access to the system continues until the end of the current billing period</li>
+                        <li>No automatic renewal for next period</li>
+                        <li>You can request data export before cancellation</li>
+                        <li>Data retained for 90 days post-cancellation for recovery (if you change your mind)</li>
+                    </ul>
+                </div>
+                
+                <h3>5.2 Cancellation Eligibility for Refund</h3>
+                <ul>
+                    <li><strong>Within 7 days:</strong> Eligible for full refund if criteria met (see Section 3.2)</li>
+                    <li><strong>After 7 days:</strong> No refund, but service continues until period end</li>
+                    <li><strong>Partial period:</strong> No pro-rated refund for partial months/periods</li>
+                </ul>
+                
+                <h3>5.3 Company-Initiated Cancellation</h3>
+                <p>
+                    We reserve the right to cancel your subscription in case of:
+                </p>
+                <ul>
+                    <li>Violation of Terms and Conditions</li>
+                    <li>Fraudulent activity</li>
+                    <li>Non-payment of dues</li>
+                    <li>Misuse of the system</li>
+                </ul>
+                <p><strong>Refund:</strong> No refund will be provided for company-initiated cancellations due to violations.</p>
+            </div>
+            
+            <div class="section">
+                <h2>6. Payment Failures</h2>
+                <h3>6.1 Failed Transactions</h3>
+                <p>
+                    If your payment fails but amount is deducted:
+                </p>
+                <ul>
+                    <li>Wait 30 minutes for automatic reversal</li>
+                    <li>If not reversed, contact us with transaction details</li>
+                    <li>We will verify with Razorpay and initiate refund if applicable</li>
+                    <li>Refund processed within 5-7 business days</li>
+                </ul>
+                
+                <h3>6.2 Double Payment</h3>
+                <p>
+                    If you're charged twice for the same subscription:
+                </p>
+                <ul>
+                    <li>Contact us immediately with both transaction IDs</li>
+                    <li>We will verify and refund the duplicate payment</li>
+                    <li>Full refund processed within 3-5 business days</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>7. Dispute Resolution</h2>
+                <h3>7.1 Chargebacks</h3>
+                <div class="alert-box">
+                    <strong>Before Initiating a Chargeback:</strong>
+                    <p>Please contact us first at support@emsonline.in. Chargebacks result in additional fees and may lead to account suspension.</p>
+                </div>
+                
+                <p>
+                    If you initiate a chargeback:
+                </p>
+                <ul>
+                    <li>Your account may be suspended during dispute investigation</li>
+                    <li>We will provide transaction evidence to your bank</li>
+                    <li>If chargeback is ruled in your favor, account remains suspended</li>
+                    <li>False chargebacks may result in legal action</li>
+                </ul>
+                
+                <h3>7.2 Dispute Process</h3>
+                <ol>
+                    <li><strong>Contact Support:</strong> Email refunds@emsonline.in</li>
+                    <li><strong>Explain Issue:</strong> Provide detailed information</li>
+                    <li><strong>Wait for Response:</strong> 2-3 business days</li>
+                    <li><strong>Resolution:</strong> Refund, credit, or alternative solution</li>
+                    <li><strong>Escalation:</strong> If unsatisfied, escalate to management</li>
+                </ol>
+            </div>
+            
+            <div class="section">
+                <h2>8. Special Circumstances</h2>
+                <h3>8.1 Force Majeure</h3>
+                <p>
+                    In case of events beyond our control (natural disasters, pandemics, government actions, etc.):
+                </p>
+                <ul>
+                    <li>Service interruptions may occur without refund obligation</li>
+                    <li>We will attempt to resume service as soon as possible</li>
+                    <li>Subscription period may be extended to compensate for downtime</li>
+                </ul>
+                
+                <h3>8.2 Service Discontinuation</h3>
+                <p>
+                    If we decide to discontinue the service:
+                </p>
+                <ul>
+                    <li>Minimum 30 days advance notice</li>
+                    <li>Pro-rated refund for unused subscription period</li>
+                    <li>Data export option provided</li>
+                    <li>Assistance with data migration if possible</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>9. Razorpay-Specific Terms</h2>
+                <h3>9.1 Payment Gateway Policy</h3>
+                <p>
+                    Razorpay processes all payments. Their refund policies also apply:
+                </p>
+                <ul>
+                    <li>Refunds initiated by us are processed through Razorpay</li>
+                    <li>Razorpay's terms available at: <a href="https://razorpay.com/terms/" target="_blank">razorpay.com/terms</a></li>
+                    <li>Transaction disputes handled according to RBI guidelines</li>
+                </ul>
+                
+                <h3>9.2 Razorpay Fees</h3>
+                <p>
+                    Razorpay charges a processing fee on transactions. In case of refunds:
+                </p>
+                <ul>
+                    <li>Full refunds: We bear the transaction fee</li>
+                    <li>Partial refunds: Pro-rated fee deduction</li>
+                    <li>User-error refunds: Transaction fee may be deducted from refund amount</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>10. Contact Information</h2>
+                <p>
+                    For refund requests, cancellations, or questions about this policy:
+                </p>
+                <ul>
+                    <li><strong>Refund Requests:</strong> refunds@emsonline.in</li>
+                    <li><strong>General Support:</strong> support@emsonline.in</li>
+                    <li><strong>Website:</strong> <a href="https://emsonline.in" target="_blank">emsonline.in</a></li>
+                    <li><strong>Phone:</strong> [Your Phone Number]</li>
+                    <li><strong>Support Hours:</strong> Monday - Friday, 9:00 AM - 6:00 PM IST</li>
+                </ul>
+                
+                <div class="highlight">
+                    <strong>Response Time:</strong>
+                    <ul>
+                        <li>Email Acknowledgment: Within 24 hours</li>
+                        <li>Refund Decision: Within 5-7 business days</li>
+                        <li>Refund Processing: Additional 3-7 business days</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>11. Policy Updates</h2>
+                <p>
+                    We reserve the right to modify this Refund and Cancellation Policy at any time. Changes will be:
+                </p>
+                <ul>
+                    <li>Posted on this page with updated "Last Updated" date</li>
+                    <li>Notified to active subscribers via email</li>
+                    <li>Effective immediately for new subscriptions</li>
+                    <li>Existing subscriptions governed by policy at time of purchase</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>12. Legal Compliance</h2>
+                <p>
+                    This policy complies with:
+                </p>
+                <ul>
+                    <li>Reserve Bank of India (RBI) guidelines</li>
+                    <li>Information Technology Act, 2000</li>
+                    <li>Consumer Protection Act, 2019</li>
+                    <li>Indian Contract Act, 1872</li>
+                    <li>Payment and Settlement Systems Act, 2007</li>
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>13. Acknowledgment</h2>
+                <p>
+                    By making a payment for our services, you acknowledge that you have read, understood, and agree to this Refund and Cancellation Policy.
+                </p>
+                <div class="highlight">
+                    <strong>Your Rights:</strong> This policy does not affect your statutory rights as a consumer under applicable law. If you believe your consumer rights have been violated, you may seek recourse through appropriate consumer forums.
+                </div>
+            </div>
+        </div>
+        
+        <a href="/login.jsp" class="back-link">← Back to Home</a>
+    </div>
+    
+    <div class="footer">
+        <p>&copy; 2025 EMS Online. All rights reserved. | Powered by <a href="https://emsonline.in" target="_blank" style="color: #667eea;">emsonline.in</a></p>
+    </div>
+</body>
+</html>

@@ -268,6 +268,87 @@
         .validation-feedback.checking {
             color: #ed8936;
         }
+        
+        /* ================================
+           MOBILE RESPONSIVE STYLES
+           ================================ */
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px auto;
+                padding: 0 15px;
+            }
+            
+            .card {
+                padding: 20px 15px;
+                border-radius: 10px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 16px; /* Prevent iOS zoom */
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 14px;
+                font-size: 1rem;
+                min-height: 48px;
+            }
+            
+            .alert {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            .strength-meter {
+                height: 6px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .card {
+                padding: 18px 12px;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .form-control {
+                padding: 11px;
+            }
+            
+            .btn-primary,
+            .btn-secondary {
+                padding: 13px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        @media (hover: none) and (pointer: coarse) {
+            .form-control,
+            .btn-primary,
+            .btn-secondary {
+                min-height: 44px;
+            }
+        }
     </style>
 </head>
 <body>

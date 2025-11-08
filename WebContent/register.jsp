@@ -205,6 +205,142 @@
         select.form-control {
             cursor: pointer;
         }
+        
+        /* ================================
+           MOBILE RESPONSIVE STYLES
+           ================================ */
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+            
+            .registration-container {
+                padding: 10px;
+            }
+            
+            .card {
+                padding: 25px 20px;
+                border-radius: 12px;
+                box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            }
+            
+            .card-title {
+                font-size: 1.5rem;
+            }
+            
+            .card-subtitle {
+                font-size: 0.9rem;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .form-group {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .form-control {
+                padding: 12px;
+                font-size: 16px; /* Prevent iOS zoom */
+                border-radius: 8px;
+            }
+            
+            select.form-control {
+                padding: 12px;
+                font-size: 16px;
+            }
+            
+            .btn-primary {
+                padding: 14px;
+                font-size: 1rem;
+                min-height: 48px; /* Touch-friendly */
+                border-radius: 8px;
+            }
+            
+            .alert {
+                padding: 12px;
+                font-size: 0.9rem;
+                border-radius: 8px;
+            }
+            
+            .login-link {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .card {
+                padding: 20px 15px;
+            }
+            
+            .card-title {
+                font-size: 1.3rem;
+            }
+            
+            .card-subtitle {
+                font-size: 0.85rem;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+            }
+            
+            .form-control {
+                padding: 11px;
+                font-size: 15px;
+            }
+            
+            .btn-primary {
+                padding: 13px;
+                font-size: 0.95rem;
+            }
+            
+            .password-strength,
+            .password-match {
+                font-size: 0.8rem;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .card {
+                padding: 18px 12px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+            
+            .form-control {
+                font-size: 14px;
+                padding: 10px;
+            }
+            
+            .btn-primary {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .form-control,
+            .btn-primary,
+            .login-link a {
+                min-height: 44px;
+            }
+            
+            .form-control:focus {
+                font-size: 16px; /* Prevent iOS zoom */
+            }
+        }
     </style>
 </head>
 <body>

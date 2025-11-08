@@ -219,6 +219,22 @@
             background: #007bff;
             color: white;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .card { padding: 20px 15px; }
+            h1 { font-size: 1.4rem; }
+            .search-box input { width: 100%; padding: 12px; font-size: 16px; }
+            table { display: block; overflow-x: auto; font-size: 13px; }
+            .btn { padding: 10px 16px; min-height: 44px; }
+        }
+        
+        @media (max-width: 480px) {
+            .card { padding: 15px 10px; }
+            h1 { font-size: 1.3rem; }
+            table { font-size: 12px; }
+        }
     </style>
 </head>
 <body>

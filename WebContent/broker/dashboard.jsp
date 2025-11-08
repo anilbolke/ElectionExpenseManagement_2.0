@@ -600,5 +600,8 @@
         <!-- Social Media Footer -->
         <jsp:include page="/includes/social-media-footer.jsp" />
     </div>
+    
+    <!-- Include Share Button -->
+    <jsp:include page="/includes/share-button.jsp" />
 </body>
 </html>

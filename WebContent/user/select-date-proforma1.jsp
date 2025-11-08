@@ -323,5 +323,11 @@
             }
         });
     </script>
+    
+    <!-- Footer with emsonline.in URL -->
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); padding: 10px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #e2e8f0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;">
+        <span style="font-weight: 600;">Powered by</span> 
+        <a href="https://emsonline.in" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 700; margin-left: 5px;">emsonline.in</a>
+    </div>
 </body>
 </html>

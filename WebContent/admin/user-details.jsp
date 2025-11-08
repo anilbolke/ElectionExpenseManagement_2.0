@@ -267,6 +267,24 @@
         .back-button:hover {
             text-decoration: underline;
         }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container { padding: 15px; }
+            .page-header h1 { font-size: 1.4rem; }
+            .info-grid { grid-template-columns: 1fr !important; gap: 12px; }
+            .info-item { padding: 12px; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            table { display: block; overflow-x: auto; }
+            .btn { padding: 12px; min-height: 48px; }
+        }
+        
+        @media (max-width: 480px) {
+            .container { padding: 10px; }
+            .page-header h1 { font-size: 1.3rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .info-item { padding: 10px; }
+        }
     </style>
 </head>
 <body>

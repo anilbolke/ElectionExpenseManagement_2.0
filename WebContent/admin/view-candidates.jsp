@@ -299,6 +299,99 @@
         @media (max-width: 768px) {
             .navbar-menu { display: none; }
             .stats-summary { grid-template-columns: repeat(2, 1fr); }
+            
+            /* Container adjustments for mobile */
+            .container {
+                padding: 12px;
+            }
+            
+            .page-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            /* Card body adjustments */
+            .card-body {
+                padding: 12px;
+            }
+            
+            /* Keep table with horizontal scroll */
+            .card-body > div[style*="overflow-x"] {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            table {
+                display: table;
+                width: 100%;
+                min-width: 900px; /* Minimum width to trigger horizontal scroll */
+            }
+            
+            table thead {
+                display: table-header-group;
+            }
+            
+            table tbody {
+                display: table-row-group;
+            }
+            
+            table tbody tr {
+                display: table-row;
+            }
+            
+            table tbody tr:hover {
+                background: #f7fafc;
+            }
+            
+            table td {
+                display: table-cell;
+                padding: 8px;
+                border-bottom: 1px solid #e2e8f0;
+                text-align: left;
+                font-size: 11px;
+                white-space: nowrap;
+            }
+            
+            table th {
+                font-size: 10px;
+                padding: 8px;
+            }
+            
+            /* Badges and buttons full width on mobile */
+            .badge {
+                display: inline-block;
+                font-size: 10px;
+                padding: 4px 10px;
+            }
+            
+            .btn {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
+            
+            /* Search box full width */
+            .search-box input {
+                max-width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-box .value {
+                font-size: 1.5rem;
+            }
+            
+            table td {
+                font-size: 12px;
+                padding-left: 40%;
+            }
+            
+            table td::before {
+                font-size: 10px;
+                width: 35%;
+            }
         }
     </style>
 </head>

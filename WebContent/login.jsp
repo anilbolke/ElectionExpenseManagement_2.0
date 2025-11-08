@@ -631,6 +631,218 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+        
+        /* ================================
+           MOBILE RESPONSIVE STYLES
+           ================================ */
+        
+        @media (max-width: 968px) {
+            /* Tablet adjustments */
+            .login-container {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+            }
+            
+            .login-brand {
+                display: none; /* Hide branding on tablet and mobile */
+            }
+            
+            .login-form-section {
+                padding: 40px 30px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            /* Mobile - Full responsive */
+            body {
+                padding: 15px;
+                align-items: flex-start;
+                padding-top: 60px;
+            }
+            
+            .language-selector-wrapper {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .login-container {
+                border-radius: 15px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            }
+            
+            .login-form-section {
+                padding: 30px 20px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .login-header p {
+                font-size: 0.9rem;
+            }
+            
+            .form-group label {
+                font-size: 0.85rem;
+            }
+            
+            .form-control {
+                padding: 12px 15px 12px 40px;
+                font-size: 16px; /* Prevent iOS zoom on focus */
+            }
+            
+            .input-icon {
+                font-size: 16px;
+                left: 12px;
+            }
+            
+            .password-toggle {
+                right: 12px;
+                font-size: 16px;
+            }
+            
+            .btn-login {
+                padding: 14px;
+                font-size: 1rem;
+                min-height: 48px; /* Touch-friendly */
+            }
+            
+            .login-footer {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .forgot-password,
+            .register-link {
+                font-size: 0.9rem;
+            }
+            
+            /* Alert adjustments */
+            .alert {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+            
+            /* Social login buttons */
+            .social-login-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .social-btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            /* Small mobile optimizations */
+            body {
+                padding: 10px;
+                padding-top: 50px;
+            }
+            
+            .login-container {
+                border-radius: 12px;
+            }
+            
+            .login-form-section {
+                padding: 25px 15px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.3rem;
+            }
+            
+            .login-header p {
+                font-size: 0.85rem;
+            }
+            
+            .form-group {
+                gap: 6px;
+            }
+            
+            .form-control {
+                padding: 11px 12px 11px 38px;
+                border-radius: 8px;
+            }
+            
+            .btn-login {
+                padding: 13px;
+                font-size: 0.95rem;
+            }
+            
+            .divider {
+                margin: 20px 0;
+                font-size: 0.8rem;
+            }
+            
+            .alert {
+                padding: 10px;
+                font-size: 0.8rem;
+                border-radius: 8px;
+            }
+            
+            .alert-icon {
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            /* Extra small mobile */
+            .login-form-section {
+                padding: 20px 12px;
+            }
+            
+            .login-header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .form-control {
+                font-size: 14px;
+            }
+            
+            .btn-login {
+                font-size: 0.9rem;
+                padding: 12px;
+            }
+        }
+        
+        /* Touch device optimizations */
+        @media (hover: none) and (pointer: coarse) {
+            .form-control,
+            .btn-login,
+            .social-btn,
+            .forgot-password,
+            .register-link {
+                min-height: 44px; /* iOS touch target */
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .form-control:focus {
+                /* Reduce zoom effect on iOS */
+                font-size: 16px;
+            }
+        }
+        
+        /* Landscape mode on mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body {
+                padding-top: 20px;
+                align-items: center;
+            }
+            
+            .login-container {
+                max-height: 90vh;
+                overflow-y: auto;
+            }
+            
+            .login-form-section {
+                padding: 25px 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -844,5 +1056,20 @@
             });
         }, 5000);
     </script>
+    
+    <!-- Policy Links Footer -->
+    <div style="position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.95); padding: 15px; text-align: center; font-size: 12px; color: #666; border-top: 1px solid #e2e8f0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 1000;">
+        <a href="<%= request.getContextPath() %>/terms-and-conditions.jsp" style="color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 600;">Terms & Conditions</a>
+        <span style="color: #cbd5e0;">|</span>
+        <a href="<%= request.getContextPath() %>/privacy-policy.jsp" style="color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 600;">Privacy Policy</a>
+        <span style="color: #cbd5e0;">|</span>
+        <a href="<%= request.getContextPath() %>/refund-policy.jsp" style="color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 600;">Refund Policy</a>
+        <span style="color: #cbd5e0;">|</span>
+        <a href="<%= request.getContextPath() %>/shipping-policy.jsp" style="color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 600;">Shipping Policy</a>
+        <span style="color: #cbd5e0;">|</span>
+        <a href="<%= request.getContextPath() %>/contact-us.jsp" style="color: #667eea; text-decoration: none; margin: 0 10px; font-weight: 600;">Contact Us</a>
+        <br>
+        <span style="margin-top: 8px; display: inline-block;">Powered by <a href="https://emsonline.in" target="_blank" style="color: #667eea; text-decoration: none; font-weight: 700;">emsonline.in</a></span>
+    </div>
 </body>
 </html>

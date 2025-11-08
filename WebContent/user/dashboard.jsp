@@ -828,125 +828,82 @@
                 font-size: 14px;
             }
             
-            /* Hide table, show mobile cards */
+            /* Keep table as table with horizontal scroll */
             .candidates-table-wrapper {
-                background: transparent;
-                box-shadow: none;
-                border-radius: 0;
-                border: none;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                border-radius: 8px;
+                border: 1px solid #e2e8f0;
             }
             
             .candidates-table {
-                display: block;
+                display: table;
                 width: 100%;
+                min-width: 800px; /* Minimum width to trigger horizontal scroll */
             }
             
-            /* Hide table header */
+            /* Keep table header visible */
             .candidates-table thead {
-                display: none;
+                display: table-header-group;
             }
             
             .candidates-table tbody {
-                display: block;
+                display: table-row-group;
             }
             
-            /* Each row becomes a card */
+            /* Keep rows as table rows */
             .candidates-table tbody tr {
-                display: block;
-                background: white !important;
-                margin-bottom: 15px;
-                border-radius: 12px;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                border: 1px solid #e2e8f0;
-                padding: 0;
-                overflow: hidden;
+                display: table-row;
             }
             
-            /* Selected row card styling */
-            .candidates-table tbody tr.selected-row {
-                background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-                border-color: #059669;
-                box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-            }
-            
-            .candidates-table tbody tr.selected-row::before {
-                content: "✓ SELECTED";
-                display: block;
-                background: rgba(0, 0, 0, 0.2);
-                color: white;
-                padding: 6px 15px;
-                font-size: 10px;
-                font-weight: 700;
-                letter-spacing: 1px;
-            }
-            
-            /* Table cells as blocks */
+            /* Keep table cells as table cells */
             .candidates-table td {
-                display: block;
-                padding: 15px;
-                border-bottom: none;
+                display: table-cell;
+                padding: 12px 8px;
+                border-bottom: 1px solid #e2e8f0;
+                font-size: 12px;
+                white-space: nowrap;
             }
             
-            .candidates-table td:first-child {
-                padding-bottom: 12px;
+            /* Selected row styling */
+            .candidates-table tbody tr.selected-row {
+                background: #d1fae5 !important;
             }
             
-            .candidates-table td:last-child {
-                padding-top: 12px;
-                background: #f8fafc;
-            }
-            
-            /* Candidate name styling */
+            /* Compact candidate name for mobile */
             .candidate-name-main {
-                font-size: 16px;
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 6px;
-            }
-            
-            .candidate-name-cell .nomination-id {
-                margin-left: 0;
-                font-size: 10px;
-                padding: 3px 8px;
-            }
-            
-                margin-bottom: 10px;
-                font-weight: 700;
-            }
-            
-            .candidate-name-cell .nomination-id {
-                font-size: 11px;
-                margin-left: 0;
-                margin-top: 6px;
-                display: inline-block;
-            }
-            
-            /* Candidate details */
-            .candidate-details {
                 font-size: 13px;
-                gap: 8px;
-                margin-top: 10px;
+            }
+            
+            .candidate-name-cell .nomination-id {
+                font-size: 10px;
+                padding: 2px 6px;
+            }
+            
+            /* Compact candidate details for mobile */
+            .candidate-details {
+                font-size: 11px;
+                gap: 4px;
             }
             
             .detail-item {
-                font-size: 12px;
-                line-height: 1.5;
+                font-size: 11px;
             }
             
-            /* Action buttons */
+            /* Action buttons - compact for mobile */
             .candidate-actions-table {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 8px;
-                padding: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
             }
             
             .candidate-actions-table .btn {
-                padding: 12px 16px;
-                font-size: 13px;
+                padding: 8px 10px;
+                font-size: 11px;
                 font-weight: 600;
-                width: 100%;
-                text-align: center;
+                white-space: nowrap;
                 border-radius: 8px;
             }
             
@@ -1588,5 +1545,8 @@
             }
         });
     </script>
+    
+    <!-- Include Share Button -->
+    <jsp:include page="/includes/share-button.jsp" />
 </body>
 </html>
