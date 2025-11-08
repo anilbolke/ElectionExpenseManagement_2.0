@@ -21,8 +21,8 @@
     
     // Debug output
     System.out.println("DEBUG Change Password Page - User ID: " + user.getUserId());
-    System.out.println("DEBUG Change Password Page - Broker ID: " + brokerId);
-    System.out.println("DEBUG Change Password Page - Has Broker: " + hasBroker);
+    System.out.println("DEBUG Change Password Page - Dealer ID: " + brokerId);
+    System.out.println("DEBUG Change Password Page - Has Dealer: " + hasBroker);
 %>
 <!DOCTYPE html>
 <html>
@@ -374,7 +374,7 @@
                 <strong>Debug Info:</strong><br>
                 User ID: <%= user.getUserId() %><br>
                 Broker ID: <%= brokerId %><br>
-                Has Broker: <%= hasBroker %><br>
+                Has Dealer: <%= hasBroker %><br>
                 Referral Section Will Show: <%= !hasBroker %>
             </div>
             

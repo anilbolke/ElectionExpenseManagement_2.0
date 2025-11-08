@@ -237,7 +237,7 @@ public class CandidateDAO {
              PreparedStatement pstmt = conn.prepareStatement(query)) {
             
             System.out.println("========== GET CANDIDATES BY BROKER ==========");
-            System.out.println("Broker ID: " + brokerId);
+            System.out.println("Dealer ID: " + brokerId);
             
             pstmt.setInt(1, brokerId);
             ResultSet rs = pstmt.executeQuery();
@@ -246,7 +246,7 @@ public class CandidateDAO {
                 candidates.add(extractCandidateFromResultSet(rs));
             }
             
-            System.out.println("Found " + candidates.size() + " candidates for broker " + brokerId);
+            System.out.println("Found " + candidates.size() + " candidates for Dealer " + brokerId);
             System.out.println("==============================================");
             
         } catch (SQLException e) {

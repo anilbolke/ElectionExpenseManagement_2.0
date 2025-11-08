@@ -13,9 +13,9 @@
     
     // Debug logging
     System.out.println("========== BROKER MY USERS PAGE DEBUG ==========");
-    System.out.println("Broker User ID: " + user.getUserId());
-    System.out.println("Broker Name: " + user.getFullName());
-    System.out.println("Broker Role: " + user.getUserRole());
+    System.out.println("Dealer User ID: " + user.getUserId());
+    System.out.println("Dealer Name: " + user.getFullName());
+    System.out.println("Dealer Role: " + user.getUserRole());
     
     UserDAO userDAO = new UserDAO();
     List<User> myUsersList = userDAO.getUsersByBrokerId(user.getUserId());
