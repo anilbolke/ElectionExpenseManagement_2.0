@@ -10,23 +10,60 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+/**
+ * SMS Utility Class for Election Expense Management System
+ * 
+ * Integrates with Shree IT SMS API to send notifications
+ * Each SMS type uses a different DLT-approved template ID
+ * 
+ * Template IDs Configuration:
+ * - Broker Registration: 1207176228666587519
+ * - Forgot Password:     1207176228666587520
+ * - Payment Success:     1207176228666587521
+ * - Referral Mapping:    1207176228666587522
+ * - General/Admin SMS:   1207176228666587519
+ * 
+ * Usage:
+ * - SMSUtil.sendBrokerRegistrationSMS(mobile, name, code);
+ * - SMSUtil.sendForgotPasswordSMS(mobile, username, password);
+ * - SMSUtil.sendPaymentSuccessSMS(mobile, amount);
+ * - SMSUtil.sendReferralMappedSMS(mobile, code, username);
+ * - SMSUtil.sendSMS(mobile, message); // Uses general template
+ * 
+ * @author Shree IT Solutions
+ * @version 2.0 - Template ID Support Added
+ */
 public class SMSUtil {
     
     // SMS API Configuration
     private static final String SMS_API_URL = "http://shreeitsms.in/REST/sendsms/";
     private static final String SMS_USER = "emsonline";
     private static final String SMS_PASSWORD = "8a65a0416eXX";
-    private static final String SENDER_ID = "INFOSM";
-    private static final String ENTITY_ID = "1234567891112131415";
-    private static final String TEMP_ID = "1034567891112131819";
+    private static final String SENDER_ID = "SRlTin";
+    private static final String ENTITY_ID = "1201159170317412990";
     private static final String ACCOUNT_USAGE_TYPE_ID = "1";
     
+    // Template IDs for different SMS types (DLT Approved)
+    // Update these with your actual template IDs from SMS provider
+    private static final String TEMPLATE_ID_BROKER_REGISTRATION = "1207176228666587519";
+    private static final String TEMPLATE_ID_FORGOT_PASSWORD = "1207176228666587520";
+    private static final String TEMPLATE_ID_PAYMENT_SUCCESS = "1207176228666587521";
+    private static final String TEMPLATE_ID_REFERRAL_MAPPING = "1207176228666587522";
+    private static final String TEMPLATE_ID_GENERAL = "1207176228666587519"; // Default template
+    
     /**
-     * Send single SMS
+     * Send single SMS with default template
      */
     public static boolean sendSMS(String mobile, String message) {
+        return sendSMS(mobile, message, TEMPLATE_ID_GENERAL);
+    }
+    
+    /**
+     * Send single SMS with specific template ID
+     */
+    public static boolean sendSMS(String mobile, String message, String templateId) {
         List<SMSRequest> smsList = new ArrayList<>();
-        smsList.add(new SMSRequest(mobile, message));
+        smsList.add(new SMSRequest(mobile, message, templateId));
         return sendBulkSMS(smsList);
     }
     
@@ -50,7 +87,7 @@ public class SMSUtil {
                 smsObj.put("clientsmsid", System.currentTimeMillis());
                 smsObj.put("accountusagetypeid", ACCOUNT_USAGE_TYPE_ID);
                 smsObj.put("entityid", ENTITY_ID);
-                smsObj.put("tempid", TEMP_ID);
+                smsObj.put("tempid", req.getTemplateId() != null ? req.getTemplateId() : TEMPLATE_ID_GENERAL);
                 smsArray.put(smsObj);
             }
             
@@ -163,7 +200,7 @@ public class SMSUtil {
             brokerName, referralCode
         );
         
-        return sendSMS(mobile, message);
+        return sendSMS(mobile, message, TEMPLATE_ID_BROKER_REGISTRATION);
     }
     
     /**
@@ -178,7 +215,7 @@ public class SMSUtil {
             username, password
         );
         
-        return sendSMS(mobile, message);
+        return sendSMS(mobile, message, TEMPLATE_ID_FORGOT_PASSWORD);
     }
     
     /**
@@ -195,7 +232,7 @@ public class SMSUtil {
             amount
         );
         
-        return sendSMS(mobile, message);
+        return sendSMS(mobile, message, TEMPLATE_ID_PAYMENT_SUCCESS);
     }
     
     /**
@@ -211,7 +248,7 @@ public class SMSUtil {
             referralCode, username
         );
         
-        return sendSMS(brokerMobile, message);
+        return sendSMS(brokerMobile, message, TEMPLATE_ID_REFERRAL_MAPPING);
     }
     
     /**
@@ -220,10 +257,18 @@ public class SMSUtil {
     public static class SMSRequest {
         private String mobile;
         private String message;
+        private String templateId;
         
         public SMSRequest(String mobile, String message) {
             this.mobile = mobile;
             this.message = message;
+            this.templateId = TEMPLATE_ID_GENERAL;
+        }
+        
+        public SMSRequest(String mobile, String message, String templateId) {
+            this.mobile = mobile;
+            this.message = message;
+            this.templateId = templateId;
         }
         
         public String getMobile() {
@@ -232,6 +277,10 @@ public class SMSUtil {
         
         public String getMessage() {
             return message;
+        }
+        
+        public String getTemplateId() {
+            return templateId;
         }
     }
 }
