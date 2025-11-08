@@ -48,7 +48,7 @@ public class SMSUtil {
     private static final String TEMPLATE_ID_BROKER_REGISTRATION = "1207176228988232394";
     private static final String TEMPLATE_ID_FORGOT_PASSWORD = "1207176228666587519";
     private static final String TEMPLATE_ID_PAYMENT_SUCCESS = "1207176228630701563";
-    private static final String TEMPLATE_ID_REFERRAL_MAPPING = "1207176228988232394";
+    private static final String TEMPLATE_ID_REFERRAL_MAPPING = "1207176228060346875";
     private static final String TEMPLATE_ID_GENERAL = "1207176228666587519"; // Default template
     
     
@@ -191,13 +191,7 @@ public class SMSUtil {
      */
     public static boolean sendBrokerRegistrationSMS(String mobile, String brokerName, String referralCode) {
         String message = String.format(
-            "Dear Dealer,\n" +
-            "Your registration as a Dealer for our Election Expense Mgmt Software is successful.\n" +
-            "Your Code is: %s\n" +
-            "Use this code for all sales to track commission accurately.\n" +
-            "Start selling now!\n" +
-            "EMSonline.in\n" +
-            "Shree IT Solutions",
+            "Dear Dealer, Your registration as a Dealer for our Election Expense Mgmt Software is successful. Your Code is: %s Use this code for all sales to track commission accurately. Start selling now! EMS online dot in Shree IT Solutions",
             referralCode
         );
         

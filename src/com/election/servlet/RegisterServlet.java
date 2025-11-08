@@ -71,18 +71,18 @@ public class RegisterServlet extends HttpServlet {
         }
         
         // Check if email exists
-        if (userDAO.isEmailExists(emailId)) {
+       /* if (userDAO.isEmailExists(emailId)) {
             request.setAttribute("error", "Email already registered");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
-        }
+        }*/
         
         // Check if mobile exists
-        if (userDAO.isMobileExists(mobileNumber)) {
+       /* if (userDAO.isMobileExists(mobileNumber)) {
             request.setAttribute("error", "Mobile number already registered");
             request.getRequestDispatcher("register.jsp").forward(request, response);
             return;
-        }
+        }*/
         
         // Handle referral code if provided
         Integer brokerId = null;

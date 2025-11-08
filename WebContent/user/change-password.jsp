@@ -659,7 +659,7 @@
                     
                     if (data.valid) {
                         isValidCode = true;
-                        referralValidation.textContent = '✓ Valid referral code - Broker: ' + data.brokerName;
+                        referralValidation.textContent = '✓ Valid referral code - Dealer: ' + data.brokerName;
                         referralValidation.className = 'validation-feedback valid';
                         mapReferralBtn.disabled = false;
                     } else {
