@@ -81,22 +81,41 @@ public class SMSUtil {
                 }
             }
             
+            // Log response for debugging
+            System.out.println("SMS API Response Code: " + responseCode);
+            System.out.println("SMS API Response: " + response.toString());
+            
             // Parse response
             JSONObject jsonResponse = new JSONObject(response.toString());
             
             if (jsonResponse.has("smslist")) {
                 JSONObject smslist = jsonResponse.getJSONObject("smslist");
                 if (smslist.has("sms")) {
-                    JSONArray smsResponseArray = smslist.getJSONArray("sms");
-                    for (int i = 0; i < smsResponseArray.length(); i++) {
-                        JSONObject smsResponse = smsResponseArray.getJSONObject(i);
+                    // Handle both single object and array responses
+                    Object smsObj = smslist.get("sms");
+                    
+                    if (smsObj instanceof JSONArray) {
+                        // Multiple SMS responses
+                        JSONArray smsResponseArray = (JSONArray) smsObj;
+                        for (int i = 0; i < smsResponseArray.length(); i++) {
+                            JSONObject smsResponse = smsResponseArray.getJSONObject(i);
+                            String status = smsResponse.optString("status", "");
+                            if (!"success".equalsIgnoreCase(status)) {
+                                System.err.println("SMS failed: " + smsResponse.toString());
+                                return false;
+                            }
+                        }
+                        return true;
+                    } else if (smsObj instanceof JSONObject) {
+                        // Single SMS response
+                        JSONObject smsResponse = (JSONObject) smsObj;
                         String status = smsResponse.optString("status", "");
                         if (!"success".equalsIgnoreCase(status)) {
                             System.err.println("SMS failed: " + smsResponse.toString());
                             return false;
                         }
+                        return true;
                     }
-                    return true;
                 }
             }
             
@@ -172,7 +191,7 @@ public class SMSUtil {
             "Your service is now active!\n" +
             "Thank you for your purchase.\n" +
             "EMSOnline\n" +
-            "Shree IT Solutions",
+            " Shree IT Solutions",
             amount
         );
         
