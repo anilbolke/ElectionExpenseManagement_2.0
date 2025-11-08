@@ -45,11 +45,12 @@ public class SMSUtil {
     
     // Template IDs for different SMS types (DLT Approved)
     // Update these with your actual template IDs from SMS provider
-    private static final String TEMPLATE_ID_BROKER_REGISTRATION = "1207176228666587519";
-    private static final String TEMPLATE_ID_FORGOT_PASSWORD = "1207176228666587520";
-    private static final String TEMPLATE_ID_PAYMENT_SUCCESS = "1207176228666587521";
-    private static final String TEMPLATE_ID_REFERRAL_MAPPING = "1207176228666587522";
+    private static final String TEMPLATE_ID_BROKER_REGISTRATION = "1207176228988232394";
+    private static final String TEMPLATE_ID_FORGOT_PASSWORD = "1207176228666587519";
+    private static final String TEMPLATE_ID_PAYMENT_SUCCESS = "1207176228630701563";
+    private static final String TEMPLATE_ID_REFERRAL_MAPPING = "1207176228988232394";
     private static final String TEMPLATE_ID_GENERAL = "1207176228666587519"; // Default template
+    
     
     /**
      * Send single SMS with default template
@@ -190,14 +191,14 @@ public class SMSUtil {
      */
     public static boolean sendBrokerRegistrationSMS(String mobile, String brokerName, String referralCode) {
         String message = String.format(
-            "Dear %s,\n" +
-            "Your registration as a Broker for our Election Expense Mgmt Software is successful.\n" +
+            "Dear Dealer,\n" +
+            "Your registration as a Dealer for our Election Expense Mgmt Software is successful.\n" +
             "Your Code is: %s\n" +
             "Use this code for all sales to track commission accurately.\n" +
             "Start selling now!\n" +
             "EMSonline.in\n" +
             "Shree IT Solutions",
-            brokerName, referralCode
+            referralCode
         );
         
         return sendSMS(mobile, message, TEMPLATE_ID_BROKER_REGISTRATION);
