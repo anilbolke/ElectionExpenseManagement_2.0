@@ -223,7 +223,7 @@ The system automatically formats mobile numbers:
 
 ### Test Referral Mapping SMS
 1. Login as user
-2. Go to "Map Referral Code"
+2. Go to "Map Referral Code"remove this 
 3. Enter valid broker referral code
 4. SMS should be sent to broker
 
