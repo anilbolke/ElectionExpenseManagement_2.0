@@ -2,6 +2,7 @@ package com.election.servlet;
 
 import com.election.dao.UserDAO;
 import com.election.model.User;
+import com.election.util.SMSUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -75,6 +76,16 @@ public class MapReferralCodeServlet extends HttpServlet {
                 // Update user object in session
                 user.setBrokerId(broker.getUserId());
                 session.setAttribute("user", user);
+                
+                // Send SMS notification to broker
+                try {
+                    if (broker.getMobile() != null && !broker.getMobile().isEmpty()) {
+                        SMSUtil.sendReferralMappedSMS(broker.getMobile(), referralCode, user.getUsername());
+                        System.out.println("SMS sent to broker " + broker.getUsername() + " for referral mapping");
+                    }
+                } catch (Exception e) {
+                    System.err.println("Failed to send SMS to broker: " + e.getMessage());
+                }
                 
                 response.sendRedirect("map-referral-code.jsp?referralSuccess=" + 
                     java.net.URLEncoder.encode("Referral code mapped successfully to broker: " + 

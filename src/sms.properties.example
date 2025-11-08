@@ -1,0 +1,20 @@
+# SMS API Configuration
+# Copy this file to sms.properties and update with your actual credentials
+
+# SMS API URL
+sms.api.url=http://shreeitsms.in/REST/sendsms/
+
+# SMS API Credentials
+sms.user=emsonline
+sms.password=8a65a0416eXX
+
+# SMS Sender Configuration
+sms.sender.id=INFOSM
+sms.entity.id=1234567891112131415
+sms.temp.id=1034567891112131819
+sms.account.usage.type.id=1
+
+# SMS Feature Enable/Disable
+sms.enabled=true
+
+# Note: Keep sms.properties in .gitignore to protect credentials

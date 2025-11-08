@@ -149,6 +149,10 @@
                    class="<%= currentPage.contains("payment") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.payments") %>
             </a></li>
+            <li><a href="<%= request.getContextPath() %>/admin/send-sms.jsp"
+                   class="<%= currentPage.contains("send-sms") ? "active" : "" %>">
+                📱 Send SMS
+            </a></li>
         </ul>
         
         <div class="multilang-user-section">

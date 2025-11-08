@@ -9,6 +9,7 @@ import com.election.model.Payment;
 import com.election.model.TermsAcceptance;
 import com.election.model.User;
 import com.election.util.RazorpayConfig;
+import com.election.util.SMSUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -534,7 +535,21 @@ public class PaymentServlet extends HttpServlet {
                 payment.setPaymentStatus("success");
                 payment.setRemarks("Subscription: " + planName);
                 
-                return paymentDAO.addPayment(payment);
+                boolean result = paymentDAO.addPayment(payment);
+                
+                // Send SMS notification on successful payment
+                if (result) {
+                    try {
+                        if (user.getMobile() != null && !user.getMobile().isEmpty()) {
+                            SMSUtil.sendPaymentSuccessSMS(user.getMobile(), String.format("%.2f", amount));
+                            System.out.println("Payment success SMS sent to user: " + user.getUsername());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Failed to send payment SMS: " + e.getMessage());
+                    }
+                }
+                
+                return result;
             }
             
             return false;
@@ -571,7 +586,21 @@ public class PaymentServlet extends HttpServlet {
                 payment.setPaymentStatus("success");
                 payment.setRemarks("Candidate Registration: " + candidate.getCandidateName());
                 
-                return paymentDAO.addPayment(payment);
+                boolean result = paymentDAO.addPayment(payment);
+                
+                // Send SMS notification on successful payment
+                if (result) {
+                    try {
+                        if (user.getMobile() != null && !user.getMobile().isEmpty()) {
+                            SMSUtil.sendPaymentSuccessSMS(user.getMobile(), String.format("%.2f", amount));
+                            System.out.println("Payment success SMS sent to user: " + user.getUsername());
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Failed to send payment SMS: " + e.getMessage());
+                    }
+                }
+                
+                return result;
             }
             
             return false;

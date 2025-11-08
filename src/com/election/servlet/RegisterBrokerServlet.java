@@ -3,6 +3,7 @@ package com.election.servlet;
 import com.election.dao.UserDAO;
 import com.election.model.User;
 import com.election.util.ValidationUtil;
+import com.election.util.SMSUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -250,6 +251,15 @@ public class RegisterBrokerServlet extends HttpServlet {
         if (userDAO.registerBroker(broker)) {
             System.out.println("SUCCESS: Broker registered by admin " + admin.getUsername() + 
                              " - Username: " + username + ", Referral Code: " + referralCode);
+            
+            // Send SMS notification to broker
+            try {
+                SMSUtil.sendBrokerRegistrationSMS(mobileNumber, ownerName, referralCode);
+                System.out.println("SMS sent to broker: " + mobileNumber);
+            } catch (Exception e) {
+                System.err.println("Failed to send SMS to broker: " + e.getMessage());
+            }
+            
             response.sendRedirect("admin/register-broker.jsp?success=" + 
                                 java.net.URLEncoder.encode("Broker registered successfully! Username: " + username + ", Referral Code: " + referralCode, "UTF-8"));
         } else {

@@ -2,6 +2,7 @@ package com.election.servlet;
 
 import com.election.dao.UserDAO;
 import com.election.model.User;
+import com.election.util.SMSUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -126,6 +127,17 @@ public class ForgotPasswordServlet extends HttpServlet {
             boolean success = userDAO.updatePassword(userId, newPassword);
             
             if (success) {
+                // Send SMS with new password
+                try {
+                    User user = userDAO.getUserById(userId);
+                    if (user != null && user.getMobile() != null && !user.getMobile().isEmpty()) {
+                        SMSUtil.sendForgotPasswordSMS(user.getMobile(), user.getUsername(), newPassword);
+                        System.out.println("Password reset SMS sent to user: " + user.getUsername());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Failed to send password reset SMS: " + e.getMessage());
+                }
+                
                 // Clear session data
                 request.getSession().removeAttribute("resetIdentifier");
                 request.getSession().removeAttribute("resetUserId");
