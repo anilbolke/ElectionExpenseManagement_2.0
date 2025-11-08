@@ -25,31 +25,32 @@
             font-family: 'Inter', sans-serif;
             background: #f5f7fa;
             color: #2d3748;
+            min-height: 100vh;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 15px;
         }
         
         .header {
             background: white;
-            padding: 20px;
+            padding: 15px;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         
         .header h1 {
-            font-size: 24px;
+            font-size: 20px;
             color: #1a202c;
             margin-bottom: 5px;
         }
         
         .header p {
             color: #718096;
-            font-size: 14px;
+            font-size: 13px;
         }
         
         .back-button {
@@ -72,7 +73,7 @@
             background: white;
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            padding: 30px;
+            padding: 20px;
         }
         
         .form-group {
@@ -255,6 +256,227 @@
         .badge-user { background: #bee3f8; color: #2c5282; }
         .badge-broker { background: #feebc8; color: #7c2d12; }
         .badge-admin { background: #fed7d7; color: #742a2a; }
+        
+        /* Mobile Responsive Styles */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .header p {
+                font-size: 12px;
+            }
+            
+            .back-button {
+                padding: 6px 12px;
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+            
+            .card {
+                padding: 15px;
+                border-radius: 6px;
+            }
+            
+            .form-group {
+                margin-bottom: 15px;
+            }
+            
+            .form-group label {
+                font-size: 13px;
+                margin-bottom: 6px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+                font-size: 14px;
+            }
+            
+            .form-group textarea {
+                min-height: 100px;
+            }
+            
+            .quick-select {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            .quick-select-btn {
+                width: 100%;
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 14px;
+                margin-bottom: 8px;
+            }
+            
+            .btn-secondary {
+                margin-left: 0;
+            }
+            
+            .templates {
+                margin-top: 20px;
+            }
+            
+            .templates h3 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .template-btn {
+                display: block;
+                width: 100%;
+                margin: 8px 0;
+                padding: 10px 16px;
+                text-align: center;
+                font-size: 13px;
+            }
+            
+            .user-table {
+                margin-top: 20px;
+                max-height: 250px;
+                border-radius: 6px;
+            }
+            
+            .user-table table {
+                font-size: 12px;
+            }
+            
+            .user-table th,
+            .user-table td {
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+            
+            .user-table th {
+                position: sticky;
+                top: 0;
+                background: #f7fafc;
+                z-index: 10;
+            }
+            
+            /* Hide table columns on very small screens */
+            .user-table .hide-mobile {
+                display: none;
+            }
+            
+            /* Show badge in name column on mobile */
+            .user-table td .badge {
+                display: inline-block !important;
+                margin-left: 6px;
+                vertical-align: middle;
+            }
+            
+            .badge {
+                padding: 2px 6px;
+                font-size: 10px;
+            }
+            
+            .alert {
+                padding: 10px 12px;
+                font-size: 13px;
+                margin-bottom: 15px;
+            }
+            
+            .char-count {
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 16px;
+            }
+            
+            .header p {
+                font-size: 11px;
+            }
+            
+            .card {
+                padding: 12px;
+            }
+            
+            .form-group {
+                margin-bottom: 12px;
+            }
+            
+            .form-group label {
+                font-size: 12px;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 8px;
+                font-size: 13px;
+            }
+            
+            .user-table {
+                max-height: 200px;
+            }
+            
+            .user-table table {
+                font-size: 11px;
+            }
+            
+            .user-table th,
+            .user-table td {
+                padding: 5px 6px;
+            }
+        }
+        
+        /* Landscape mode for mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .user-table {
+                max-height: 180px;
+            }
+            
+            .form-group textarea {
+                min-height: 80px;
+            }
+        }
+        
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .btn,
+            .quick-select-btn,
+            .template-btn,
+            .back-button {
+                min-height: 44px;
+                touch-action: manipulation;
+            }
+            
+            .form-group input,
+            .form-group select {
+                min-height: 44px;
+            }
+            
+            select {
+                -webkit-appearance: none;
+                -moz-appearance: none;
+                appearance: none;
+                background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right 8px center;
+                background-size: 16px;
+                padding-right: 32px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -333,8 +555,8 @@
                     <thead>
                         <tr>
                             <th>Name</th>
-                            <th>Mobile</th>
-                            <th>Role</th>
+                            <th class="hide-mobile">Mobile</th>
+                            <th class="hide-mobile">Role</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -343,9 +565,14 @@
                             for (User u : allUsers) {
                                 if (!"admin".equals(u.getUserRole())) { %>
                                     <tr data-role="<%= u.getUserRole() %>">
-                                        <td><%= u.getFullName() != null ? u.getFullName() : u.getUsername() %></td>
-                                        <td><%= u.getMobile() != null ? u.getMobile() : "N/A" %></td>
                                         <td>
+                                            <%= u.getFullName() != null ? u.getFullName() : u.getUsername() %>
+                                            <span class="badge badge-<%= u.getUserRole() %>" style="display: none;">
+                                                <%= u.getUserRole() %>
+                                            </span>
+                                        </td>
+                                        <td class="hide-mobile"><%= u.getMobile() != null ? u.getMobile() : "N/A" %></td>
+                                        <td class="hide-mobile">
                                             <span class="badge badge-<%= u.getUserRole() %>">
                                                 <%= u.getUserRole() %>
                                             </span>
