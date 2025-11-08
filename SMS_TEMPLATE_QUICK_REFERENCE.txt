@@ -1,0 +1,234 @@
+═══════════════════════════════════════════════════════════════════
+               SMS TEMPLATE IDs - QUICK REFERENCE
+═══════════════════════════════════════════════════════════════════
+
+📋 TEMPLATE ID MAPPING
+══════════════════════════════════════════════════════════════════
+
+SMS Type                  | Template ID          | File Location
+─────────────────────────────────────────────────────────────────
+1. Broker Registration    | 1207176228666587519  | Line 47
+2. Forgot Password        | 1207176228666587520  | Line 48
+3. Payment Success        | 1207176228666587521  | Line 49
+4. Referral Mapping       | 1207176228666587522  | Line 50
+5. General/Admin SMS      | 1207176228666587519  | Line 51
+
+File: src/com/election/util/SMSUtil.java
+
+═══════════════════════════════════════════════════════════════════
+
+🔧 HOW TO UPDATE
+══════════════════════════════════════════════════════════════════
+
+Step 1: Open File
+  → src/com/election/util/SMSUtil.java
+
+Step 2: Find Lines 47-51
+  private static final String TEMPLATE_ID_BROKER_REGISTRATION = "...";
+  private static final String TEMPLATE_ID_FORGOT_PASSWORD = "...";
+  private static final String TEMPLATE_ID_PAYMENT_SUCCESS = "...";
+  private static final String TEMPLATE_ID_REFERRAL_MAPPING = "...";
+  private static final String TEMPLATE_ID_GENERAL = "...";
+
+Step 3: Replace with Your Template IDs
+  Get from: http://shreeitsms.in → DLT Templates
+
+Step 4: Save & Rebuild
+  mvn clean package
+
+═══════════════════════════════════════════════════════════════════
+
+📱 MESSAGE TEMPLATES
+══════════════════════════════════════════════════════════════════
+
+Template 1: BROKER REGISTRATION (ID: ...519)
+─────────────────────────────────────────────────────────────────
+Dear {Name},
+Your registration as a Broker for our Election Expense Mgmt 
+Software is successful.
+Your Code is: {Code}
+Use this code for all sales to track commission accurately.
+Start selling now!
+EMSonline.in
+Shree IT Solutions
+
+Variables: {Name}, {Code}
+─────────────────────────────────────────────────────────────────
+
+Template 2: FORGOT PASSWORD (ID: ...520)
+─────────────────────────────────────────────────────────────────
+Dear User,
+Your password for {Username} is {Password}
+EMS Online
+Shree IT Solutions
+
+Variables: {Username}, {Password}
+─────────────────────────────────────────────────────────────────
+
+Template 3: PAYMENT SUCCESS (ID: ...521)
+─────────────────────────────────────────────────────────────────
+Success!
+Your payment of Rs.{Amount} is successful. Subscription is 
+confirmed.
+Your service is now active!
+Thank you for your purchase.
+EMSOnline
+Shree IT Solutions
+
+Variables: {Amount}
+─────────────────────────────────────────────────────────────────
+
+Template 4: REFERRAL MAPPING (ID: ...522)
+─────────────────────────────────────────────────────────────────
+Congratulations!
+Your referral code {Code} has been successfully applied to 
+{Username}
+Complete payment and start earning now!
+EMSOnline
+Shree IT Solutions
+
+Variables: {Code}, {Username}
+─────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════════
+
+🧪 TESTING COMMANDS
+══════════════════════════════════════════════════════════════════
+
+Test 1: Broker Registration
+───────────────────────────────────────────────────────────────────
+Action: Register new broker from admin panel
+Expected: SMS sent with Template ID 1207176228666587519
+Log: "SMS sent to broker: {mobile}"
+
+Test 2: Forgot Password
+───────────────────────────────────────────────────────────────────
+Action: Use forgot password feature
+Expected: SMS sent with Template ID 1207176228666587520
+Log: "Password reset SMS sent to user: {username}"
+
+Test 3: Payment Success
+───────────────────────────────────────────────────────────────────
+Action: Complete payment (subscription or candidate)
+Expected: SMS sent with Template ID 1207176228666587521
+Log: "Payment success SMS sent to user: {username}"
+
+Test 4: Referral Mapping
+───────────────────────────────────────────────────────────────────
+Action: User maps referral code
+Expected: SMS sent to broker with Template ID 1207176228666587522
+Log: "SMS sent to broker {username} for referral mapping"
+
+Test 5: Admin Panel SMS
+───────────────────────────────────────────────────────────────────
+Action: Send SMS from admin panel
+Expected: SMS sent with Template ID 1207176228666587519 (default)
+Log: "SMS sent successfully"
+
+═══════════════════════════════════════════════════════════════════
+
+✅ VERIFICATION CHECKLIST
+══════════════════════════════════════════════════════════════════
+
+Before Deployment:
+□ All template IDs updated in SMSUtil.java
+□ Templates registered with DLT
+□ Templates approved by SMS provider
+□ Entity ID verified
+□ Sender ID approved
+□ SMS balance sufficient
+
+After Deployment:
+□ Test broker registration SMS
+□ Test forgot password SMS
+□ Test payment success SMS
+□ Test referral mapping SMS
+□ Test admin panel SMS
+□ Check console logs for errors
+□ Verify SMS delivery status
+□ Check SMS provider dashboard
+
+═══════════════════════════════════════════════════════════════════
+
+🔍 CONSOLE LOG PATTERNS
+══════════════════════════════════════════════════════════════════
+
+Success:
+✓ SMS API Response Code: 200
+✓ SMS API Response: {"smslist":{"sms":{"status":"success",...}}}
+✓ SMS sent to broker: 9876543210
+✓ Payment success SMS sent to user: john_doe
+
+Failure:
+✗ SMS failed: {"status":"failed","reason":"..."}
+✗ Failed to send SMS to broker: Connection timeout
+✗ Invalid credentials
+✗ Insufficient balance
+
+═══════════════════════════════════════════════════════════════════
+
+⚠️  TROUBLESHOOTING
+══════════════════════════════════════════════════════════════════
+
+Issue: "Invalid Template ID"
+→ Verify template ID in SMS provider dashboard
+→ Ensure template is DLT approved
+→ Check if template ID is correct in SMSUtil.java
+
+Issue: "Template Content Mismatch"
+→ Message content must match DLT template exactly
+→ Don't modify fixed text
+→ Only variable parts can change
+
+Issue: "DLT Rejection"
+→ Check DLT portal for rejection reason
+→ Modify template as per guidelines
+→ Resubmit for approval
+
+Issue: "SMS Not Delivered"
+→ Check SMS balance
+→ Verify mobile number format
+→ Check delivery status in SMS provider dashboard
+→ Verify internet connectivity
+
+═══════════════════════════════════════════════════════════════════
+
+📞 SUPPORT CONTACTS
+══════════════════════════════════════════════════════════════════
+
+SMS Provider:
+  Website: http://shreeitsms.in
+  Dashboard: Login → DLT Templates section
+
+DLT Platform:
+  Website: https://www.vilpower.in/
+  Help: DLT portal help section
+
+System Developer:
+  Company: Shree IT Solutions
+  Email: support@emsonline.in
+
+═══════════════════════════════════════════════════════════════════
+
+📚 DOCUMENTATION FILES
+══════════════════════════════════════════════════════════════════
+
+1. SMS_TEMPLATE_IDS_CONFIGURATION.md
+   Complete guide with DLT registration process
+
+2. SMS_INTEGRATION_README.md
+   Full SMS integration documentation
+
+3. SMS_SETUP_CHECKLIST.md
+   Pre-deployment checklist
+
+4. SMS_TEMPLATE_QUICK_REFERENCE.txt (This File)
+   Quick reference for template IDs
+
+═══════════════════════════════════════════════════════════════════
+
+Last Updated: November 8, 2025
+Version: 2.0 - Template ID Support
+Status: ✅ Production Ready
+
+═══════════════════════════════════════════════════════════════════
