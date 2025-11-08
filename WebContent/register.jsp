@@ -401,7 +401,10 @@
                     <label for="username">Username <span class="required">*</span></label>
                     <input type="text" id="username" name="username" class="form-control" 
                            minlength="4" maxlength="30" required>
-                    <div class="field-hint">4-30 characters (letters, numbers, underscore only)</div>
+                    <div class="field-hint" id="usernameHint">4-30 characters (letters, numbers, underscore only)</div>
+                    <div class="field-hint" id="usernameAvailable" style="color: #48bb78; font-weight: 600; display: none;">
+                        ✓ Username is available
+                    </div>
                     <div class="error-message" id="username-error">Username must be 4-30 characters</div>
                 </div>
                 
@@ -596,6 +599,107 @@
             }
         });
         
+        // Username validation (AJAX)
+        let validUsername = false;
+        let usernameChecked = false;
+        let usernameCheckTimeout = null;
+        
+        document.getElementById('username').addEventListener('input', function(e) {
+            // Allow only alphanumeric and underscore
+            e.target.value = e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '');
+            
+            // Clear previous timeout
+            if (usernameCheckTimeout) {
+                clearTimeout(usernameCheckTimeout);
+            }
+            
+            // Reset states during typing
+            const errorElement = document.getElementById('username-error');
+            const availableDiv = document.getElementById('usernameAvailable');
+            const usernameHint = document.getElementById('usernameHint');
+            
+            this.classList.remove('error', 'success');
+            errorElement.classList.remove('show');
+            availableDiv.style.display = 'none';
+            usernameHint.style.display = 'block';
+            validUsername = false;
+            usernameChecked = false;
+        });
+        
+        document.getElementById('username').addEventListener('blur', function() {
+            const username = this.value.trim();
+            const errorElement = document.getElementById('username-error');
+            const availableDiv = document.getElementById('usernameAvailable');
+            const usernameHint = document.getElementById('usernameHint');
+            
+            // Reset states
+            this.classList.remove('error', 'success');
+            errorElement.classList.remove('show');
+            availableDiv.style.display = 'none';
+            usernameHint.style.display = 'block';
+            validUsername = false;
+            usernameChecked = false;
+            
+            // Check if empty
+            if (!username) {
+                this.classList.add('error');
+                errorElement.textContent = 'Username is required';
+                errorElement.classList.add('show');
+                usernameChecked = true;
+                return;
+            }
+            
+            // Check length
+            if (username.length < 4 || username.length > 30) {
+                this.classList.add('error');
+                errorElement.textContent = 'Username must be 4-30 characters';
+                errorElement.classList.add('show');
+                usernameChecked = true;
+                return;
+            }
+            
+            // Check format (alphanumeric and underscore only)
+            if (!/^[a-z0-9_]+$/.test(username)) {
+                this.classList.add('error');
+                errorElement.textContent = 'Only letters, numbers, and underscore allowed';
+                errorElement.classList.add('show');
+                usernameChecked = true;
+                return;
+            }
+            
+            // AJAX call to check username availability
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'check-username?username=' + encodeURIComponent(username), true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    usernameChecked = true;
+                    
+                    if (response.available) {
+                        // Username is available
+                        validUsername = true;
+                        document.getElementById('username').classList.add('success');
+                        availableDiv.style.display = 'block';
+                        usernameHint.style.display = 'none';
+                    } else {
+                        // Username is taken
+                        validUsername = false;
+                        document.getElementById('username').classList.add('error');
+                        errorElement.textContent = 'Username already taken';
+                        errorElement.classList.add('show');
+                    }
+                }
+            };
+            xhr.onerror = function() {
+                usernameChecked = true;
+                validUsername = false;
+                document.getElementById('username').classList.add('error');
+                errorElement.textContent = 'Unable to check username availability';
+                errorElement.classList.add('show');
+            };
+            xhr.send();
+        });
+        
         // Referral code validation (AJAX)
         let validReferralCode = false;
         let referralCodeChecked = false;
@@ -698,6 +802,14 @@
                     isValid = false;
                 }
             });
+            
+            // Check username availability
+            const username = document.getElementById('username').value.trim();
+            if (username && !validUsername) {
+                e.preventDefault();
+                alert('Username is already taken or not validated. Please choose a different username.');
+                return false;
+            }
             
             // Check referral code if provided
             const referralCode = document.getElementById('referralCode').value.trim();
