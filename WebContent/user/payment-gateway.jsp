@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.election.model.User" %>
+<%@ page import="com.election.dao.SystemSettingsDAO" %>
 <%
     User user = (User) session.getAttribute("user");
     if (user == null) {
@@ -31,6 +32,11 @@
             amount = 4800.00;
         }
     }
+    
+    // Get payment mode from system settings (razorpay or qrcode)
+    SystemSettingsDAO settingsDAO = new SystemSettingsDAO();
+    String paymentMode = settingsDAO.getSetting("payment_mode", "razorpay");
+    boolean useQRCode = "qrcode".equalsIgnoreCase(paymentMode);
 %>
 <!DOCTYPE html>
 <html>
@@ -192,6 +198,7 @@
             <p>Election Expense Management</p>
         </div>
         
+        <% if (!useQRCode) { %>
         <div class="demo-note" id="demoNote" style="display: none;">
             <strong>⚠️ Demo Payment System</strong>
             Razorpay is not configured. Using demo payment mode. 
@@ -202,6 +209,13 @@
             <strong>✓ Razorpay Integration Active</strong>
             You will be redirected to Razorpay secure payment gateway.
         </div>
+        <% } else { %>
+        <div class="demo-note" style="background: #fff3cd; border-color: #ffc107; color: #856404;">
+            <strong>📱 QR Code Payment Mode Active</strong>
+            Scan the QR code below with any UPI app to complete payment.
+            (कोणत्याही UPI अॅपसह खालील QR कोड स्कॅन करा)
+        </div>
+        <% } %>
         
         <div class="payment-details">
             <div class="detail-row">
@@ -227,6 +241,62 @@
             <div class="amount-value">₹<%= String.format("%.2f", amount) %></div>
         </div>
         
+        <% if (useQRCode) { %>
+        <!-- QR Code Payment Section -->
+        <div class="qr-payment-section" style="text-align: center; padding: 30px 20px; background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px;">
+            <h3 style="color: #333; margin-bottom: 20px;">Scan QR Code to Pay / QR कोड स्कॅन करा</h3>
+            <div style="background: white; padding: 20px; display: inline-block; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+                <img src="<%=request.getContextPath()%>/Document/QrCode.jpeg" 
+                     alt="Payment QR Code" 
+                     style="max-width: 300px; width: 100%; height: auto; border: 3px solid #667eea; border-radius: 8px;">
+            </div>
+            <div style="margin-top: 25px; padding: 20px; background: #f8f9ff; border-radius: 8px;">
+                <h4 style="color: #667eea; margin-bottom: 15px;">📱 Payment Instructions / सूचना</h4>
+                <ol style="text-align: left; display: inline-block; color: #555; line-height: 1.8;">
+                    <li>Open any UPI app (Google Pay, PhonePe, Paytm, etc.) / कोणतेही UPI अॅप उघडा</li>
+                    <li>Scan the QR code above / वरील QR कोड स्कॅन करा</li>
+                    <li>Enter amount: <strong style="color: #667eea;">₹<%= String.format("%.2f", amount) %></strong></li>
+                    <li>Complete the payment / पेमेंट पूर्ण करा</li>
+                    <li>Take a screenshot of payment confirmation / पेमेंट कन्फर्मेशनचा स्क्रीनशॉट घ्या</li>
+                </ol>
+            </div>
+            <div style="margin-top: 20px; padding: 15px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; color: #856404;">
+                <strong>⚠️ Important:</strong> After completing payment, please enter your transaction ID below and submit.
+                <br><em>(पेमेंट पूर्ण केल्यानंतर, कृपया तुमचा ट्रान्झॅक्शन आयडी खाली एंटर करा आणि सबमिट करा)</em>
+            </div>
+        </div>
+        
+        <form action="<%=request.getContextPath()%>/qrpayment" method="post" class="payment-form">
+            <input type="hidden" name="action" value="submitPayment">
+            <input type="hidden" name="paymentType" value="subscription">
+            <input type="hidden" name="planName" value="<%= planName %>">
+            <input type="hidden" name="paymentMethod" value="QR Code">
+            <input type="hidden" name="amount" value="<%= amount %>">
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    UPI Transaction ID / Reference Number <span style="color: red;">*</span>
+                </label>
+                <input type="text" name="transactionId" class="form-control" 
+                       placeholder="Enter UPI Transaction ID (e.g., 1234567890)" 
+                       required 
+                       style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px;">
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    📌 Find this in your UPI app's transaction history / हे तुमच्या UPI अॅपच्या ट्रान्झॅक्शन हिस्ट्री मध्ये मिळेल
+                </small>
+            </div>
+            
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">
+                    Payment Screenshot (Optional) / पेमेंट स्क्रीनशॉट (पर्यायी)
+                </label>
+                <input type="file" name="paymentProof" accept="image/*" class="form-control" 
+                       style="width: 100%; padding: 10px; border: 2px solid #ddd; border-radius: 6px;">
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Upload payment confirmation screenshot for faster verification
+                </small>
+            </div>
+        <% } else { %>
         <form action="<%=request.getContextPath()%>/payment" method="post" class="payment-form">
             <input type="hidden" name="action" value="processPayment">
             <input type="hidden" name="planName" value="<%= planName %>">
@@ -287,6 +357,7 @@
                 <span class="icon">🔒</span>
                 <span>Your payment information is encrypted and secure</span>
             </div>
+            <% } %>
             
             <!-- Terms and Conditions Checkbox -->
             <div class="terms-section" style="margin-top: 25px; padding: 20px; background: #f8f9fa; border-radius: 8px; border: 2px solid #e0e0e0;">
@@ -320,7 +391,11 @@
                     ← Cancel
                 </button>
                 <button type="submit" class="btn btn-success" id="payButton" disabled>
-                    Pay ₹<%= String.format("%.2f", amount) %> →
+                    <% if (useQRCode) { %>
+                        Submit Transaction Details →
+                    <% } else { %>
+                        Pay ₹<%= String.format("%.2f", amount) %> →
+                    <% } %>
                 </button>
             </div>
         </form>
@@ -330,8 +405,33 @@
         </div>
     </div>
     
+    <% if (!useQRCode) { %>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <% } %>
     <script>
+        <% if (useQRCode) { %>
+        // QR Code Payment Mode - No Razorpay needed
+        const termsCheckbox = document.getElementById('termsCheckbox');
+        const payButton = document.getElementById('payButton');
+        const acceptedTimestampField = document.getElementById('acceptedTimestamp');
+        
+        termsCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                payButton.disabled = false;
+                payButton.style.opacity = '1';
+                payButton.style.cursor = 'pointer';
+                acceptedTimestampField.value = new Date().toISOString();
+            } else {
+                payButton.disabled = true;
+                payButton.style.opacity = '0.5';
+                payButton.style.cursor = 'not-allowed';
+                acceptedTimestampField.value = '';
+            }
+        });
+        
+        payButton.style.opacity = '0.5';
+        payButton.style.cursor = 'not-allowed';
+        <% } else { %>
         let razorpayConfig = null;
         let isRazorpayConfigured = false;
         let configLoaded = false;
@@ -363,29 +463,44 @@
         
         // Handle form submission
         document.querySelector('.payment-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+            // Debug: Show payment mode
+            console.log('=== PAYMENT MODE DEBUG ===');
+            console.log('Payment Mode from JSP: <%= paymentMode %>');
+            console.log('useQRCode flag: <%= useQRCode %>');
+            console.log('========================');
             
-            // Wait for config to load if still loading
-            if (!configLoaded) {
-                console.log('⏳ Waiting for config to load...');
-                setTimeout(() => {
-                    document.querySelector('.payment-form').dispatchEvent(new Event('submit'));
-                }, 500);
-                return;
-            }
-            
-            console.log('💳 Processing payment...');
-            console.log('isRazorpayConfigured:', isRazorpayConfigured);
-            
-            if (isRazorpayConfigured) {
-                console.log('🚀 Using Razorpay API');
-                initiateRazorpayPayment();
-            } else {
-                console.log('⚠️ Using fallback demo payment');
-                console.log('Reason: Environment variables not set or invalid');
-                // Fallback to demo payment
-                HTMLFormElement.prototype.submit.call(this);
-            }
+            <% if (useQRCode) { %>
+                // QR Code mode - allow normal form submission
+                console.log('✅ QR CODE MODE ACTIVE - Allowing form submission');
+                console.log('📱 QR Code payment - Submitting form to servlet');
+                console.log('Form action:', this.action);
+                // Don't call e.preventDefault() - let form submit normally
+            <% } else { %>
+                // Razorpay mode - prevent default and use API
+                e.preventDefault();
+                
+                // Wait for config to load if still loading
+                if (!configLoaded) {
+                    console.log('⏳ Waiting for config to load...');
+                    setTimeout(() => {
+                        document.querySelector('.payment-form').dispatchEvent(new Event('submit'));
+                    }, 500);
+                    return;
+                }
+                
+                console.log('💳 Processing payment...');
+                console.log('isRazorpayConfigured:', isRazorpayConfigured);
+                
+                if (isRazorpayConfigured) {
+                    console.log('🚀 Using Razorpay API');
+                    initiateRazorpayPayment();
+                } else {
+                    console.log('⚠️ Using fallback demo payment');
+                    console.log('Reason: Environment variables not set or invalid');
+                    // Fallback to demo payment
+                    HTMLFormElement.prototype.submit.call(this);
+                }
+            <% } %>
         });
         
         function initiateRazorpayPayment() {
@@ -515,6 +630,7 @@
         // Initial state
         payButton.style.opacity = '0.5';
         payButton.style.cursor = 'not-allowed';
+        <% } %>
     </script>
     
     <!-- Terms and Conditions Modal -->

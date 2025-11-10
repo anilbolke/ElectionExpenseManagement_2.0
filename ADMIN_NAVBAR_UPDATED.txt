@@ -1,0 +1,72 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║         ADMIN NAVIGATION - PAYMENT SETTINGS LINK ADDED ✅         ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+✅ WHAT WAS DONE:
+─────────────────
+Added "Payment Settings" link to admin navigation bar
+
+📁 FILE MODIFIED:
+─────────────────
+WebContent/includes/admin-navbar.jsp
+
+🔗 LINK DETAILS:
+────────────────
+Text:  💳 Payment Settings
+URL:   /admin/payment-settings.jsp
+Icon:  💳 (Credit Card)
+Position: Between "Payments" and "Send SMS"
+
+📋 ADMIN NAVIGATION MENU (NEW ORDER):
+──────────────────────────────────────
+1. Dashboard
+2. Users
+3. Candidates
+4. Brokers
+5. Payments (manage-payments.jsp)
+6. 💳 Payment Settings (payment-settings.jsp) ← NEW!
+7. 📱 Send SMS
+
+🎯 FEATURES:
+────────────
+✓ Active state highlighting (when on payment-settings page)
+✓ Responsive design (mobile-friendly)
+✓ Matches existing navbar styling
+✓ Credit card emoji for visual recognition
+
+🧪 HOW TO TEST:
+───────────────
+1. Login as admin
+2. Check navigation bar at top
+3. You should see "💳 Payment Settings" link
+4. Click it - should go to payment settings page
+5. Link should highlight when active
+
+🔐 ACCESS:
+──────────
+Only visible to admin users (role check in place)
+
+📸 WHAT YOU'LL SEE:
+───────────────────
+Navigation menu will show:
+... | Payments | 💳 Payment Settings | 📱 Send SMS | ...
+
+When clicked:
+→ Opens: /admin/payment-settings.jsp
+→ Shows payment mode toggle interface
+→ Navigation link becomes highlighted/active
+
+✨ BONUS:
+─────────
+Fixed active class detection for "manage-payments.jsp"
+Changed from: contains("payment") 
+To: contains("manage-payment")
+This prevents conflict with "payment-settings"
+
+═══════════════════════════════════════════════════════════════════
+
+✅ COMPLETE! Admin navbar now includes Payment Settings link.
+
+Access it after login: Look for "💳 Payment Settings" in top menu
+
+═══════════════════════════════════════════════════════════════════

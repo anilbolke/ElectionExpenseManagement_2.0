@@ -1063,6 +1063,25 @@
     <!-- Multi-Language Navigation -->
     <jsp:include page="/includes/user-navbar.jsp" />
 
+    <!-- Success/Error Messages -->
+    <% 
+    String successMsg = (String) session.getAttribute("message");
+    String errorMsg = (String) session.getAttribute("error");
+    if (successMsg != null) {
+        session.removeAttribute("message");
+    %>
+        <div class="alert alert-success" style="margin: 20px auto; max-width: 1400px; padding: 15px 20px; border-radius: 8px; background: #d4edda; border-left: 4px solid #28a745; color: #155724;">
+            <strong>✓</strong> <%= successMsg %>
+        </div>
+    <% } %>
+    <% if (errorMsg != null) {
+        session.removeAttribute("error");
+    %>
+        <div class="alert alert-error" style="margin: 20px auto; max-width: 1400px; padding: 15px 20px; border-radius: 8px; background: #f8d7da; border-left: 4px solid #dc3545; color: #721c24;">
+            <strong>✗</strong> <%= errorMsg %>
+        </div>
+    <% } %>
+
     <!-- Main Container -->
     <div class="main-container">
         <div class="dashboard-grid">

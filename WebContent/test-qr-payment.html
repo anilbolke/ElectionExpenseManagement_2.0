@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test QR Payment Submission</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .info {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196F3;
+        }
+        .warning {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Direct QR Payment Test</h1>
+        
+        <div class="info">
+            <strong>Purpose:</strong> This page directly submits to the servlet without any JavaScript interference.
+            Use this to test if the servlet is working correctly.
+        </div>
+        
+        <form action="/ElectionExpenseManagement/qrpayment" method="post">
+            <input type="hidden" name="action" value="submitPayment">
+            <input type="hidden" name="paymentType" value="candidate_registration">
+            
+            <div class="form-group">
+                <label for="candidateId">Candidate ID:</label>
+                <input type="number" id="candidateId" name="candidateId" value="1" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="amount">Amount:</label>
+                <input type="number" id="amount" name="amount" value="5000" step="0.01" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="transactionId">Transaction ID: (min 6 characters)</label>
+                <input type="text" id="transactionId" name="transactionId" 
+                       value="TEST<?php echo time(); ?><?php echo rand(100,999); ?>" 
+                       minlength="6" maxlength="50" required>
+            </div>
+            
+            <button type="submit">🚀 Submit to Servlet</button>
+        </form>
+        
+        <div class="warning">
+            <strong>⚠️ Note:</strong><br>
+            • Make sure you're logged in as a user before testing<br>
+            • Change the Candidate ID to a real candidate in your database<br>
+            • This bypasses JavaScript - tests the servlet directly
+        </div>
+    </div>
+    
+    <script>
+        // Log when form is submitted
+        document.querySelector('form').addEventListener('submit', function(e) {
+            console.log('📝 Form submitting to:', this.action);
+            console.log('Method:', this.method);
+            console.log('Data:', new FormData(this));
+        });
+    </script>
+</body>
+</html>

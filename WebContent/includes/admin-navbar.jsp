@@ -146,8 +146,16 @@
                 <%= MessageBundle.getMessage(request, "admin.brokers") %>
             </a></li>
             <li><a href="<%= request.getContextPath() %>/admin/manage-payments.jsp"
-                   class="<%= currentPage.contains("payment") ? "active" : "" %>">
+                   class="<%= currentPage.contains("manage-payment") ? "active" : "" %>">
                 <%= MessageBundle.getMessage(request, "nav.payments") %>
+            </a></li>
+            <li><a href="<%= request.getContextPath() %>/admin/payment-settings.jsp"
+                   class="<%= currentPage.contains("payment-settings") ? "active" : "" %>">
+                💳 Payment Settings
+            </a></li>
+            <li><a href="<%= request.getContextPath() %>/admin/verify-qr-payments.jsp"
+                   class="<%= currentPage.contains("verify-qr") ? "active" : "" %>">
+                📱 Verify QR Payments
             </a></li>
             <li><a href="<%= request.getContextPath() %>/admin/send-sms.jsp"
                    class="<%= currentPage.contains("send-sms") ? "active" : "" %>">

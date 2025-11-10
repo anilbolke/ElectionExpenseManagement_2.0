@@ -1,0 +1,168 @@
+╔═══════════════════════════════════════════════════════════════════╗
+║                  PAYMENT MODE TOGGLE - QUICK REFERENCE            ║
+╚═══════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🚀 SETUP (First Time Only)                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+Step 1: Run SQL
+───────────────
+mysql -u [user] -p [database] < database/add_payment_mode_setting.sql
+
+Step 2: Access Admin Panel
+───────────────────────────
+URL: /admin/payment-settings.jsp
+
+Step 3: Select Mode & Save
+───────────────────────────
+Choose: Razorpay OR QR Code
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🔄 SWITCH MODES (Anytime)                                       │
+└─────────────────────────────────────────────────────────────────┘
+
+Via Admin Panel (Recommended):
+───────────────────────────────
+1. Login as admin
+2. Visit: /admin/payment-settings.jsp
+3. Click desired mode
+4. Click Save
+
+Via SQL (Quick):
+────────────────
+-- Switch to QR Code:
+UPDATE system_settings SET setting_value='qrcode' 
+WHERE setting_key='payment_mode';
+
+-- Switch to Razorpay:
+UPDATE system_settings SET setting_value='razorpay' 
+WHERE setting_key='payment_mode';
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 📊 MODE COMPARISON                                              │
+└─────────────────────────────────────────────────────────────────┘
+
+RAZORPAY MODE:
+──────────────
+✓ Automatic payment verification
+✓ Multiple payment methods (UPI, Card, Net Banking, Wallet)
+✓ Instant account activation
+✓ Real-time tracking
+✗ Gateway fees apply
+✗ Requires Razorpay account
+
+QR CODE MODE:
+─────────────
+✓ Simple scan & pay
+✓ Works with any UPI app
+✓ No gateway fees
+✓ Full control
+✗ Manual verification needed
+✗ Admin must check transaction IDs
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🧪 TEST IT                                                      │
+└─────────────────────────────────────────────────────────────────┘
+
+Test URL:
+─────────
+/user/payment-gateway.jsp?planName=Monthly&paymentMethod=UPI&amount=500
+
+Check QR Mode:
+──────────────
+• QR code visible? ✓
+• Transaction ID field? ✓
+• NO Razorpay form? ✓
+
+Check Razorpay Mode:
+────────────────────
+• Razorpay form visible? ✓
+• Payment options shown? ✓
+• NO QR code? ✓
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 📁 FILES                                                        │
+└─────────────────────────────────────────────────────────────────┘
+
+Created:
+────────
+✓ admin/payment-settings.jsp
+✓ database/add_payment_mode_setting.sql
+✓ PAYMENT_MODE_TOGGLE_FEATURE.md
+✓ QUICK_SETUP_PAYMENT_TOGGLE.md
+✓ PAYMENT_SETUP_CHECKLIST.md
+
+Modified:
+─────────
+✓ user/payment-gateway.jsp
+✓ user/candidate-payment.jsp
+
+Used:
+─────
+✓ WebContent/Document/QrCode.jpeg (383 KB)
+
+┌─────────────────────────────────────────────────────────────────┐
+│ ❓ TROUBLESHOOTING                                              │
+└─────────────────────────────────────────────────────────────────┘
+
+QR Code Not Showing?
+────────────────────
+1. Check: setting_value = 'qrcode' in database
+2. Verify: QrCode.jpeg exists in Document folder
+3. Clear browser cache (Ctrl+F5)
+
+Mode Not Changing?
+──────────────────
+1. Check database value:
+   SELECT * FROM system_settings WHERE setting_key='payment_mode';
+2. Clear browser cache
+3. Check JSP compilation errors in logs
+
+Admin Panel 404?
+────────────────
+1. Verify logged in as admin
+2. Check URL path
+3. Verify file exists: admin/payment-settings.jsp
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 📞 QUICK COMMANDS                                               │
+└─────────────────────────────────────────────────────────────────┘
+
+Check Current Mode:
+───────────────────
+SELECT setting_value FROM system_settings 
+WHERE setting_key='payment_mode';
+
+View All Settings:
+──────────────────
+SELECT * FROM system_settings WHERE setting_key LIKE '%payment%';
+
+Reset to Default:
+─────────────────
+UPDATE system_settings SET setting_value='razorpay' 
+WHERE setting_key='payment_mode';
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 🎯 REMEMBER                                                     │
+└─────────────────────────────────────────────────────────────────┘
+
+✓ No server restart needed
+✓ Changes take effect immediately  
+✓ Affects both subscription & candidate payments
+✓ QR code path: /Document/QrCode.jpeg
+✓ Default mode: Razorpay
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 📖 MORE INFO                                                    │
+└─────────────────────────────────────────────────────────────────┘
+
+Full Documentation:
+───────────────────
+• PAYMENT_MODE_TOGGLE_FEATURE.md - Complete guide
+• QUICK_SETUP_PAYMENT_TOGGLE.md  - Setup steps
+• PAYMENT_SETUP_CHECKLIST.md     - Verification checklist
+
+═══════════════════════════════════════════════════════════════════
+                         ✅ READY TO USE
+═══════════════════════════════════════════════════════════════════
