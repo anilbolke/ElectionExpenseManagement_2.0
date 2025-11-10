@@ -176,6 +176,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
+            transition: all 0.3s ease;
+        }
+        .stats-compact.vertical {
+            grid-template-columns: 1fr;
+            gap: 10px;
         }
         .stat-mini {
             background: white;
@@ -183,6 +188,16 @@
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.06);
             border-left: 3px solid;
+            transition: all 0.3s ease;
+        }
+        .stats-compact.vertical .stat-mini {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px;
+        }
+        .stats-compact.vertical .stat-mini h4 {
+            margin-bottom: 0;
         }
         .stat-mini:nth-child(1) { border-left-color: #667eea; }
         .stat-mini:nth-child(2) { border-left-color: #48bb78; }
@@ -200,6 +215,46 @@
             font-size: 1.4rem;
             font-weight: 700;
             color: #1a202c;
+        }
+        
+        /* Stats Header with Toggle */
+        .stats-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+        .stats-header h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: #1a202c;
+            margin: 0;
+        }
+        .stats-toggle-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+        .stats-toggle-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(102, 126, 234, 0.4);
+        }
+        .stats-toggle-btn:active {
+            transform: scale(0.95);
         }
         
         /* Quick Actions */
@@ -437,8 +492,37 @@
             .user-info span {
                 display: none;
             }
+            /* Stats grid - default to vertical on mobile for better readability */
             .stats-compact { 
-                grid-template-columns: repeat(2, 1fr); 
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .stats-compact.horizontal {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-mini {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 15px 12px;
+            }
+            .stats-compact.horizontal .stat-mini {
+                display: block;
+                padding: 12px;
+            }
+            .stat-mini h4 {
+                font-size: 11px;
+                margin-bottom: 0;
+            }
+            .stats-compact.horizontal .stat-mini h4 {
+                margin-bottom: 4px;
+            }
+            .stat-mini .value {
+                font-size: 1.6rem;
+            }
+            .stats-compact.horizontal .stat-mini .value {
+                font-size: 1.4rem;
             }
             .sidebar { 
                 grid-template-columns: 1fr; 
@@ -518,8 +602,16 @@
         <div class="dashboard-grid">
             <!-- Left Sidebar -->
             <div class="sidebar">
+                <!-- Stats Header with Toggle -->
+                <div class="stats-header">
+                    <h3>📊 Statistics</h3>
+                    <button id="toggleStatsLayout" class="stats-toggle-btn" onclick="toggleStatsLayout()" title="Toggle Horizontal/Vertical Layout">
+                        <span id="statsLayoutIcon">⇅</span>
+                    </button>
+                </div>
+                
                 <!-- Compact Stats -->
-                <div class="stats-compact">
+                <div class="stats-compact" id="statsContainer">
                     <div class="stat-mini">
                         <h4><%= MessageBundle.getMessage(request, "card.total.users") %></h4>
                         <div class="value"><%= totalUsers %></div>
@@ -1002,6 +1094,39 @@
             }
         }
         
+        // Toggle Stats Layout (Horizontal/Vertical)
+        function toggleStatsLayout() {
+            const statsContainer = document.getElementById('statsContainer');
+            const icon = document.getElementById('statsLayoutIcon');
+            
+            // Check if mobile view
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                // Mobile: Toggle between vertical (default) and horizontal (2-column)
+                if (statsContainer.classList.contains('horizontal')) {
+                    statsContainer.classList.remove('horizontal');
+                    icon.textContent = '⇅'; // Vertical arrows (vertical layout)
+                    localStorage.setItem('statsLayoutMobile', 'vertical');
+                } else {
+                    statsContainer.classList.add('horizontal');
+                    icon.textContent = '⇄'; // Horizontal arrows (horizontal layout)
+                    localStorage.setItem('statsLayoutMobile', 'horizontal');
+                }
+            } else {
+                // Desktop: Toggle between horizontal (2-column) and vertical (1-column)
+                if (statsContainer.classList.contains('vertical')) {
+                    statsContainer.classList.remove('vertical');
+                    icon.textContent = '⇅'; // Vertical arrows
+                    localStorage.setItem('statsLayoutDesktop', 'horizontal');
+                } else {
+                    statsContainer.classList.add('vertical');
+                    icon.textContent = '⇄'; // Horizontal arrows
+                    localStorage.setItem('statsLayoutDesktop', 'vertical');
+                }
+            }
+        }
+        
         // Restore state on page load
         window.addEventListener('DOMContentLoaded', function() {
             const sections = ['quickActions', 'userDistribution'];
@@ -1016,6 +1141,31 @@
                     icon.classList.add('collapsed');
                 }
             });
+            
+            // Restore Stats Layout
+            const statsContainer = document.getElementById('statsContainer');
+            const statsIcon = document.getElementById('statsLayoutIcon');
+            const isMobile = window.innerWidth <= 768;
+            
+            if (isMobile) {
+                const savedLayout = localStorage.getItem('statsLayoutMobile');
+                if (savedLayout === 'horizontal') {
+                    statsContainer.classList.add('horizontal');
+                    statsIcon.textContent = '⇄';
+                } else {
+                    // Default to vertical on mobile
+                    statsIcon.textContent = '⇅';
+                }
+            } else {
+                const savedLayout = localStorage.getItem('statsLayoutDesktop');
+                if (savedLayout === 'vertical') {
+                    statsContainer.classList.add('vertical');
+                    statsIcon.textContent = '⇄';
+                } else {
+                    // Default to horizontal on desktop
+                    statsIcon.textContent = '⇅';
+                }
+            }
         });
     </script>
     
