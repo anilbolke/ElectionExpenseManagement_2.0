@@ -257,6 +257,20 @@
             transform: scale(0.95);
         }
         
+        /* Stats Collapsed State */
+        .stats-compact.collapsed {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            margin-bottom: 0;
+            transition: max-height 0.4s ease, opacity 0.3s ease, margin-bottom 0.3s ease;
+        }
+        .stats-compact:not(.collapsed) {
+            max-height: 2000px;
+            opacity: 1;
+            transition: max-height 0.4s ease, opacity 0.3s ease;
+        }
+        
         /* Quick Actions */
         .quick-actions-compact {
             background: white;
@@ -602,12 +616,17 @@
         <div class="dashboard-grid">
             <!-- Left Sidebar -->
             <div class="sidebar">
-                <!-- Stats Header with Toggle -->
+                <!-- Stats Header with Toggles -->
                 <div class="stats-header">
                     <h3>📊 Statistics</h3>
-                    <button id="toggleStatsLayout" class="stats-toggle-btn" onclick="toggleStatsLayout()" title="Toggle Horizontal/Vertical Layout">
-                        <span id="statsLayoutIcon">⇅</span>
-                    </button>
+                    <div style="display: flex; gap: 8px;">
+                        <button id="toggleStatsLayout" class="stats-toggle-btn" onclick="toggleStatsLayout()" title="Toggle Horizontal/Vertical Layout">
+                            <span id="statsLayoutIcon">⇅</span>
+                        </button>
+                        <button id="toggleStatsMinMax" class="stats-toggle-btn" onclick="toggleStatsMinMax()" title="Minimize/Maximize Statistics">
+                            <span id="statsMinMaxIcon">−</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Compact Stats -->
@@ -1127,6 +1146,24 @@
             }
         }
         
+        // Toggle Stats Minimize/Maximize
+        function toggleStatsMinMax() {
+            const statsContainer = document.getElementById('statsContainer');
+            const icon = document.getElementById('statsMinMaxIcon');
+            
+            if (statsContainer.classList.contains('collapsed')) {
+                // Maximize
+                statsContainer.classList.remove('collapsed');
+                icon.textContent = '−';
+                localStorage.setItem('statsMinimized', 'false');
+            } else {
+                // Minimize
+                statsContainer.classList.add('collapsed');
+                icon.textContent = '+';
+                localStorage.setItem('statsMinimized', 'true');
+            }
+        }
+        
         // Restore state on page load
         window.addEventListener('DOMContentLoaded', function() {
             const sections = ['quickActions', 'userDistribution'];
@@ -1145,6 +1182,7 @@
             // Restore Stats Layout
             const statsContainer = document.getElementById('statsContainer');
             const statsIcon = document.getElementById('statsLayoutIcon');
+            const statsMinMaxIcon = document.getElementById('statsMinMaxIcon');
             const isMobile = window.innerWidth <= 768;
             
             if (isMobile) {
@@ -1165,6 +1203,15 @@
                     // Default to horizontal on desktop
                     statsIcon.textContent = '⇅';
                 }
+            }
+            
+            // Restore Stats Minimize/Maximize State
+            const statsMinimized = localStorage.getItem('statsMinimized');
+            if (statsMinimized === 'true') {
+                statsContainer.classList.add('collapsed');
+                statsMinMaxIcon.textContent = '+';
+            } else {
+                statsMinMaxIcon.textContent = '−';
             }
         });
     </script>
