@@ -1,3 +1,4 @@
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="com.election.i18n.MessageBundle" %>
 <%@ page import="com.election.model.*, com.election.dao.*, java.util.List, java.math.BigDecimal" %>
@@ -30,7 +31,8 @@
         }
     }
     
-    // Get all candidates
+    // Get all candidates with user information
+    List<Candidate> allCandidates = new ArrayList<>(); 
     int totalCandidates = 0;
     int activeCandidates = 0;
     int pendingPayments = 0;
@@ -43,6 +45,11 @@
                     if (userCandidates != null) {
                         totalCandidates += userCandidates.size();
                         for (Candidate c : userCandidates) {
+                            // Set user information in candidate for display
+                            c.setUserName(u.getFullName());
+                            c.setUserEmail(u.getEmail());
+                            allCandidates.add(c);
+                            
                             if (c.isPaymentVerified()) {
                                 activeCandidates++;
                             } else {
@@ -53,6 +60,14 @@
                 }
             }
         }
+        
+        // Sort candidates by registration date (newest first)
+        allCandidates.sort((c1, c2) -> {
+            if (c1.getCreatedDate() == null) return 1;
+            if (c2.getCreatedDate() == null) return -1;
+            return c2.getCreatedDate().compareTo(c1.getCreatedDate());
+        });
+        
     } catch (Exception e) {
         e.printStackTrace();
     }
@@ -661,6 +676,8 @@
                         <a href="view-brokers.jsp" class="action-btn tertiary">🤝 <%= MessageBundle.getMessage(request, "admin.view.brokers") %></a>
                         <a href="register-broker.jsp" class="action-btn" style="background: #ed8936;">➕ <%= MessageBundle.getMessage(request, "admin.register.broker") %></a>
                         <a href="manage-payments.jsp" class="action-btn" style="background: #4299e1;">💳 <%= MessageBundle.getMessage(request, "admin.payment.activity") %></a>
+                        <a href="manage-licenses.jsp" class="action-btn" style="background: #28a745;">🔑 Manage Licenses</a>
+                        <a href="payment-settings.jsp" class="action-btn" style="background: #667eea;">⚙️ Payment Settings</a>
                     </div>
                 </div>
                 
@@ -751,7 +768,7 @@
                                 <% 
                                 int count = 0;
                                 for (User u : allUsers) {
-                                    if (count >= 10) break;
+                                    if (count >= 3) break;  // Changed from 5 to 3
                                     count++;
                                 %>
                                     <tr>
@@ -784,6 +801,90 @@
                             <p style="font-size: 12px;">Users will appear here once they register.</p>
                         </div>
                     <% } %>
+                </div>
+                
+                <!-- Recent Candidates with Filter -->
+                <div style="margin-top: 30px;">
+                    <div class="content-header" style="border-bottom: none;">
+                        <h3 style="font-size: 14px; font-weight: 600;">🗳️ Recent Candidates</h3>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <input type="text" 
+                                   id="candidateSearch" 
+                                   placeholder="Search candidates..." 
+                                   style="padding: 6px 12px; border: 2px solid #e2e8f0; border-radius: 6px; font-size: 12px; width: 200px;" 
+                                   onkeyup="filterCandidates()">
+                            <a href="view-candidates.jsp" class="btn btn-primary btn-sm">View All →</a>
+                        </div>
+                    </div>
+                    
+                    <% if (allCandidates != null && !allCandidates.isEmpty()) { %>
+                        <table id="candidatesTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>User</th>
+                                    <th>Position</th>
+                                    <th>Constituency</th>
+                                    <th>Party</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="candidatesTableBody">
+                                <% 
+                                int candidateCount = 0;
+                                for (Candidate c : allCandidates) {
+                                    if (candidateCount >= 3) break; // Show only top 3 candidates
+                                    candidateCount++;
+                                %>
+                                    <tr class="candidate-row" data-search-text="<%= (c.getCandidateName() + " " + c.getUserName() + " " + (c.getPosition() != null ? c.getPosition() : "") + " " + (c.getConstituency() != null ? c.getConstituency() : "") + " " + (c.getParty() != null ? c.getParty() : "")).toLowerCase() %>">
+                                        <td>#<%= c.getCandidateId() %></td>
+                                        <td><strong><%= c.getCandidateName() %></strong></td>
+                                        <td>
+                                            <div style="font-size: 11px;">
+                                                <%= c.getUserName() %><br>
+                                                <span style="color: #718096;"><%= c.getUserEmail() %></span>
+                                            </div>
+                                        </td>
+                                        <td><%= c.getPosition() != null ? c.getPosition() : "-" %></td>
+                                        <td><%= c.getConstituency() != null ? c.getConstituency() : "-" %></td>
+                                        <td><%= c.getParty() != null ? c.getParty() : "Independent" %></td>
+                                        <td>
+                                            <% if (c.isPaymentVerified()) { %>
+                                                <span class="badge badge-success">Verified</span>
+                                            <% } else { %>
+                                                <span class="badge badge-warning">Pending</span>
+                                            <% } %>
+                                        </td>
+                                        <td>
+                                            <a href="candidate-details.jsp?candidateId=<%= c.getCandidateId() %>" class="btn btn-primary btn-sm">View</a>
+                                        </td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Show All Candidates Button (for filtered results) -->
+                        <div id="showAllCandidates" style="text-align: center; margin-top: 15px; display: none;">
+                            <button onclick="showAllCandidates()" class="btn btn-info btn-sm">Show All Matching Candidates</button>
+                            <button onclick="resetCandidateFilter()" class="btn btn-secondary btn-sm" style="background: #6c757d;">Reset Filter</button>
+                        </div>
+                        
+                    <% } else { %>
+                        <div style="text-align: center; padding: 40px; color: #718096;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">🗳️</div>
+                            <h3 style="color: #4a5568; margin-bottom: 8px;">No Candidates Found</h3>
+                            <p style="font-size: 12px;">Candidates will appear here once users register them.</p>
+                        </div>
+                    <% } %>
+                    
+                    <!-- No Search Results Message -->
+                    <div id="noSearchResults" style="display: none; text-align: center; padding: 30px; color: #718096;">
+                        <div style="font-size: 2rem; margin-bottom: 10px;">🔍</div>
+                        <h4 style="color: #4a5568; margin-bottom: 5px;">No matches found</h4>
+                        <p style="font-size: 12px;">Try different search terms or <button onclick="resetCandidateFilter()" style="background: none; border: none; color: #667eea; text-decoration: underline; cursor: pointer;">clear the filter</button></p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -979,6 +1080,7 @@
                 <li><a href="view-users.jsp">Users</a></li>
                 <li><a href="view-candidates.jsp">Candidates</a></li>
                 <li><a href="view-brokers.jsp">Brokers</a></li>
+                <li><a href="payment-gateway-settings.jsp">Payment Settings</a></li>
             </ul>
             <div class="user-info">
                 <div class="user-avatar"><%= user.getFullName() != null ? user.getFullName().substring(0, 1).toUpperCase() : "A" %></div>
@@ -1113,6 +1215,83 @@
             }
         }
         
+        // Candidate filtering functionality
+        function filterCandidates() {
+            const searchInput = document.getElementById('candidateSearch');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const candidateRows = document.querySelectorAll('.candidate-row');
+            const noResultsDiv = document.getElementById('noSearchResults');
+            const candidatesTable = document.getElementById('candidatesTable');
+            const showAllBtn = document.getElementById('showAllCandidates');
+            
+            let visibleCount = 0;
+            let hasMatches = false;
+            
+            candidateRows.forEach(row => {
+                const searchText = row.getAttribute('data-search-text');
+                const shouldShow = searchText.includes(searchTerm);
+                
+                if (shouldShow) {
+                    hasMatches = true;
+                    if (searchTerm === '' && visibleCount >= 3) {
+                        // Show only top 3 when no search term
+                        row.style.display = 'none';
+                    } else if (searchTerm !== '' && visibleCount >= 10) {
+                        // Show max 10 when searching
+                        row.style.display = 'none';
+                    } else {
+                        row.style.display = 'table-row';
+                        visibleCount++;
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            if (!hasMatches && searchTerm !== '') {
+                noResultsDiv.style.display = 'block';
+                candidatesTable.style.display = 'none';
+                showAllBtn.style.display = 'none';
+            } else {
+                noResultsDiv.style.display = 'none';
+                candidatesTable.style.display = 'table';
+                
+                // Show "Show All" button if there are more matches than displayed
+                const totalMatches = Array.from(candidateRows).filter(row => 
+                    row.getAttribute('data-search-text').includes(searchTerm)
+                ).length;
+                
+                if (searchTerm !== '' && totalMatches > visibleCount) {
+                    showAllBtn.style.display = 'block';
+                } else {
+                    showAllBtn.style.display = 'none';
+                }
+            }
+        }
+        
+        function showAllCandidates() {
+            const searchInput = document.getElementById('candidateSearch');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const candidateRows = document.querySelectorAll('.candidate-row');
+            const showAllBtn = document.getElementById('showAllCandidates');
+            
+            candidateRows.forEach(row => {
+                const searchText = row.getAttribute('data-search-text');
+                if (searchText.includes(searchTerm)) {
+                    row.style.display = 'table-row';
+                }
+            });
+            
+            showAllBtn.style.display = 'none';
+        }
+        
+        function resetCandidateFilter() {
+            const searchInput = document.getElementById('candidateSearch');
+            searchInput.value = '';
+            filterCandidates();
+        }
+        
         // Toggle Stats Layout (Horizontal/Vertical)
         function toggleStatsLayout() {
             const statsContainer = document.getElementById('statsContainer');
@@ -1213,6 +1392,9 @@
             } else {
                 statsMinMaxIcon.textContent = '−';
             }
+            
+            // Initialize candidate filter
+            filterCandidates();
         });
     </script>
     

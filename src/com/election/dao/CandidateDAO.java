@@ -42,11 +42,22 @@ public class CandidateDAO {
             pstmt.setBigDecimal(22, candidate.getExpenseLimit());
             pstmt.setString(23, "pending_payment");
             
+            // Debug logging
+            System.out.println("========== CANDIDATE CREATION DEBUG ==========");
+            System.out.println("Candidate Name: " + candidate.getCandidateName());
+            System.out.println("Expense Limit: " + candidate.getExpenseLimit());
+            System.out.println("User ID: " + candidate.getUserId());
+            System.out.println("Broker ID: " + candidate.getBrokerId());
+            System.out.println("==========================================");
+            
             int result = pstmt.executeUpdate();
             if (result > 0) {
                 ResultSet rs = pstmt.getGeneratedKeys();
                 if (rs.next()) {
-                    return rs.getInt(1);
+                    int candidateId = rs.getInt(1);
+                    System.out.println("✓ Candidate created successfully with ID: " + candidateId);
+                    System.out.println("✓ Expense Limit inserted: " + candidate.getExpenseLimit());
+                    return candidateId;
                 }
             }
             
@@ -119,7 +130,9 @@ public class CandidateDAO {
     public boolean updateCandidate(Candidate candidate) {
         String query = "UPDATE candidates SET candidate_name = ?, father_name = ?, age = ?, gender = ?, mobile = ?, email = ?, address = ?, city = ?, " +
                       "state = ?, pincode = ?, aadhar_number = ?, voter_id = ?, constituency = ?, nomination_id = ?, party_name = ?, " +
-                      "party_symbol = ?, election_type = ?, election_date = ?, booth_number = ?, expense_limit = ? WHERE candidate_id = ?";
+                      "party_symbol = ?, election_type = ?, election_date = ?, booth_number = ?, expense_limit = ?, " +
+                      "payment_amount = ?, payment_status = ?, payment_date = ?, transaction_id = ?, payment_method = ?, " +
+                      "is_payment_verified = ?, account_status = ?, terms_accepted = ?, terms_accepted_date = ? WHERE candidate_id = ?";
         
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(query)) {
@@ -127,10 +140,13 @@ public class CandidateDAO {
             // Debug logging
             System.out.println("========== CANDIDATE UPDATE DEBUG ==========");
             System.out.println("Candidate ID: " + candidate.getCandidateId());
-            System.out.println("Gender: " + candidate.getGender());
-            System.out.println("Mobile: " + candidate.getMobile());
-            System.out.println("Email: " + candidate.getEmail());
-            System.out.println("Expense Limit: " + candidate.getExpenseLimit());
+            System.out.println("Payment Status: " + candidate.getPaymentStatus());
+            System.out.println("Payment Amount: " + candidate.getPaymentAmount());
+            System.out.println("Payment Method: " + candidate.getPaymentMethod());
+            System.out.println("Transaction ID: " + candidate.getTransactionId());
+            System.out.println("Is Payment Verified: " + candidate.isPaymentVerified());
+            System.out.println("Account Status: " + candidate.getAccountStatus());
+            System.out.println("Terms Accepted: " + candidate.isTermsAccepted());
             System.out.println("==========================================");
             
             pstmt.setString(1, candidate.getCandidateName());
@@ -153,7 +169,19 @@ public class CandidateDAO {
             pstmt.setDate(18, candidate.getElectionDate());
             pstmt.setString(19, candidate.getBoothNumber());
             pstmt.setBigDecimal(20, candidate.getExpenseLimit());
-            pstmt.setInt(21, candidate.getCandidateId());
+            
+            // Payment-related fields
+            pstmt.setBigDecimal(21, candidate.getPaymentAmount());
+            pstmt.setString(22, candidate.getPaymentStatus());
+            pstmt.setTimestamp(23, candidate.getPaymentDate());
+            pstmt.setString(24, candidate.getTransactionId());
+            pstmt.setString(25, candidate.getPaymentMethod());
+            pstmt.setInt(26, candidate.isPaymentVerified() ? 1 : 0);
+            pstmt.setString(27, candidate.getAccountStatus());
+            pstmt.setInt(28, candidate.isTermsAccepted() ? 1 : 0);
+            pstmt.setTimestamp(29, candidate.getTermsAcceptedDate());
+            
+            pstmt.setInt(30, candidate.getCandidateId());
             
             int result = pstmt.executeUpdate();
             System.out.println("Update result: " + result + " row(s) affected");
@@ -178,6 +206,30 @@ public class CandidateDAO {
             pstmt.setString(2, transactionId);
             pstmt.setInt(3, status.equals("completed") ? 1 : 0);
             pstmt.setString(4, status.equals("completed") ? "active" : "pending_payment");
+            pstmt.setInt(5, candidateId);
+            
+            int result = pstmt.executeUpdate();
+            return result > 0;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    // Update payment status with custom parameters (overloaded for license)
+    public boolean updatePaymentStatus(int candidateId, String status, String transactionId, 
+                                      boolean isVerified, String accountStatus) {
+        String query = "UPDATE candidates SET payment_status = ?, transaction_id = ?, payment_date = CURRENT_TIMESTAMP, " +
+                      "is_payment_verified = ?, account_status = ? WHERE candidate_id = ?";
+        
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            
+            pstmt.setString(1, status);
+            pstmt.setString(2, transactionId);
+            pstmt.setBoolean(3, isVerified);
+            pstmt.setString(4, accountStatus);
             pstmt.setInt(5, candidateId);
             
             int result = pstmt.executeUpdate();
@@ -322,12 +374,31 @@ public class CandidateDAO {
         candidate.setBoothNumber(rs.getString("booth_number"));
         candidate.setBrokerId(rs.getInt("broker_id"));
         candidate.setExpenseLimit(rs.getBigDecimal("expense_limit"));
+        
+        // Payment-related fields
         candidate.setPaymentStatus(rs.getString("payment_status"));
         candidate.setPaymentAmount(rs.getBigDecimal("payment_amount"));
         candidate.setPaymentDate(rs.getTimestamp("payment_date"));
         candidate.setTransactionId(rs.getString("transaction_id"));
+        
+        // Handle payment_method (may be null for older records)
+        try {
+            candidate.setPaymentMethod(rs.getString("payment_method"));
+        } catch (SQLException e) {
+            // Column may not exist
+        }
+        
         candidate.setPaymentVerified(rs.getBoolean("is_payment_verified"));
         candidate.setAccountStatus(rs.getString("account_status"));
+        
+        // Terms and Conditions fields (may be null for older records)
+        try {
+            candidate.setTermsAccepted(rs.getBoolean("terms_accepted"));
+            candidate.setTermsAcceptedDate(rs.getTimestamp("terms_accepted_date"));
+        } catch (SQLException e) {
+            // Columns may not exist
+        }
+        
         candidate.setCreatedDate(rs.getTimestamp("created_date"));
         candidate.setUpdatedDate(rs.getTimestamp("updated_date"));
         return candidate;
